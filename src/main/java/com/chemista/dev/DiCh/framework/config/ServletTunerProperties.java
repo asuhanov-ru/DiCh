@@ -6,6 +6,8 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -48,52 +50,134 @@ public class ServletTunerProperties {
 
     private final Registry registry = new Registry();
 
+    private final ClientApp clientApp = new ClientApp();
+
+    private final AuditEvents auditEvents = new AuditEvents();
+
+    /**
+     * <p>Getter for the field <code>async</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Async} object.
+     */
     public Async getAsync() {
         return async;
     }
 
+    /**
+     * <p>Getter for the field <code>http</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Http} object.
+     */
     public Http getHttp() {
         return http;
     }
 
+    /**
+     * <p>Getter for the field <code>cache</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Cache} object.
+     */
     public Cache getCache() {
         return cache;
     }
 
+    /**
+     * <p>Getter for the field <code>mail</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Mail} object.
+     */
     public Mail getMail() {
         return mail;
     }
 
+    /**
+     * <p>Getter for the field <code>registry</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Registry} object.
+     */
     public Registry getRegistry() {
         return registry;
     }
 
+    /**
+     * <p>Getter for the field <code>security</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Security} object.
+     */
     public Security getSecurity() {
         return security;
     }
 
+    /**
+     * <p>Getter for the field <code>swagger</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Swagger} object.
+     */
     public Swagger getSwagger() {
         return swagger;
     }
 
+    /**
+     * <p>Getter for the field <code>metrics</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Metrics} object.
+     */
     public Metrics getMetrics() {
         return metrics;
     }
 
+    /**
+     * <p>Getter for the field <code>logging</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Logging} object.
+     */
     public Logging getLogging() {
         return logging;
     }
 
+    /**
+     * <p>Getter for the field <code>cors</code>.</p>
+     *
+     * @return a {@link org.springframework.web.cors.CorsConfiguration} object.
+     */
     public CorsConfiguration getCors() {
         return cors;
     }
 
+    /**
+     * <p>Getter for the field <code>social</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Social} object.
+     */
     public Social getSocial() {
         return social;
     }
 
+    /**
+     * <p>Getter for the field <code>gateway</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.Gateway} object.
+     */
     public Gateway getGateway() {
         return gateway;
+    }
+
+    /**
+     * <p>Getter for the field <code>clientApp</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.ClientApp} object.
+     */
+    public ClientApp getClientApp() {
+        return clientApp;
+    }
+
+    /**
+     * <p>Getter for the field <code>auditEvents</code>.</p>
+     *
+     * @return a {@link io.github.jhipster.config.JHipsterProperties.AuditEvents} object.
+     */
+    public AuditEvents getAuditEvents() {
+        return auditEvents;
     }
 
     public static class Async {
@@ -131,30 +215,10 @@ public class ServletTunerProperties {
 
     public static class Http {
 
-        public enum Version {V_1_1, V_2_0}
-
         private final Cache cache = new Cache();
-
-        /**
-         * Https has to be active with cipher suite define also
-         */
-        private boolean useUndertowUserCipherSuitesOrder = ServletTunerDefaults.Http.useUndertowUserCipherSuitesOrder;
-
-        /**
-         * HTTP version, must be "V_1_1" (for HTTP/1.1) or V_2_0 (for (HTTP/2)
-         */
-        public Version version = ServletTunerDefaults.Http.version;
 
         public Cache getCache() {
             return cache;
-        }
-
-        public Version getVersion() {
-            return version;
-        }
-
-        public void setVersion(Version version) {
-            this.version = version;
         }
 
         public static class Cache {
@@ -169,19 +233,13 @@ public class ServletTunerProperties {
                 this.timeToLiveInDays = timeToLiveInDays;
             }
         }
-
-        public boolean isUseUndertowUserCipherSuitesOrder() {
-            return useUndertowUserCipherSuitesOrder;
-        }
-
-        public void setUseUndertowUserCipherSuitesOrder(boolean useUndertowUserCipherSuitesOrder) {
-            this.useUndertowUserCipherSuitesOrder = useUndertowUserCipherSuitesOrder;
-        }
     }
 
     public static class Cache {
 
         private final Hazelcast hazelcast = new Hazelcast();
+
+        private final Caffeine caffeine = new Caffeine();
 
         private final Ehcache ehcache = new Ehcache();
 
@@ -189,8 +247,14 @@ public class ServletTunerProperties {
 
         private final Memcached memcached = new Memcached();
 
+        private final Redis redis = new Redis();
+
         public Hazelcast getHazelcast() {
             return hazelcast;
+        }
+
+        public Caffeine getCaffeine() {
+            return caffeine;
         }
 
         public Ehcache getEhcache() {
@@ -203,6 +267,10 @@ public class ServletTunerProperties {
 
         public Memcached getMemcached() {
             return memcached;
+        }
+
+        public Redis getRedis() {
+            return redis;
         }
 
         public static class Hazelcast {
@@ -223,7 +291,7 @@ public class ServletTunerProperties {
 
                 private int updateInterval = ServletTunerDefaults.Cache.Hazelcast.ManagementCenter.updateInterval;
 
-                private String url =  ServletTunerDefaults.Cache.Hazelcast.ManagementCenter.url;
+                private String url = ServletTunerDefaults.Cache.Hazelcast.ManagementCenter.url;
 
                 public boolean isEnabled() {
                     return enabled;
@@ -265,6 +333,29 @@ public class ServletTunerProperties {
 
             public void setBackupCount(int backupCount) {
                 this.backupCount = backupCount;
+            }
+        }
+
+        public static class Caffeine {
+
+            private int timeToLiveSeconds = ServletTunerDefaults.Cache.Caffeine.timeToLiveSeconds;
+
+            private long maxEntries = ServletTunerDefaults.Cache.Caffeine.maxEntries;
+
+            public int getTimeToLiveSeconds() {
+                return timeToLiveSeconds;
+            }
+
+            public void setTimeToLiveSeconds(int timeToLiveSeconds) {
+                this.timeToLiveSeconds = timeToLiveSeconds;
+            }
+
+            public long getMaxEntries() {
+                return maxEntries;
+            }
+
+            public void setMaxEntries(long maxEntries) {
+                this.maxEntries = maxEntries;
             }
         }
 
@@ -458,6 +549,36 @@ public class ServletTunerProperties {
                 this.useBinaryProtocol = useBinaryProtocol;
             }
         }
+
+        public static class Redis {
+            private String[] server = ServletTunerDefaults.Cache.Redis.server;
+            private int expiration = ServletTunerDefaults.Cache.Redis.expiration;
+            private boolean cluster = ServletTunerDefaults.Cache.Redis.cluster;
+
+            public String[] getServer() {
+                return server;
+            }
+
+            public void setServer(String[] server) {
+                this.server = server;
+            }
+
+            public int getExpiration() {
+                return expiration;
+            }
+
+            public void setExpiration(int expiration) {
+                this.expiration = expiration;
+            }
+
+            public boolean isCluster() {
+                return cluster;
+            }
+
+            public void setCluster(boolean cluster) {
+                this.cluster = cluster;
+            }
+        }
     }
 
     public static class Mail {
@@ -501,6 +622,8 @@ public class ServletTunerProperties {
 
         private final RememberMe rememberMe = new RememberMe();
 
+        private final OAuth2 oauth2 = new OAuth2();
+
         public ClientAuthorization getClientAuthorization() {
             return clientAuthorization;
         }
@@ -511,6 +634,10 @@ public class ServletTunerProperties {
 
         public RememberMe getRememberMe() {
             return rememberMe;
+        }
+
+        public OAuth2 getOauth2() {
+            return oauth2;
         }
 
         public static class ClientAuthorization {
@@ -568,6 +695,8 @@ public class ServletTunerProperties {
 
                 private String secret = ServletTunerDefaults.Security.Authentication.Jwt.secret;
 
+                private String base64Secret = ServletTunerDefaults.Security.Authentication.Jwt.base64Secret;
+
                 private long tokenValidityInSeconds = ServletTunerDefaults.Security.Authentication.Jwt
                         .tokenValidityInSeconds;
 
@@ -580,6 +709,14 @@ public class ServletTunerProperties {
 
                 public void setSecret(String secret) {
                     this.secret = secret;
+                }
+
+                public String getBase64Secret() {
+                    return base64Secret;
+                }
+
+                public void setBase64Secret(String base64Secret) {
+                    this.base64Secret = base64Secret;
                 }
 
                 public long getTokenValidityInSeconds() {
@@ -613,6 +750,18 @@ public class ServletTunerProperties {
                 this.key = key;
             }
         }
+
+        public static class OAuth2 {
+            private List<String> audience = new ArrayList<>();
+
+            public List<String> getAudience() {
+                return Collections.unmodifiableList(audience);
+            }
+
+            public void setAudience(@NotNull List<String> audience) {
+                this.audience.addAll(audience);
+            }
+        }
     }
 
     public static class Swagger {
@@ -640,6 +789,8 @@ public class ServletTunerProperties {
         private String host = ServletTunerDefaults.Swagger.host;
 
         private String[] protocols = ServletTunerDefaults.Swagger.protocols;
+
+        private boolean useDefaultResponseMessages = ServletTunerDefaults.Swagger.useDefaultResponseMessages;
 
         public String getTitle() {
             return title;
@@ -736,33 +887,22 @@ public class ServletTunerProperties {
         public void setProtocols(final String[] protocols) {
             this.protocols = protocols;
         }
+
+        public boolean isUseDefaultResponseMessages() {
+            return useDefaultResponseMessages;
+        }
+
+        public void setUseDefaultResponseMessages(final boolean useDefaultResponseMessages) {
+            this.useDefaultResponseMessages = useDefaultResponseMessages;
+        }
     }
 
     public static class Metrics {
 
-        private final Jmx jmx = new Jmx();
-
         private final Logs logs = new Logs();
-
-        public Jmx getJmx() {
-            return jmx;
-        }
 
         public Logs getLogs() {
             return logs;
-        }
-
-        public static class Jmx {
-
-            private boolean enabled = ServletTunerDefaults.Metrics.Jmx.enabled;
-
-            public boolean isEnabled() {
-                return enabled;
-            }
-
-            public void setEnabled(boolean enabled) {
-                this.enabled = enabled;
-            }
         }
 
         public static class Logs {
@@ -791,7 +931,17 @@ public class ServletTunerProperties {
 
     public static class Logging {
 
+        private boolean useJsonFormat = ServletTunerDefaults.Logging.useJsonFormat;
+
         private final Logstash logstash = new Logstash();
+
+        public boolean isUseJsonFormat() {
+            return useJsonFormat;
+        }
+
+        public void setUseJsonFormat(boolean useJsonFormat) {
+            this.useJsonFormat = useJsonFormat;
+        }
 
         public Logstash getLogstash() {
             return logstash;
@@ -917,6 +1067,31 @@ public class ServletTunerProperties {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+    }
+
+    public static class ClientApp {
+
+        private String name = ServletTunerDefaults.ClientApp.name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class AuditEvents {
+        private int retentionPeriod = ServletTunerDefaults.AuditEvents.retentionPeriod;
+
+        public int getRetentionPeriod() {
+            return retentionPeriod;
+        }
+
+        public void setRetentionPeriod(int retentionPeriod) {
+            this.retentionPeriod = retentionPeriod;
         }
     }
 }

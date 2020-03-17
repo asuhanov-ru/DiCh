@@ -4,7 +4,6 @@ package com.chemista.dev.DiCh.web.rest;
 import com.chemista.dev.DiCh.domain.Page;
 import com.chemista.dev.DiCh.repository.PageRepository;
 import com.chemista.dev.DiCh.web.rest.errors.BadRequestAlertException;
-import com.chemista.dev.DiCh.web.rest.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

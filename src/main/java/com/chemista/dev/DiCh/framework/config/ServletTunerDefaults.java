@@ -1,8 +1,11 @@
 package com.chemista.dev.DiCh.framework.config;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface ServletTunerDefaults {
+
     interface Async {
 
         int corePoolSize = 2;
@@ -11,10 +14,6 @@ public interface ServletTunerDefaults {
     }
 
     interface Http {
-
-        ServletTunerProperties.Http.Version version = ServletTunerProperties.Http.Version.V_1_1;
-
-        boolean useUndertowUserCipherSuitesOrder = true;
 
         interface Cache {
 
@@ -35,6 +34,12 @@ public interface ServletTunerDefaults {
                 int updateInterval = 3;
                 String url = "";
             }
+        }
+
+        interface Caffeine {
+
+            int timeToLiveSeconds = 3600; // 1 hour
+            long maxEntries = 100;
         }
 
         interface Ehcache {
@@ -75,6 +80,12 @@ public interface ServletTunerDefaults {
             int expiration = 300; // 5 minutes
             boolean useBinaryProtocol = true;
         }
+
+        interface Redis {
+            String[] server = {"redis://localhost:6379"};
+            int expiration = 300; // 5 minutes
+            boolean cluster = false;
+        }
     }
 
     interface Mail {
@@ -98,8 +109,9 @@ public interface ServletTunerDefaults {
             interface Jwt {
 
                 String secret = null;
-                long tokenValidityInSeconds = 1800; // 0.5 hour
-                long tokenValidityInSecondsForRememberMe = 2592000; // 30 hours;
+                String base64Secret = null;
+                long tokenValidityInSeconds = 1800; // 30 minutes
+                long tokenValidityInSecondsForRememberMe = 2592000; // 30 days
             }
         }
 
@@ -123,13 +135,14 @@ public interface ServletTunerDefaults {
         String defaultIncludePattern = "/api/.*";
         String host = null;
         String[] protocols = {};
+        boolean useDefaultResponseMessages = true;
     }
 
     interface Metrics {
 
         interface Jmx {
 
-            boolean enabled = true;
+            boolean enabled = false;
         }
 
         interface Logs {
@@ -138,9 +151,17 @@ public interface ServletTunerDefaults {
             long reportFrequency = 60;
 
         }
+
+        interface Prometheus {
+
+            boolean enabled = false;
+            String endpoint = "/prometheusMetrics";
+        }
     }
 
     interface Logging {
+
+        boolean useJsonFormat = false;
 
         interface Logstash {
 
@@ -177,5 +198,15 @@ public interface ServletTunerDefaults {
     interface Registry {
 
         String password = null;
+    }
+
+    interface ClientApp {
+
+        String name = "jhipsterApp";
+    }
+
+    interface AuditEvents {
+
+        int retentionPeriod = 30;
     }
 }

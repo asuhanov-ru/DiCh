@@ -1,6 +1,7 @@
 package com.chemista.dev.DiCh;
 
 
+import com.chemista.dev.DiCh.framework.config.DefaultProfileUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -8,7 +9,6 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.core.env.Environment;
 import com.chemista.dev.DiCh.framework.config.ServletTunerProperties;
 import com.chemista.dev.DiCh.config.ApplicationProperties;
-import com.chemista.dev.DiCh.config.DefaultProfileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -51,26 +51,23 @@ public class DatabaseConfiguration {
     @Bean(initMethod = "start", destroyMethod = "stop")
     @Profile(ServletTunerConstants.SPRING_PROFILE_DEVELOPMENT)
     public Object h2TCPServer() throws SQLException {
+        String port = getValidPortForH2();
+        log.debug("H2 database is available on port {}", port);
         return H2ConfigurationHelper.createServer();
     }
 
-    @Bean
-    public SpringLiquibase liquibase(@Qualifier("taskExecutor") TaskExecutor taskExecutor,
-                                     DataSource dataSource, LiquibaseProperties liquibaseProperties) {
-
-        // Use liquibase.integration.spring.SpringLiquibase if you don't want Liquibase to start asynchronously
-        SpringLiquibase liquibase = new AsyncSpringLiquibase(taskExecutor, env);
-        liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog("classpath:config/liquibase/master.xml");
-        liquibase.setContexts(liquibaseProperties.getContexts());
-        liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
-        liquibase.setDropFirst(liquibaseProperties.isDropFirst());
-        if (env.acceptsProfiles(ServletTunerConstants.SPRING_PROFILE_NO_LIQUIBASE)) {
-            liquibase.setShouldRun(false);
+    private String getValidPortForH2() {
+        int port = Integer.parseInt(env.getProperty("server.port"));
+        if (port < 10000) {
+            port = 10000 + port;
         } else {
-            liquibase.setShouldRun(liquibaseProperties.isEnabled());
-            log.debug("Configuring Liquibase");
+            if (port < 63536) {
+                port = port + 2000;
+            } else {
+                port = port - 2000;
+            }
         }
-        return liquibase;
+        return String.valueOf(port);
     }
+
 }
