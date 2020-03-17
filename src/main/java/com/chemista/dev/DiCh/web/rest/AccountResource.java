@@ -5,7 +5,7 @@ import com.chemista.dev.DiCh.repository.PersistentTokenRepository;
 import com.chemista.dev.DiCh.domain.User;
 import com.chemista.dev.DiCh.repository.UserRepository;
 import com.chemista.dev.DiCh.security.SecurityUtils;
-//import com.chemista.dev.DiCh.service.MailService;
+import com.chemista.dev.DiCh.service.MailService;
 import com.chemista.dev.DiCh.service.UserService;
 import com.chemista.dev.DiCh.service.dto.PasswordChangeDTO;
 import com.chemista.dev.DiCh.service.dto.UserDTO;
@@ -44,15 +44,15 @@ public class AccountResource {
 
     private final UserService userService;
 
-    //private final MailService mailService;
+    private final MailService mailService;
 
     private final PersistentTokenRepository persistentTokenRepository;
 
-    public AccountResource(UserRepository userRepository, UserService userService, /*MailService mailService,*/ PersistentTokenRepository persistentTokenRepository) {
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, PersistentTokenRepository persistentTokenRepository) {
 
         this.userRepository = userRepository;
         this.userService = userService;
-        //this.mailService = mailService;
+        this.mailService = mailService;
         this.persistentTokenRepository = persistentTokenRepository;
     }
 
@@ -71,7 +71,7 @@ public class AccountResource {
             throw new InvalidPasswordException();
         }
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-        //mailService.sendActivationEmail(user);
+        mailService.sendActivationEmail(user);
     }
 
     /**
@@ -124,9 +124,9 @@ public class AccountResource {
     public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        /*if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
+        if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
-        }*/
+        }
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
@@ -200,7 +200,7 @@ public class AccountResource {
     public void requestPasswordReset(@RequestBody String mail) {
         Optional<User> user = userService.requestPasswordReset(mail);
         if (user.isPresent()) {
-            //mailService.sendPasswordResetMail(user.get());
+            mailService.sendPasswordResetMail(user.get());
         } else {
             // Pretend the request has been successful to prevent checking which emails really exist
             // but log that an invalid attempt has been made

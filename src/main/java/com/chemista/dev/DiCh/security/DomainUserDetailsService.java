@@ -2,6 +2,7 @@ package com.chemista.dev.DiCh.security;
 
 import com.chemista.dev.DiCh.domain.User;
 import com.chemista.dev.DiCh.repository.UserRepository;
+
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
