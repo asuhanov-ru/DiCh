@@ -25,7 +25,8 @@ HELP.md
 /dist/
 /nbdist/
 /.nb-gradle/
-
+/bin/
+/node_modules/
 ### VS Code ###
 .vscode/
 
