@@ -1,0 +1,11 @@
+version: '2'
+services:
+  dich-postgresql:
+    image: postgres:12.1
+    # volumes:
+    #     - ~/volumes/jhipster/DiCh/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=DiCh
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432
