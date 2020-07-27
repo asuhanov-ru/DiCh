@@ -1,0 +1,23 @@
+{
+  "diChApp": {
+    "collections": {
+      "home": {
+        "title": "Collections",
+        "createLabel": "Create a new Collections",
+        "createOrEditLabel": "Create or edit a Collections",
+        "notFound": "No Collections found"
+      },
+      "created": "A new Collections is created with identifier {{ param }}",
+      "updated": "A Collections is updated with identifier {{ param }}",
+      "deleted": "A Collections is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Collections {{ id }}?"
+      },
+      "detail": {
+        "title": "Collections"
+      },
+      "name": "Name",
+      "description": "Description"
+    }
+  }
+}
