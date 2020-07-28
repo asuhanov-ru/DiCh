@@ -1,0 +1,26 @@
+{
+  "diChApp": {
+    "mediaStructure": {
+      "home": {
+        "title": "Media Structures",
+        "createLabel": "Создать новый Media Structure",
+        "createOrEditLabel": "Создать или отредактировать Media Structure",
+        "notFound": "No Media Structures found"
+      },
+      "created": "Новый Media Structure создан с идентификатором {{ param }}",
+      "updated": "Media Structure обновлен с идентификатором {{ param }}",
+      "deleted": "Media Structure удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Media Structure {{ id }}?"
+      },
+      "detail": {
+        "title": "Media Structure"
+      },
+      "objName": "Obj Name",
+      "objType": "Obj Type",
+      "parentId": "Parent Id",
+      "tag": "Tag",
+      "media": "Media"
+    }
+  }
+}

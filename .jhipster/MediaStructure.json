@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "media",
+            "otherEntityName": "media",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "fileName",
+            "otherEntityRelationshipName": "mediaStructure"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "objName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "objType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "parentId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "tag",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20200728095713",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "media_structure",
+    "databaseType": "sql",
+    "readOnly": false,
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}
