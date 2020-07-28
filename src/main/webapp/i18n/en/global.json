@@ -9,6 +9,7 @@
         "main": "Entities",
         "collections": "Collections",
         "media": "Media",
+        "mediaStructure": "Media Structure",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

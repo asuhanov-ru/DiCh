@@ -20,6 +20,10 @@ import collections, {
 import media, {
   MediaState
 } from 'app/entities/media/media.reducer';
+// prettier-ignore
+import mediaStructure, {
+  MediaStructureState
+} from 'app/entities/media-structure/media-structure.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -35,6 +39,7 @@ export interface IRootState {
   readonly settings: SettingsState;
   readonly collections: CollectionsState;
   readonly media: MediaState;
+  readonly mediaStructure: MediaStructureState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -52,6 +57,7 @@ const rootReducer = combineReducers<IRootState>({
   settings,
   collections,
   media,
+  mediaStructure,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });
