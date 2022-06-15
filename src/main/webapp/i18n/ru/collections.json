@@ -1,0 +1,23 @@
+{
+  "diChApp": {
+    "collections": {
+      "home": {
+        "title": "Collections",
+        "createLabel": "Создать новый Collections",
+        "createOrEditLabel": "Создать или отредактировать Collections",
+        "notFound": "No Collections found"
+      },
+      "created": "Новый Collections создан с идентификатором {{ param }}",
+      "updated": "Collections обновлен с идентификатором {{ param }}",
+      "deleted": "Collections удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Collections {{ id }}?"
+      },
+      "detail": {
+        "title": "Collections"
+      },
+      "name": "Name",
+      "description": "Description"
+    }
+  }
+}
