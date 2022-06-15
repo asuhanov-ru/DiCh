@@ -1,30 +1,35 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
-import { getEntity } from './media.reducer';
-import { IMedia } from 'app/shared/model/media.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IMediaDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+import { getEntity } from './media.reducer';
 
-export const MediaDetail = (props: IMediaDetailProps) => {
+export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { mediaEntity } = props;
+  const mediaEntity = useAppSelector(state => state.media.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="diChApp.media.detail.title">Media</Translate> [<b>{mediaEntity.id}</b>]
+        <h2 data-cy="mediaDetailsHeading">
+          <Translate contentKey="diChApp.media.detail.title">Media</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{mediaEntity.id}</dd>
           <dt>
             <span id="fileName">
               <Translate contentKey="diChApp.media.fileName">File Name</Translate>
@@ -48,7 +53,7 @@ export const MediaDetail = (props: IMediaDetailProps) => {
           </dt>
           <dd>{mediaEntity.collections ? mediaEntity.collections.name : ''}</dd>
         </dl>
-        <Button tag={Link} to="/media" replace color="info">
+        <Button tag={Link} to="/media" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -66,13 +71,4 @@ export const MediaDetail = (props: IMediaDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ media }: IRootState) => ({
-  mediaEntity: media.entity
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(MediaDetail);
+export default MediaDetail;

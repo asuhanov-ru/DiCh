@@ -1,39 +1,42 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { ICollections } from 'app/shared/model/collections.model';
-import { IRootState } from 'app/shared/reducers';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './collections.reducer';
 
-export interface ICollectionsDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const CollectionsDeleteDialog = (props: RouteComponentProps<{ id: string }>) => {
+  const [loadModal, setLoadModal] = useState(false);
+  const dispatch = useAppDispatch();
 
-export const CollectionsDeleteDialog = (props: ICollectionsDeleteDialogProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
+    setLoadModal(true);
   }, []);
+
+  const collectionsEntity = useAppSelector(state => state.collections.entity);
+  const updateSuccess = useAppSelector(state => state.collections.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/collections');
   };
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess && loadModal) {
       handleClose();
+      setLoadModal(false);
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.collectionsEntity.id);
+    dispatch(deleteEntity(collectionsEntity.id));
   };
 
-  const { collectionsEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="collectionsDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="diChApp.collections.delete.question">
@@ -47,7 +50,7 @@ export const CollectionsDeleteDialog = (props: ICollectionsDeleteDialogProps) =>
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-collections" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-collections" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,14 +60,4 @@ export const CollectionsDeleteDialog = (props: ICollectionsDeleteDialogProps) =>
   );
 };
 
-const mapStateToProps = ({ collections }: IRootState) => ({
-  collectionsEntity: collections.entity,
-  updateSuccess: collections.updateSuccess
-});
-
-const mapDispatchToProps = { getEntity, deleteEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionsDeleteDialog);
+export default CollectionsDeleteDialog;

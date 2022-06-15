@@ -1,13 +1,14 @@
 package org.jhipster.dich.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.jhipster.dich.web.rest.TestUtil;
 
-public class CollectionsTest {
+import org.jhipster.dich.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class CollectionsTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Collections.class);
         Collections collections1 = new Collections();
         collections1.setId(1L);

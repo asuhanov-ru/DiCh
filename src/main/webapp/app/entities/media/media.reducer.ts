@@ -1,145 +1,123 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-
+import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IMedia, defaultValue } from 'app/shared/model/media.model';
 
-export const ACTION_TYPES = {
-  FETCH_MEDIA_LIST: 'media/FETCH_MEDIA_LIST',
-  FETCH_MEDIA: 'media/FETCH_MEDIA',
-  CREATE_MEDIA: 'media/CREATE_MEDIA',
-  UPDATE_MEDIA: 'media/UPDATE_MEDIA',
-  DELETE_MEDIA: 'media/DELETE_MEDIA',
-  RESET: 'media/RESET'
-};
-
-const initialState = {
+const initialState: EntityState<IMedia> = {
   loading: false,
   errorMessage: null,
-  entities: [] as ReadonlyArray<IMedia>,
+  entities: [],
   entity: defaultValue,
   updating: false,
-  updateSuccess: false
-};
-
-export type MediaState = Readonly<typeof initialState>;
-
-// Reducer
-
-export default (state: MediaState = initialState, action): MediaState => {
-  switch (action.type) {
-    case REQUEST(ACTION_TYPES.FETCH_MEDIA_LIST):
-    case REQUEST(ACTION_TYPES.FETCH_MEDIA):
-      return {
-        ...state,
-        errorMessage: null,
-        updateSuccess: false,
-        loading: true
-      };
-    case REQUEST(ACTION_TYPES.CREATE_MEDIA):
-    case REQUEST(ACTION_TYPES.UPDATE_MEDIA):
-    case REQUEST(ACTION_TYPES.DELETE_MEDIA):
-      return {
-        ...state,
-        errorMessage: null,
-        updateSuccess: false,
-        updating: true
-      };
-    case FAILURE(ACTION_TYPES.FETCH_MEDIA_LIST):
-    case FAILURE(ACTION_TYPES.FETCH_MEDIA):
-    case FAILURE(ACTION_TYPES.CREATE_MEDIA):
-    case FAILURE(ACTION_TYPES.UPDATE_MEDIA):
-    case FAILURE(ACTION_TYPES.DELETE_MEDIA):
-      return {
-        ...state,
-        loading: false,
-        updating: false,
-        updateSuccess: false,
-        errorMessage: action.payload
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_MEDIA_LIST):
-      return {
-        ...state,
-        loading: false,
-        entities: action.payload.data
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_MEDIA):
-      return {
-        ...state,
-        loading: false,
-        entity: action.payload.data
-      };
-    case SUCCESS(ACTION_TYPES.CREATE_MEDIA):
-    case SUCCESS(ACTION_TYPES.UPDATE_MEDIA):
-      return {
-        ...state,
-        updating: false,
-        updateSuccess: true,
-        entity: action.payload.data
-      };
-    case SUCCESS(ACTION_TYPES.DELETE_MEDIA):
-      return {
-        ...state,
-        updating: false,
-        updateSuccess: true,
-        entity: {}
-      };
-    case ACTION_TYPES.RESET:
-      return {
-        ...initialState
-      };
-    default:
-      return state;
-  }
+  updateSuccess: false,
 };
 
 const apiUrl = 'api/media';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IMedia> = (page, size, sort) => ({
-  type: ACTION_TYPES.FETCH_MEDIA_LIST,
-  payload: axios.get<IMedia>(`${apiUrl}?cacheBuster=${new Date().getTime()}`)
+export const getEntities = createAsyncThunk('media/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
+  return axios.get<IMedia[]>(requestUrl);
 });
 
-export const getEntity: ICrudGetAction<IMedia> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
-  return {
-    type: ACTION_TYPES.FETCH_MEDIA,
-    payload: axios.get<IMedia>(requestUrl)
-  };
-};
+export const getEntity = createAsyncThunk(
+  'media/fetch_entity',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    return axios.get<IMedia>(requestUrl);
+  },
+  { serializeError: serializeAxiosError }
+);
 
-export const createEntity: ICrudPutAction<IMedia> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.CREATE_MEDIA,
-    payload: axios.post(apiUrl, cleanEntity(entity))
-  });
-  dispatch(getEntities());
-  return result;
-};
+export const createEntity = createAsyncThunk(
+  'media/create_entity',
+  async (entity: IMedia, thunkAPI) => {
+    const result = await axios.post<IMedia>(apiUrl, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
 
-export const updateEntity: ICrudPutAction<IMedia> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.UPDATE_MEDIA,
-    payload: axios.put(apiUrl, cleanEntity(entity))
-  });
-  dispatch(getEntities());
-  return result;
-};
+export const updateEntity = createAsyncThunk(
+  'media/update_entity',
+  async (entity: IMedia, thunkAPI) => {
+    const result = await axios.put<IMedia>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
 
-export const deleteEntity: ICrudDeleteAction<IMedia> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
-  const result = await dispatch({
-    type: ACTION_TYPES.DELETE_MEDIA,
-    payload: axios.delete(requestUrl)
-  });
-  dispatch(getEntities());
-  return result;
-};
+export const partialUpdateEntity = createAsyncThunk(
+  'media/partial_update_entity',
+  async (entity: IMedia, thunkAPI) => {
+    const result = await axios.patch<IMedia>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
 
-export const reset = () => ({
-  type: ACTION_TYPES.RESET
+export const deleteEntity = createAsyncThunk(
+  'media/delete_entity',
+  async (id: string | number, thunkAPI) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    const result = await axios.delete<IMedia>(requestUrl);
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+// slice
+
+export const MediaSlice = createEntitySlice({
+  name: 'media',
+  initialState,
+  extraReducers(builder) {
+    builder
+      .addCase(getEntity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entity = action.payload.data;
+      })
+      .addCase(deleteEntity.fulfilled, state => {
+        state.updating = false;
+        state.updateSuccess = true;
+        state.entity = {};
+      })
+      .addMatcher(isFulfilled(getEntities), (state, action) => {
+        const { data } = action.payload;
+
+        return {
+          ...state,
+          loading: false,
+          entities: data,
+        };
+      })
+      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
+        state.updating = false;
+        state.loading = false;
+        state.updateSuccess = true;
+        state.entity = action.payload.data;
+      })
+      .addMatcher(isPending(getEntities, getEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.loading = true;
+      })
+      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.updating = true;
+      });
+  },
 });
+
+export const { reset } = MediaSlice.actions;
+
+// Reducer
+export default MediaSlice.reducer;

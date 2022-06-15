@@ -3,6 +3,7 @@
     "collections": {
       "home": {
         "title": "Collections",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Collections",
         "createOrEditLabel": "Create or edit a Collections",
         "notFound": "No Collections found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Collections"
       },
+      "id": "ID",
       "name": "Name",
       "description": "Description"
     }

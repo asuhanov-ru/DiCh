@@ -1,27 +1,26 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "name",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "description",
-            "fieldType": "String"
-        }
-    ],
-    "changelogDate": "20200727142307",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "collections",
-    "databaseType": "sql",
-    "readOnly": false,
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "changelogDate": "20200727142307",
+  "clientRootFolder": "",
+  "databaseType": "sql",
+  "dto": "no",
+  "entityTableName": "collections",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Collections",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "searchEngine": false,
+  "service": "no"
 }

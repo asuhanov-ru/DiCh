@@ -3,18 +3,15 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import DevTools from './config/devtools';
-import initStore from './config/store';
-import { registerLocale } from './config/translation';
-import setupAxiosInterceptors from './config/axios-interceptor';
-import { clearAuthentication } from './shared/reducers/authentication';
-import ErrorBoundary from './shared/error/error-boundary';
-import AppComponent from './app';
-import { loadIcons } from './config/icon-loader';
+import getStore from 'app/config/store';
+import { registerLocale } from 'app/config/translation';
+import setupAxiosInterceptors from 'app/config/axios-interceptor';
+import { clearAuthentication } from 'app/shared/reducers/authentication';
+import ErrorBoundary from 'app/shared/error/error-boundary';
+import AppComponent from 'app/app';
+import { loadIcons } from 'app/config/icon-loader';
 
-const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null;
-
-const store = initStore();
+const store = getStore();
 registerLocale(store);
 
 const actions = bindActionCreators({ clearAuthentication }, store.dispatch);
@@ -30,8 +27,6 @@ const render = Component =>
     <ErrorBoundary>
       <Provider store={store}>
         <div>
-          {/* If this slows down the app in dev disable it and enable when required  */}
-          {devTools}
           <Component />
         </div>
       </Provider>

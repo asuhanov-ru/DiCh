@@ -3,9 +3,10 @@
     "mediaStructure": {
       "home": {
         "title": "Media Structures",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Media Structure",
         "createOrEditLabel": "Создать или отредактировать Media Structure",
-        "notFound": "No Media Structures found"
+        "notFound": "Media Structures не найдено"
       },
       "created": "Новый Media Structure создан с идентификатором {{ param }}",
       "updated": "Media Structure обновлен с идентификатором {{ param }}",
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Media Structure"
       },
+      "id": "ID",
       "objName": "Obj Name",
       "objType": "Obj Type",
       "parentId": "Parent Id",

@@ -1,13 +1,14 @@
 package org.jhipster.dich.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.jhipster.dich.web.rest.TestUtil;
 
-public class MediaTest {
+import org.jhipster.dich.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class MediaTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Media.class);
         Media media1 = new Media();
         media1.setId(1L);

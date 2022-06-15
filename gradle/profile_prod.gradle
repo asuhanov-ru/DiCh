@@ -7,8 +7,12 @@ if (project.hasProperty("no-liquibase")) {
     profiles += ",no-liquibase"
 }
 
-if (project.hasProperty("swagger")) {
-    profiles += ",swagger"
+if (project.hasProperty("api-docs")) {
+    profiles += ",api-docs"
+}
+
+if (project.hasProperty("e2e")) {
+    profiles += ",e2e"
 }
 
 springBoot {
@@ -19,12 +23,8 @@ bootRun {
     args = []
 }
 
-task webpack_test(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "webpack:test"]
-}
-
-task webpack(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "webpack:prod"]
+task webapp(type: NpmTask, dependsOn: "npm_install") {
+    args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }
 
@@ -41,6 +41,5 @@ processResources {
     }
 }
 
-test.dependsOn webpack_test
-processResources.dependsOn webpack
+processResources.dependsOn webapp
 bootJar.dependsOn processResources

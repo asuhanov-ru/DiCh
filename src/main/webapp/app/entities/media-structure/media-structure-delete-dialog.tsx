@@ -1,39 +1,42 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IMediaStructure } from 'app/shared/model/media-structure.model';
-import { IRootState } from 'app/shared/reducers';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './media-structure.reducer';
 
-export interface IMediaStructureDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const MediaStructureDeleteDialog = (props: RouteComponentProps<{ id: string }>) => {
+  const [loadModal, setLoadModal] = useState(false);
+  const dispatch = useAppDispatch();
 
-export const MediaStructureDeleteDialog = (props: IMediaStructureDeleteDialogProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
+    setLoadModal(true);
   }, []);
+
+  const mediaStructureEntity = useAppSelector(state => state.mediaStructure.entity);
+  const updateSuccess = useAppSelector(state => state.mediaStructure.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/media-structure');
   };
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess && loadModal) {
       handleClose();
+      setLoadModal(false);
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.mediaStructureEntity.id);
+    dispatch(deleteEntity(mediaStructureEntity.id));
   };
 
-  const { mediaStructureEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="mediaStructureDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="diChApp.mediaStructure.delete.question">
@@ -47,7 +50,7 @@ export const MediaStructureDeleteDialog = (props: IMediaStructureDeleteDialogPro
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-mediaStructure" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-mediaStructure" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,14 +60,4 @@ export const MediaStructureDeleteDialog = (props: IMediaStructureDeleteDialogPro
   );
 };
 
-const mapStateToProps = ({ mediaStructure }: IRootState) => ({
-  mediaStructureEntity: mediaStructure.entity,
-  updateSuccess: mediaStructure.updateSuccess
-});
-
-const mapDispatchToProps = { getEntity, deleteEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(MediaStructureDeleteDialog);
+export default MediaStructureDeleteDialog;

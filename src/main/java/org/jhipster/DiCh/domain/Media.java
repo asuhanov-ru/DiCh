@@ -1,11 +1,8 @@
 package org.jhipster.dich.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
 
 /**
  * A Media.
@@ -19,6 +16,7 @@ public class Media implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -33,12 +31,17 @@ public class Media implements Serializable {
     private String fileDesc;
 
     @ManyToOne
-    @JsonIgnoreProperties("media")
     private Collections collections;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Media id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -46,11 +49,11 @@ public class Media implements Serializable {
     }
 
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
 
     public Media fileName(String fileName) {
-        this.fileName = fileName;
+        this.setFileName(fileName);
         return this;
     }
 
@@ -59,11 +62,11 @@ public class Media implements Serializable {
     }
 
     public String getFileType() {
-        return fileType;
+        return this.fileType;
     }
 
     public Media fileType(String fileType) {
-        this.fileType = fileType;
+        this.setFileType(fileType);
         return this;
     }
 
@@ -72,11 +75,11 @@ public class Media implements Serializable {
     }
 
     public String getFileDesc() {
-        return fileDesc;
+        return this.fileDesc;
     }
 
     public Media fileDesc(String fileDesc) {
-        this.fileDesc = fileDesc;
+        this.setFileDesc(fileDesc);
         return this;
     }
 
@@ -85,18 +88,19 @@ public class Media implements Serializable {
     }
 
     public Collections getCollections() {
-        return collections;
-    }
-
-    public Media collections(Collections collections) {
-        this.collections = collections;
-        return this;
+        return this.collections;
     }
 
     public void setCollections(Collections collections) {
         this.collections = collections;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public Media collections(Collections collections) {
+        this.setCollections(collections);
+        return this;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -111,9 +115,11 @@ public class Media implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Media{" +
