@@ -2,6 +2,7 @@ package org.jhipster.dich.web.rest;
 
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
+import org.jhipster.dich.service.PdfDocService;
 import org.jhipster.dich.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+
+import static org.jhipster.dich.domain.Media_.fileName;
 
 /**
  * REST controller for managing {@link org.jhipster.dich.domain.Media}.
@@ -36,8 +39,11 @@ public class MediaResource {
 
     private final MediaRepository mediaRepository;
 
-    public MediaResource(MediaRepository mediaRepository) {
+    private final PdfDocService pdfDocService;
+
+    public MediaResource(MediaRepository mediaRepository,PdfDocService pdfDocService) {
         this.mediaRepository = mediaRepository;
+        this.pdfDocService = pdfDocService;
     }
 
     /**
@@ -88,6 +94,7 @@ public class MediaResource {
     @GetMapping("/media")
     public List<Media> getAllMedia() {
         log.debug("REST request to get all Media");
+
         return mediaRepository.findAll();
     }
 
@@ -101,6 +108,14 @@ public class MediaResource {
     public ResponseEntity<Media> getMedia(@PathVariable Long id) {
         log.debug("REST request to get Media : {}", id);
         Optional<Media> media = mediaRepository.findById(id);
+        log.debug("File name is: {}", media.map(Media::getFileName).get());
+        media.ifPresent(el -> {
+                try {
+                    pdfDocService.ProcessPdf(el.getFileName());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+        });
         return ResponseUtil.wrapOrNotFound(media);
     }
 

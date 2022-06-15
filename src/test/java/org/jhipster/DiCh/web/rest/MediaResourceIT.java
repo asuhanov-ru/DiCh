@@ -3,6 +3,7 @@ package org.jhipster.dich.web.rest;
 import org.jhipster.dich.DiChApp;
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
+import org.jhipster.dich.service.PdfDocService;
 import org.jhipster.dich.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +47,8 @@ public class MediaResourceIT {
     private MediaRepository mediaRepository;
 
     @Autowired
+    private PdfDocService pdfDocService;
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -67,7 +70,7 @@ public class MediaResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final MediaResource mediaResource = new MediaResource(mediaRepository);
+        final MediaResource mediaResource = new MediaResource(mediaRepository, pdfDocService);
         this.restMediaMockMvc = MockMvcBuilders.standaloneSetup(mediaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -199,7 +202,7 @@ public class MediaResourceIT {
             .andExpect(jsonPath("$.[*].fileType").value(hasItem(DEFAULT_FILE_TYPE)))
             .andExpect(jsonPath("$.[*].fileDesc").value(hasItem(DEFAULT_FILE_DESC)));
     }
-    
+
     @Test
     @Transactional
     public void getMedia() throws Exception {

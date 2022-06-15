@@ -274,6 +274,7 @@ dependencies {
     testImplementation "com.h2database:h2"
     liquibaseRuntime "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+    implementation "com.itextpdf:itext7-core:7.2.2"
 }
 
 if (project.hasProperty("gae")) {

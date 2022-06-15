@@ -123,3 +123,5 @@ jhipster:
 # ===================================================================
 
 # application:
+collections:
+  location: 'C:\Users\suhanov_av\Documents\My\Химия\'
