@@ -1,32 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, ICrudGetAllAction } from 'react-jhipster';
+import { Button, Table } from 'reactstrap';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './media.reducer';
-import { IMedia } from 'app/shared/model/media.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IMediaProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+import { IMedia } from 'app/shared/model/media.model';
+import { getEntities } from './media.reducer';
 
-export const Media = (props: IMediaProps) => {
+export const Media = (props: RouteComponentProps<{ url: string }>) => {
+  const dispatch = useAppDispatch();
+
+  const mediaList = useAppSelector(state => state.media.entities);
+  const loading = useAppSelector(state => state.media.loading);
+
   useEffect(() => {
-    props.getEntities();
+    dispatch(getEntities({}));
   }, []);
 
-  const { mediaList, match, loading } = props;
+  const handleSyncList = () => {
+    dispatch(getEntities({}));
+  };
+
+  const { match } = props;
+
   return (
     <div>
-      <h2 id="media-heading">
+      <h2 id="media-heading" data-cy="MediaHeading">
         <Translate contentKey="diChApp.media.home.title">Media</Translate>
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus" />
-          &nbsp;
-          <Translate contentKey="diChApp.media.home.createLabel">Create new Media</Translate>
-        </Link>
+        <div className="d-flex justify-content-end">
+          <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
+            <Translate contentKey="diChApp.media.home.refreshListLabel">Refresh List</Translate>
+          </Button>
+          <Link to="/media/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <FontAwesomeIcon icon="plus" />
+            &nbsp;
+            <Translate contentKey="diChApp.media.home.createLabel">Create new Media</Translate>
+          </Link>
+        </div>
       </h2>
       <div className="table-responsive">
         {mediaList && mediaList.length > 0 ? (
@@ -34,7 +48,7 @@ export const Media = (props: IMediaProps) => {
             <thead>
               <tr>
                 <th>
-                  <Translate contentKey="global.field.id">ID</Translate>
+                  <Translate contentKey="diChApp.media.id">ID</Translate>
                 </th>
                 <th>
                   <Translate contentKey="diChApp.media.fileName">File Name</Translate>
@@ -53,31 +67,31 @@ export const Media = (props: IMediaProps) => {
             </thead>
             <tbody>
               {mediaList.map((media, i) => (
-                <tr key={`entity-${i}`}>
+                <tr key={`entity-${i}`} data-cy="entityTable">
                   <td>
-                    <Button tag={Link} to={`${match.url}/${media.id}`} color="link" size="sm">
+                    <Button tag={Link} to={`/media/${media.id}`} color="link" size="sm">
                       {media.id}
                     </Button>
                   </td>
                   <td>{media.fileName}</td>
                   <td>{media.fileType}</td>
                   <td>{media.fileDesc}</td>
-                  <td>{media.collections ? <Link to={`collections/${media.collections.id}`}>{media.collections.name}</Link> : ''}</td>
-                  <td className="text-right">
+                  <td>{media.collections ? <Link to={`/collections/${media.collections.id}`}>{media.collections.name}</Link> : ''}</td>
+                  <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${media.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`/media/${media.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${media.id}/edit`} color="primary" size="sm">
+                      <Button tag={Link} to={`/media/${media.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${media.id}/delete`} color="danger" size="sm">
+                      <Button tag={Link} to={`/media/${media.id}/delete`} color="danger" size="sm" data-cy="entityDeleteButton">
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -101,16 +115,4 @@ export const Media = (props: IMediaProps) => {
   );
 };
 
-const mapStateToProps = ({ media }: IRootState) => ({
-  mediaList: media.entities,
-  loading: media.loading
-});
-
-const mapDispatchToProps = {
-  getEntities
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(Media);
+export default Media;

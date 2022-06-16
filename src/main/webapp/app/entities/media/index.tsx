@@ -11,12 +11,12 @@ import MediaDeleteDialog from './media-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={MediaDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={MediaUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={MediaUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={MediaDetail} />
       <ErrorBoundaryRoute path={match.url} component={Media} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={MediaDeleteDialog} />
   </>
 );
 

@@ -3,9 +3,10 @@
     "collections": {
       "home": {
         "title": "Collections",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Collections",
         "createOrEditLabel": "Создать или отредактировать Collections",
-        "notFound": "No Collections found"
+        "notFound": "Collections не найдено"
       },
       "created": "Новый Collections создан с идентификатором {{ param }}",
       "updated": "Collections обновлен с идентификатором {{ param }}",
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Collections"
       },
+      "id": "ID",
       "name": "Name",
       "description": "Description"
     }

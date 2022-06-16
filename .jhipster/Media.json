@@ -1,42 +1,39 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [
-        {
-            "relationshipName": "collections",
-            "otherEntityName": "collections",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "name",
-            "otherEntityRelationshipName": "media"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "fileName",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fileType",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fileDesc",
-            "fieldType": "String"
-        }
-    ],
-    "changelogDate": "20200728093617",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "media",
-    "databaseType": "sql",
-    "readOnly": false,
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "changelogDate": "20200728093617",
+  "clientRootFolder": "",
+  "databaseType": "sql",
+  "dto": "no",
+  "entityTableName": "media",
+  "fields": [
+    {
+      "fieldName": "fileName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fileType",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fileDesc",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Media",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "collections",
+      "otherEntityRelationshipName": "media",
+      "relationshipName": "collections",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": false,
+  "service": "no"
 }

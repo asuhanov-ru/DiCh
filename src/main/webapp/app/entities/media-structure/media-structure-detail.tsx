@@ -1,30 +1,35 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
-import { getEntity } from './media-structure.reducer';
-import { IMediaStructure } from 'app/shared/model/media-structure.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IMediaStructureDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+import { getEntity } from './media-structure.reducer';
 
-export const MediaStructureDetail = (props: IMediaStructureDetailProps) => {
+export const MediaStructureDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { mediaStructureEntity } = props;
+  const mediaStructureEntity = useAppSelector(state => state.mediaStructure.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="diChApp.mediaStructure.detail.title">MediaStructure</Translate> [<b>{mediaStructureEntity.id}</b>]
+        <h2 data-cy="mediaStructureDetailsHeading">
+          <Translate contentKey="diChApp.mediaStructure.detail.title">MediaStructure</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{mediaStructureEntity.id}</dd>
           <dt>
             <span id="objName">
               <Translate contentKey="diChApp.mediaStructure.objName">Obj Name</Translate>
@@ -54,7 +59,7 @@ export const MediaStructureDetail = (props: IMediaStructureDetailProps) => {
           </dt>
           <dd>{mediaStructureEntity.media ? mediaStructureEntity.media.fileName : ''}</dd>
         </dl>
-        <Button tag={Link} to="/media-structure" replace color="info">
+        <Button tag={Link} to="/media-structure" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -72,13 +77,4 @@ export const MediaStructureDetail = (props: IMediaStructureDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ mediaStructure }: IRootState) => ({
-  mediaStructureEntity: mediaStructure.entity
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(MediaStructureDetail);
+export default MediaStructureDetail;

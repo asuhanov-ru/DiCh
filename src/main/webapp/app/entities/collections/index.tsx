@@ -11,12 +11,12 @@ import CollectionsDeleteDialog from './collections-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={CollectionsDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={CollectionsUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={CollectionsUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={CollectionsDetail} />
       <ErrorBoundaryRoute path={match.url} component={Collections} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={CollectionsDeleteDialog} />
   </>
 );
 

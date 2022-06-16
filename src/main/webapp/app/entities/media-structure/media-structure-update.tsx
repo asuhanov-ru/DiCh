@@ -1,67 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
+
+import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
+import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IMedia } from 'app/shared/model/media.model';
 import { getEntities as getMedia } from 'app/entities/media/media.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './media-structure.reducer';
 import { IMediaStructure } from 'app/shared/model/media-structure.model';
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
+import { getEntity, updateEntity, createEntity, reset } from './media-structure.reducer';
 
-export interface IMediaStructureUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const MediaStructureUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const MediaStructureUpdate = (props: IMediaStructureUpdateProps) => {
-  const [mediaId, setMediaId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { mediaStructureEntity, media, loading, updating } = props;
-
+  const media = useAppSelector(state => state.media.entities);
+  const mediaStructureEntity = useAppSelector(state => state.mediaStructure.entity);
+  const loading = useAppSelector(state => state.mediaStructure.loading);
+  const updating = useAppSelector(state => state.mediaStructure.updating);
+  const updateSuccess = useAppSelector(state => state.mediaStructure.updateSuccess);
   const handleClose = () => {
     props.history.push('/media-structure');
   };
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getMedia();
+    dispatch(getMedia({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...mediaStructureEntity,
-        ...values
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...mediaStructureEntity,
+      ...values,
+      media: media.find(it => it.id.toString() === values.media.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...mediaStructureEntity,
+          media: mediaStructureEntity?.media?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="diChApp.mediaStructure.home.createOrEditLabel">
+          <h2 id="diChApp.mediaStructure.home.createOrEditLabel" data-cy="MediaStructureCreateUpdateHeading">
             <Translate contentKey="diChApp.mediaStructure.home.createOrEditLabel">Create or edit a MediaStructure</Translate>
           </h2>
         </Col>
@@ -71,55 +79,62 @@ export const MediaStructureUpdate = (props: IMediaStructureUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : mediaStructureEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="media-structure-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="media-structure-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="media-structure-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
+                />
               ) : null}
-              <AvGroup>
-                <Label id="objNameLabel" for="media-structure-objName">
-                  <Translate contentKey="diChApp.mediaStructure.objName">Obj Name</Translate>
-                </Label>
-                <AvField id="media-structure-objName" type="text" name="objName" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="objTypeLabel" for="media-structure-objType">
-                  <Translate contentKey="diChApp.mediaStructure.objType">Obj Type</Translate>
-                </Label>
-                <AvField id="media-structure-objType" type="text" name="objType" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="parentIdLabel" for="media-structure-parentId">
-                  <Translate contentKey="diChApp.mediaStructure.parentId">Parent Id</Translate>
-                </Label>
-                <AvField id="media-structure-parentId" type="string" className="form-control" name="parentId" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="tagLabel" for="media-structure-tag">
-                  <Translate contentKey="diChApp.mediaStructure.tag">Tag</Translate>
-                </Label>
-                <AvField id="media-structure-tag" type="text" name="tag" />
-              </AvGroup>
-              <AvGroup>
-                <Label for="media-structure-media">
-                  <Translate contentKey="diChApp.mediaStructure.media">Media</Translate>
-                </Label>
-                <AvInput id="media-structure-media" type="select" className="form-control" name="media.id">
-                  <option value="" key="0" />
-                  {media
-                    ? media.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.fileName}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/media-structure" replace color="info">
+              <ValidatedField
+                label={translate('diChApp.mediaStructure.objName')}
+                id="media-structure-objName"
+                name="objName"
+                data-cy="objName"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.mediaStructure.objType')}
+                id="media-structure-objType"
+                name="objType"
+                data-cy="objType"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.mediaStructure.parentId')}
+                id="media-structure-parentId"
+                name="parentId"
+                data-cy="parentId"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.mediaStructure.tag')}
+                id="media-structure-tag"
+                name="tag"
+                data-cy="tag"
+                type="text"
+              />
+              <ValidatedField
+                id="media-structure-media"
+                name="media"
+                data-cy="media"
+                label={translate('diChApp.mediaStructure.media')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {media
+                  ? media.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.fileName}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/media-structure" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -127,12 +142,12 @@ export const MediaStructureUpdate = (props: IMediaStructureUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -140,23 +155,4 @@ export const MediaStructureUpdate = (props: IMediaStructureUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  media: storeState.media.entities,
-  mediaStructureEntity: storeState.mediaStructure.entity,
-  loading: storeState.mediaStructure.loading,
-  updating: storeState.mediaStructure.updating,
-  updateSuccess: storeState.mediaStructure.updateSuccess
-});
-
-const mapDispatchToProps = {
-  getMedia,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(MediaStructureUpdate);
+export default MediaStructureUpdate;

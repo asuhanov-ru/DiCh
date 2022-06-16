@@ -1,32 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, ICrudGetAllAction } from 'react-jhipster';
+import { Button, Table } from 'reactstrap';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './media-structure.reducer';
-import { IMediaStructure } from 'app/shared/model/media-structure.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IMediaStructureProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+import { IMediaStructure } from 'app/shared/model/media-structure.model';
+import { getEntities } from './media-structure.reducer';
 
-export const MediaStructure = (props: IMediaStructureProps) => {
+export const MediaStructure = (props: RouteComponentProps<{ url: string }>) => {
+  const dispatch = useAppDispatch();
+
+  const mediaStructureList = useAppSelector(state => state.mediaStructure.entities);
+  const loading = useAppSelector(state => state.mediaStructure.loading);
+
   useEffect(() => {
-    props.getEntities();
+    dispatch(getEntities({}));
   }, []);
 
-  const { mediaStructureList, match, loading } = props;
+  const handleSyncList = () => {
+    dispatch(getEntities({}));
+  };
+
+  const { match } = props;
+
   return (
     <div>
-      <h2 id="media-structure-heading">
+      <h2 id="media-structure-heading" data-cy="MediaStructureHeading">
         <Translate contentKey="diChApp.mediaStructure.home.title">Media Structures</Translate>
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus" />
-          &nbsp;
-          <Translate contentKey="diChApp.mediaStructure.home.createLabel">Create new Media Structure</Translate>
-        </Link>
+        <div className="d-flex justify-content-end">
+          <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
+            <Translate contentKey="diChApp.mediaStructure.home.refreshListLabel">Refresh List</Translate>
+          </Button>
+          <Link to="/media-structure/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <FontAwesomeIcon icon="plus" />
+            &nbsp;
+            <Translate contentKey="diChApp.mediaStructure.home.createLabel">Create new Media Structure</Translate>
+          </Link>
+        </div>
       </h2>
       <div className="table-responsive">
         {mediaStructureList && mediaStructureList.length > 0 ? (
@@ -34,7 +48,7 @@ export const MediaStructure = (props: IMediaStructureProps) => {
             <thead>
               <tr>
                 <th>
-                  <Translate contentKey="global.field.id">ID</Translate>
+                  <Translate contentKey="diChApp.mediaStructure.id">ID</Translate>
                 </th>
                 <th>
                   <Translate contentKey="diChApp.mediaStructure.objName">Obj Name</Translate>
@@ -56,9 +70,9 @@ export const MediaStructure = (props: IMediaStructureProps) => {
             </thead>
             <tbody>
               {mediaStructureList.map((mediaStructure, i) => (
-                <tr key={`entity-${i}`}>
+                <tr key={`entity-${i}`} data-cy="entityTable">
                   <td>
-                    <Button tag={Link} to={`${match.url}/${mediaStructure.id}`} color="link" size="sm">
+                    <Button tag={Link} to={`/media-structure/${mediaStructure.id}`} color="link" size="sm">
                       {mediaStructure.id}
                     </Button>
                   </td>
@@ -67,23 +81,35 @@ export const MediaStructure = (props: IMediaStructureProps) => {
                   <td>{mediaStructure.parentId}</td>
                   <td>{mediaStructure.tag}</td>
                   <td>
-                    {mediaStructure.media ? <Link to={`media/${mediaStructure.media.id}`}>{mediaStructure.media.fileName}</Link> : ''}
+                    {mediaStructure.media ? <Link to={`/media/${mediaStructure.media.id}`}>{mediaStructure.media.fileName}</Link> : ''}
                   </td>
-                  <td className="text-right">
+                  <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${mediaStructure.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`/media-structure/${mediaStructure.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${mediaStructure.id}/edit`} color="primary" size="sm">
+                      <Button
+                        tag={Link}
+                        to={`/media-structure/${mediaStructure.id}/edit`}
+                        color="primary"
+                        size="sm"
+                        data-cy="entityEditButton"
+                      >
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${mediaStructure.id}/delete`} color="danger" size="sm">
+                      <Button
+                        tag={Link}
+                        to={`/media-structure/${mediaStructure.id}/delete`}
+                        color="danger"
+                        size="sm"
+                        data-cy="entityDeleteButton"
+                      >
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -107,16 +133,4 @@ export const MediaStructure = (props: IMediaStructureProps) => {
   );
 };
 
-const mapStateToProps = ({ mediaStructure }: IRootState) => ({
-  mediaStructureList: mediaStructure.entities,
-  loading: mediaStructure.loading
-});
-
-const mapDispatchToProps = {
-  getEntities
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(MediaStructure);
+export default MediaStructure;

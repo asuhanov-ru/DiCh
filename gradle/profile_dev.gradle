@@ -1,12 +1,5 @@
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
-
 dependencies {
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     implementation "com.h2database:h2"
 }
 
@@ -30,19 +23,32 @@ bootRun {
     args = []
 }
 
-task webpack(type: NpmTask) {
+task webapp(type: NpmTask) {
+    inputs.property('appVersion', project.version)
     inputs.files("package-lock.json")
+        .withPropertyName('package-lock')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
     inputs.files("build.gradle")
+        .withPropertyName('build.gradle')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
     inputs.dir("src/main/webapp/")
+        .withPropertyName("webapp-source-dir")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.files("tsconfig.json")
+        .withPropertyName("tsconfig")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 
-    def webpackDevFiles = fileTree("webpack//")
+    def webpackDevFiles = fileTree("webpack/")
     webpackDevFiles.exclude("webpack.prod.js")
     inputs.files(webpackDevFiles)
-
+        .withPropertyName("webpack-dir")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
     outputs.dir("build/resources/main/static/")
+        .withPropertyName("webapp-build-dir")
 
     dependsOn npmInstall
-    args = ["run", "webpack:build"]
+
+    args = ["run", "webapp:build"]
     environment = [APP_VERSION: project.version]
 }
 
@@ -59,5 +65,5 @@ processResources {
     }
 }
 
-processResources.dependsOn webpack
+processResources.dependsOn webapp
 bootJar.dependsOn processResources

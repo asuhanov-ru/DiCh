@@ -3,9 +3,10 @@
     "media": {
       "home": {
         "title": "Media",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Media",
         "createOrEditLabel": "Создать или отредактировать Media",
-        "notFound": "No Media found"
+        "notFound": "Media не найдено"
       },
       "created": "Новый Media создан с идентификатором {{ param }}",
       "updated": "Media обновлен с идентификатором {{ param }}",
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Media"
       },
+      "id": "ID",
       "fileName": "File Name",
       "fileType": "File Type",
       "fileDesc": "File Desc",
