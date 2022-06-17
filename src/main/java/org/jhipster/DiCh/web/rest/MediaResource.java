@@ -1,7 +1,5 @@
 package org.jhipster.dich.web.rest;
 
-import static org.jhipster.dich.domain.Media_.fileName;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -11,8 +9,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
-import org.jhipster.dich.service.OCRService;
-import org.jhipster.dich.service.PdfDocService;
 import org.jhipster.dich.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +36,8 @@ public class MediaResource {
 
     private final MediaRepository mediaRepository;
 
-    private final PdfDocService pdfDocService;
-
-    private final OCRService ocrService;
-
-    public MediaResource(MediaRepository mediaRepository, PdfDocService pdfDocService, OCRService ocrService) {
+    public MediaResource(MediaRepository mediaRepository) {
         this.mediaRepository = mediaRepository;
-        this.pdfDocService = pdfDocService;
-        this.ocrService = ocrService;
     }
 
     /**
@@ -162,7 +152,6 @@ public class MediaResource {
     @GetMapping("/media")
     public List<Media> getAllMedia(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Media");
-
         return mediaRepository.findAllWithEagerRelationships();
     }
 
@@ -175,17 +164,7 @@ public class MediaResource {
     @GetMapping("/media/{id}")
     public ResponseEntity<Media> getMedia(@PathVariable Long id) {
         log.debug("REST request to get Media : {}", id);
-
         Optional<Media> media = mediaRepository.findOneWithEagerRelationships(id);
-        log.debug("File name is: {}", media.map(Media::getFileName).get());
-        media.ifPresent(el -> {
-            try {
-                pdfDocService.ProcessPdf(el.getFileName());
-                ocrService.doOCR();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
         return ResponseUtil.wrapOrNotFound(media);
     }
 

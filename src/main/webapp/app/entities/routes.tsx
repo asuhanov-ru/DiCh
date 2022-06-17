@@ -5,6 +5,7 @@ import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import Collections from './collections';
 import Media from './media';
 import MediaStructure from './media-structure';
+import PageImage from './page-image';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default ({ match }) => {
@@ -15,6 +16,7 @@ export default ({ match }) => {
         <ErrorBoundaryRoute path={`${match.url}collections`} component={Collections} />
         <ErrorBoundaryRoute path={`${match.url}media`} component={Media} />
         <ErrorBoundaryRoute path={`${match.url}media-structure`} component={MediaStructure} />
+        <ErrorBoundaryRoute path={`${match.url}page-image`} component={PageImage} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </Switch>
     </div>

@@ -10,6 +10,7 @@
         "collections": "Collections",
         "media": "Media",
         "mediaStructure": "Media Structure",
+        "pageImage": "Page Image",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

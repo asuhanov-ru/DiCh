@@ -1,0 +1,24 @@
+{
+  "diChApp": {
+    "pageImage": {
+      "home": {
+        "title": "Page Images",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Page Image",
+        "createOrEditLabel": "Создать или отредактировать Page Image",
+        "notFound": "Page Images не найдено"
+      },
+      "created": "Новый Page Image создан с идентификатором {{ param }}",
+      "updated": "Page Image обновлен с идентификатором {{ param }}",
+      "deleted": "Page Image удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Page Image {{ id }}?"
+      },
+      "detail": {
+        "title": "Page Image"
+      },
+      "id": "ID",
+      "image": "Image"
+    }
+  }
+}

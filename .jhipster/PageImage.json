@@ -1,0 +1,17 @@
+{
+  "changelogDate": "20220617123302",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "image",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "PageImage",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}
