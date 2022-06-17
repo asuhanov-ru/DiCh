@@ -5,7 +5,6 @@ buildscript {
         // mavenCentral()
         // gradlePluginPortal()
         google()
-        jcenter()
         maven { url "https://repo.spring.io/plugins-release" }
         gradlePluginPortal()
     }
@@ -278,6 +277,7 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
     implementation "com.itextpdf:itext7-core:7.2.2"
+    implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '5.2.1'
 }
 
 if (project.hasProperty("gae")) {

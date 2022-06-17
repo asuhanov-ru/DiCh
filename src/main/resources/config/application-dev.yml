@@ -111,3 +111,6 @@ jhipster:
 # application:
 collections:
   location: 'C:\Users\suhanov_av\Documents\My\Химия\'
+
+tessdata:
+  location: 'C:\Users\suhanov_av\Documents\Projects\tessdata_best'

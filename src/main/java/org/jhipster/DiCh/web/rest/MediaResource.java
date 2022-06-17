@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
+import org.jhipster.dich.service.OCRService;
 import org.jhipster.dich.service.PdfDocService;
 import org.jhipster.dich.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -41,9 +42,12 @@ public class MediaResource {
 
     private final PdfDocService pdfDocService;
 
-    public MediaResource(MediaRepository mediaRepository, PdfDocService pdfDocService) {
+    private final OCRService ocrService;
+
+    public MediaResource(MediaRepository mediaRepository, PdfDocService pdfDocService, OCRService ocrService) {
         this.mediaRepository = mediaRepository;
         this.pdfDocService = pdfDocService;
+        this.ocrService = ocrService;
     }
 
     /**
@@ -177,6 +181,7 @@ public class MediaResource {
         media.ifPresent(el -> {
             try {
                 pdfDocService.ProcessPdf(el.getFileName());
+                ocrService.doOCR();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
