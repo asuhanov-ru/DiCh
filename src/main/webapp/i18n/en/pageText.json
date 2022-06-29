@@ -1,0 +1,26 @@
+{
+  "diChApp": {
+    "pageText": {
+      "home": {
+        "title": "Page Texts",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Page Text",
+        "createOrEditLabel": "Create or edit a Page Text",
+        "notFound": "No Page Texts found"
+      },
+      "created": "A new Page Text is created with identifier {{ param }}",
+      "updated": "A Page Text is updated with identifier {{ param }}",
+      "deleted": "A Page Text is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Page Text {{ id }}?"
+      },
+      "detail": {
+        "title": "Page Text"
+      },
+      "id": "ID",
+      "page_id": "Page Id",
+      "text": "Text",
+      "pageImage": "Page Image"
+    }
+  }
+}

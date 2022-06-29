@@ -1,0 +1,26 @@
+{
+  "diChApp": {
+    "pageText": {
+      "home": {
+        "title": "Page Texts",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Page Text",
+        "createOrEditLabel": "Создать или отредактировать Page Text",
+        "notFound": "Page Texts не найдено"
+      },
+      "created": "Новый Page Text создан с идентификатором {{ param }}",
+      "updated": "Page Text обновлен с идентификатором {{ param }}",
+      "deleted": "Page Text удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Page Text {{ id }}?"
+      },
+      "detail": {
+        "title": "Page Text"
+      },
+      "id": "ID",
+      "page_id": "Page Id",
+      "text": "Text",
+      "pageImage": "Page Image"
+    }
+  }
+}

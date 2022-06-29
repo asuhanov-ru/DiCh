@@ -1,6 +1,9 @@
 package org.jhipster.dich.service;
 
 import java.io.File;
+import net.bytebuddy.jar.asm.Handle;
+import net.sourceforge.tess4j.ITessAPI;
+import net.sourceforge.tess4j.TessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.slf4j.Logger;
@@ -22,12 +25,14 @@ public class OCRService {
     public void doOCR() throws TesseractException {
         String file_name = SRC + "29.jpg";
         File image = new File(file_name);
-        Tesseract tesseract = new Tesseract();
+        /*Tesseract tesseract = new Tesseract();
         tesseract.setDatapath(tessdata);
         tesseract.setLanguage("lat");
         tesseract.setPageSegMode(1);
         tesseract.setOcrEngineMode(1);
-        String result = tesseract.doOCR(image);
-        log.debug("Try to OCR file: {} result: {}", file_name, result);
+        String result = tesseract.doOCR(image);*/
+        TessAPI api = TessAPI.INSTANCE;
+        ITessAPI.TessBaseAPI handle = api.TessBaseAPICreate();
+        //log.debug("Try to OCR file: {} result: {}", file_name, result);
     }
 }

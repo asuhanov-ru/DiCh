@@ -2,6 +2,7 @@ import { faCogs } from '@fortawesome/free-solid-svg-icons/faCogs';
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
 import { faAsterisk } from '@fortawesome/free-solid-svg-icons/faAsterisk';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
 import { faCloud } from '@fortawesome/free-solid-svg-icons/faCloud';
@@ -37,6 +38,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 export const loadIcons = () => {
   library.add(
     faArrowLeft,
+    faArrowRight,
     faAsterisk,
     faBan,
     faBell,
