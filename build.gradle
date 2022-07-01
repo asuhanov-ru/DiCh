@@ -278,6 +278,7 @@ dependencies {
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
     implementation "com.itextpdf:itext7-core:7.2.2"
     implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '5.2.1'
+    implementation group: 'net.sourceforge.lept4j', name: 'lept4j', version: '1.16.1'
 }
 
 if (project.hasProperty("gae")) {
