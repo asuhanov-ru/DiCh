@@ -12,6 +12,7 @@
         "mediaStructure": "Media Structure",
         "pageImage": "Page Image",
         "pageText": "Page Text",
+        "pageWord": "Page Word",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

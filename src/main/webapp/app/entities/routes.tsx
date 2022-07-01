@@ -7,6 +7,7 @@ import Media from './media';
 import MediaStructure from './media-structure';
 import PageImage from './page-image';
 import PageText from './page-text';
+import PageWord from './page-word';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default ({ match }) => {
@@ -19,6 +20,7 @@ export default ({ match }) => {
         <ErrorBoundaryRoute path={`${match.url}media-structure`} component={MediaStructure} />
         <ErrorBoundaryRoute path={`${match.url}page-image`} component={PageImage} />
         <ErrorBoundaryRoute path={`${match.url}page-text`} component={PageText} />
+        <ErrorBoundaryRoute path={`${match.url}page-word`} component={PageWord} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </Switch>
     </div>

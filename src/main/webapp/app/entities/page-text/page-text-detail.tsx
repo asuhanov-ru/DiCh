@@ -60,10 +60,6 @@ export const PageTextDetail = (props: RouteComponentProps<{ id: string }>) => {
             <Translate contentKey="entity.action.edit">Edit</Translate>
           </span>
         </Button>
-        &nbsp;
-        <Button tag={Link} to={`/page-ocr/${pageTextEntity.id}`} replace color="primary">
-          <FontAwesomeIcon icon="arrow-right" /> <span className="d-none d-md-inline">OCR</span>
-        </Button>
       </Col>
     </Row>
   );
