@@ -1,5 +1,6 @@
 package org.jhipster.dich.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -37,6 +38,7 @@ public class PageWord implements Serializable {
     private Long n_idx;
 
     @ManyToOne
+    @JsonIgnoreProperties(value = { "pageWords" }, allowSetters = true)
     private PageImage pageImage;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

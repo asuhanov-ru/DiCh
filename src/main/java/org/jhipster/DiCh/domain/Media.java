@@ -1,5 +1,6 @@
 package org.jhipster.dich.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -31,6 +32,7 @@ public class Media implements Serializable {
     private String fileDesc;
 
     @ManyToOne
+    @JsonIgnoreProperties(value = { "media" }, allowSetters = true)
     private Collections collections;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
