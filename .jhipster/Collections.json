@@ -20,7 +20,14 @@
   "name": "Collections",
   "pagination": "no",
   "readOnly": false,
-  "relationships": [],
+  "relationships": [
+    {
+      "otherEntityName": "media",
+      "otherEntityRelationshipName": "collections",
+      "relationshipName": "media",
+      "relationshipType": "one-to-many"
+    }
+  ],
   "searchEngine": false,
   "service": "no"
 }

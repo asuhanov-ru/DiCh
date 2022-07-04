@@ -31,35 +31,41 @@ export const PageWordDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{pageWordEntity.id}</dd>
           <dt>
-            <span id="word">
-              <Translate contentKey="diChApp.pageWord.word">Word</Translate>
+            <span id="s_word">
+              <Translate contentKey="diChApp.pageWord.s_word">S Word</Translate>
             </span>
           </dt>
-          <dd>{pageWordEntity.word}</dd>
+          <dd>{pageWordEntity.s_word}</dd>
           <dt>
-            <span id="left">
-              <Translate contentKey="diChApp.pageWord.left">Left</Translate>
+            <span id="n_top">
+              <Translate contentKey="diChApp.pageWord.n_top">N Top</Translate>
             </span>
           </dt>
-          <dd>{pageWordEntity.left}</dd>
+          <dd>{pageWordEntity.n_top}</dd>
           <dt>
-            <span id="top">
-              <Translate contentKey="diChApp.pageWord.top">Top</Translate>
+            <span id="n_left">
+              <Translate contentKey="diChApp.pageWord.n_left">N Left</Translate>
             </span>
           </dt>
-          <dd>{pageWordEntity.top}</dd>
+          <dd>{pageWordEntity.n_left}</dd>
           <dt>
-            <span id="right">
-              <Translate contentKey="diChApp.pageWord.right">Right</Translate>
+            <span id="n_heigth">
+              <Translate contentKey="diChApp.pageWord.n_heigth">N Heigth</Translate>
             </span>
           </dt>
-          <dd>{pageWordEntity.right}</dd>
+          <dd>{pageWordEntity.n_heigth}</dd>
           <dt>
-            <span id="bottom">
-              <Translate contentKey="diChApp.pageWord.bottom">Bottom</Translate>
+            <span id="n_width">
+              <Translate contentKey="diChApp.pageWord.n_width">N Width</Translate>
             </span>
           </dt>
-          <dd>{pageWordEntity.bottom}</dd>
+          <dd>{pageWordEntity.n_width}</dd>
+          <dt>
+            <span id="n_idx">
+              <Translate contentKey="diChApp.pageWord.n_idx">N Idx</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.n_idx}</dd>
           <dt>
             <Translate contentKey="diChApp.pageWord.pageImage">Page Image</Translate>
           </dt>

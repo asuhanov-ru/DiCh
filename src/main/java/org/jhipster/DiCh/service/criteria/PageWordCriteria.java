@@ -28,15 +28,17 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private StringFilter word;
+    private StringFilter s_word;
 
-    private LongFilter left;
+    private LongFilter n_top;
 
-    private LongFilter top;
+    private LongFilter n_left;
 
-    private LongFilter right;
+    private LongFilter n_heigth;
 
-    private LongFilter bottom;
+    private LongFilter n_width;
+
+    private LongFilter n_idx;
 
     private LongFilter pageImageId;
 
@@ -46,11 +48,12 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     public PageWordCriteria(PageWordCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.word = other.word == null ? null : other.word.copy();
-        this.left = other.left == null ? null : other.left.copy();
-        this.top = other.top == null ? null : other.top.copy();
-        this.right = other.right == null ? null : other.right.copy();
-        this.bottom = other.bottom == null ? null : other.bottom.copy();
+        this.s_word = other.s_word == null ? null : other.s_word.copy();
+        this.n_top = other.n_top == null ? null : other.n_top.copy();
+        this.n_left = other.n_left == null ? null : other.n_left.copy();
+        this.n_heigth = other.n_heigth == null ? null : other.n_heigth.copy();
+        this.n_width = other.n_width == null ? null : other.n_width.copy();
+        this.n_idx = other.n_idx == null ? null : other.n_idx.copy();
         this.pageImageId = other.pageImageId == null ? null : other.pageImageId.copy();
         this.distinct = other.distinct;
     }
@@ -75,79 +78,94 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public StringFilter getWord() {
-        return word;
+    public StringFilter gets_word() {
+        return s_word;
     }
 
-    public StringFilter word() {
-        if (word == null) {
-            word = new StringFilter();
+    public StringFilter s_word() {
+        if (s_word == null) {
+            s_word = new StringFilter();
         }
-        return word;
+        return s_word;
     }
 
-    public void setWord(StringFilter word) {
-        this.word = word;
+    public void sets_word(StringFilter s_word) {
+        this.s_word = s_word;
     }
 
-    public LongFilter getLeft() {
-        return left;
+    public LongFilter getn_top() {
+        return n_top;
     }
 
-    public LongFilter left() {
-        if (left == null) {
-            left = new LongFilter();
+    public LongFilter n_top() {
+        if (n_top == null) {
+            n_top = new LongFilter();
         }
-        return left;
+        return n_top;
     }
 
-    public void setLeft(LongFilter left) {
-        this.left = left;
+    public void setn_top(LongFilter n_top) {
+        this.n_top = n_top;
     }
 
-    public LongFilter getTop() {
-        return top;
+    public LongFilter getn_left() {
+        return n_left;
     }
 
-    public LongFilter top() {
-        if (top == null) {
-            top = new LongFilter();
+    public LongFilter n_left() {
+        if (n_left == null) {
+            n_left = new LongFilter();
         }
-        return top;
+        return n_left;
     }
 
-    public void setTop(LongFilter top) {
-        this.top = top;
+    public void setn_left(LongFilter n_left) {
+        this.n_left = n_left;
     }
 
-    public LongFilter getRight() {
-        return right;
+    public LongFilter getn_heigth() {
+        return n_heigth;
     }
 
-    public LongFilter right() {
-        if (right == null) {
-            right = new LongFilter();
+    public LongFilter n_heigth() {
+        if (n_heigth == null) {
+            n_heigth = new LongFilter();
         }
-        return right;
+        return n_heigth;
     }
 
-    public void setRight(LongFilter right) {
-        this.right = right;
+    public void setn_heigth(LongFilter n_heigth) {
+        this.n_heigth = n_heigth;
     }
 
-    public LongFilter getBottom() {
-        return bottom;
+    public LongFilter getn_width() {
+        return n_width;
     }
 
-    public LongFilter bottom() {
-        if (bottom == null) {
-            bottom = new LongFilter();
+    public LongFilter n_width() {
+        if (n_width == null) {
+            n_width = new LongFilter();
         }
-        return bottom;
+        return n_width;
     }
 
-    public void setBottom(LongFilter bottom) {
-        this.bottom = bottom;
+    public void setn_width(LongFilter n_width) {
+        this.n_width = n_width;
+    }
+
+    public LongFilter getn_idx() {
+        return n_idx;
+    }
+
+    public LongFilter n_idx() {
+        if (n_idx == null) {
+            n_idx = new LongFilter();
+        }
+        return n_idx;
+    }
+
+    public void setn_idx(LongFilter n_idx) {
+        this.n_idx = n_idx;
     }
 
     public LongFilter getPageImageId() {
@@ -184,11 +202,12 @@ public class PageWordCriteria implements Serializable, Criteria {
         final PageWordCriteria that = (PageWordCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(word, that.word) &&
-            Objects.equals(left, that.left) &&
-            Objects.equals(top, that.top) &&
-            Objects.equals(right, that.right) &&
-            Objects.equals(bottom, that.bottom) &&
+            Objects.equals(s_word, that.s_word) &&
+            Objects.equals(n_top, that.n_top) &&
+            Objects.equals(n_left, that.n_left) &&
+            Objects.equals(n_heigth, that.n_heigth) &&
+            Objects.equals(n_width, that.n_width) &&
+            Objects.equals(n_idx, that.n_idx) &&
             Objects.equals(pageImageId, that.pageImageId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -196,7 +215,7 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, word, left, top, right, bottom, pageImageId, distinct);
+        return Objects.hash(id, s_word, n_top, n_left, n_heigth, n_width, n_idx, pageImageId, distinct);
     }
 
     // prettier-ignore
@@ -204,11 +223,12 @@ public class PageWordCriteria implements Serializable, Criteria {
     public String toString() {
         return "PageWordCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
-            (word != null ? "word=" + word + ", " : "") +
-            (left != null ? "left=" + left + ", " : "") +
-            (top != null ? "top=" + top + ", " : "") +
-            (right != null ? "right=" + right + ", " : "") +
-            (bottom != null ? "bottom=" + bottom + ", " : "") +
+            (s_word != null ? "s_word=" + s_word + ", " : "") +
+            (n_top != null ? "n_top=" + n_top + ", " : "") +
+            (n_left != null ? "n_left=" + n_left + ", " : "") +
+            (n_heigth != null ? "n_heigth=" + n_heigth + ", " : "") +
+            (n_width != null ? "n_width=" + n_width + ", " : "") +
+            (n_idx != null ? "n_idx=" + n_idx + ", " : "") +
             (pageImageId != null ? "pageImageId=" + pageImageId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";

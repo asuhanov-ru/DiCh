@@ -10,15 +10,17 @@ public class PageWordDTO implements Serializable {
 
     private Long id;
 
-    private String word;
+    private String s_word;
 
-    private Long left;
+    private Long n_top;
 
-    private Long top;
+    private Long n_left;
 
-    private Long right;
+    private Long n_heigth;
 
-    private Long bottom;
+    private Long n_width;
+
+    private Long n_idx;
 
     private PageImageDTO pageImage;
 
@@ -30,44 +32,52 @@ public class PageWordDTO implements Serializable {
         this.id = id;
     }
 
-    public String getWord() {
-        return word;
+    public String gets_word() {
+        return s_word;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public void sets_word(String s_word) {
+        this.s_word = s_word;
     }
 
-    public Long getLeft() {
-        return left;
+    public Long getn_top() {
+        return n_top;
     }
 
-    public void setLeft(Long left) {
-        this.left = left;
+    public void setn_top(Long n_top) {
+        this.n_top = n_top;
     }
 
-    public Long getTop() {
-        return top;
+    public Long getn_left() {
+        return n_left;
     }
 
-    public void setTop(Long top) {
-        this.top = top;
+    public void setn_left(Long n_left) {
+        this.n_left = n_left;
     }
 
-    public Long getRight() {
-        return right;
+    public Long getn_heigth() {
+        return n_heigth;
     }
 
-    public void setRight(Long right) {
-        this.right = right;
+    public void setn_heigth(Long n_heigth) {
+        this.n_heigth = n_heigth;
     }
 
-    public Long getBottom() {
-        return bottom;
+    public Long getn_width() {
+        return n_width;
     }
 
-    public void setBottom(Long bottom) {
-        this.bottom = bottom;
+    public void setn_width(Long n_width) {
+        this.n_width = n_width;
+    }
+
+    public Long getn_idx() {
+        return n_idx;
+    }
+
+    public void setn_idx(Long n_idx) {
+        this.n_idx = n_idx;
     }
 
     public PageImageDTO getPageImage() {
@@ -104,11 +114,12 @@ public class PageWordDTO implements Serializable {
     public String toString() {
         return "PageWordDTO{" +
             "id=" + getId() +
-            ", word='" + getWord() + "'" +
-            ", left=" + getLeft() +
-            ", top=" + getTop() +
-            ", right=" + getRight() +
-            ", bottom=" + getBottom() +
+            ", s_word='" + gets_word() + "'" +
+            ", n_top=" + getn_top() +
+            ", n_left=" + getn_left() +
+            ", n_heigth=" + getn_heigth() +
+            ", n_width=" + getn_width() +
+            ", n_idx=" + getn_idx() +
             ", pageImage=" + getPageImage() +
             "}";
     }

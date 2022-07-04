@@ -90,20 +90,23 @@ public class PageWordQueryService extends QueryService<PageWord> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), PageWord_.id));
             }
-            if (criteria.getWord() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getWord(), PageWord_.word));
+            if (criteria.gets_word() != null) {
+                specification = specification.and(buildStringSpecification(criteria.gets_word(), PageWord_.s_word));
             }
-            if (criteria.getLeft() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLeft(), PageWord_.left));
+            if (criteria.getn_top() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getn_top(), PageWord_.n_top));
             }
-            if (criteria.getTop() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTop(), PageWord_.top));
+            if (criteria.getn_left() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getn_left(), PageWord_.n_left));
             }
-            if (criteria.getRight() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getRight(), PageWord_.right));
+            if (criteria.getn_heigth() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getn_heigth(), PageWord_.n_heigth));
             }
-            if (criteria.getBottom() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBottom(), PageWord_.bottom));
+            if (criteria.getn_width() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getn_width(), PageWord_.n_width));
+            }
+            if (criteria.getn_idx() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getn_idx(), PageWord_.n_idx));
             }
             if (criteria.getPageImageId() != null) {
                 specification =

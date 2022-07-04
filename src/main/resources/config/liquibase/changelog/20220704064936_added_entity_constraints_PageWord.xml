@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity PageWord.
+    -->
+    <changeSet id="20220704064936-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="page_image_id"
+                                 baseTableName="page_word"
+                                 constraintName="fk_page_word__page_image_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="page_image"/>
+    </changeSet>
+</databaseChangeLog>

@@ -124,20 +124,23 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('id')}>
                     <Translate contentKey="diChApp.pageWord.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('word')}>
-                    <Translate contentKey="diChApp.pageWord.word">Word</Translate> <FontAwesomeIcon icon="sort" />
+                  <th className="hand" onClick={sort('s_word')}>
+                    <Translate contentKey="diChApp.pageWord.s_word">S Word</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('left')}>
-                    <Translate contentKey="diChApp.pageWord.left">Left</Translate> <FontAwesomeIcon icon="sort" />
+                  <th className="hand" onClick={sort('n_top')}>
+                    <Translate contentKey="diChApp.pageWord.n_top">N Top</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('top')}>
-                    <Translate contentKey="diChApp.pageWord.top">Top</Translate> <FontAwesomeIcon icon="sort" />
+                  <th className="hand" onClick={sort('n_left')}>
+                    <Translate contentKey="diChApp.pageWord.n_left">N Left</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('right')}>
-                    <Translate contentKey="diChApp.pageWord.right">Right</Translate> <FontAwesomeIcon icon="sort" />
+                  <th className="hand" onClick={sort('n_heigth')}>
+                    <Translate contentKey="diChApp.pageWord.n_heigth">N Heigth</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('bottom')}>
-                    <Translate contentKey="diChApp.pageWord.bottom">Bottom</Translate> <FontAwesomeIcon icon="sort" />
+                  <th className="hand" onClick={sort('n_width')}>
+                    <Translate contentKey="diChApp.pageWord.n_width">N Width</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('n_idx')}>
+                    <Translate contentKey="diChApp.pageWord.n_idx">N Idx</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th>
                     <Translate contentKey="diChApp.pageWord.pageImage">Page Image</Translate> <FontAwesomeIcon icon="sort" />
@@ -153,11 +156,12 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                         {pageWord.id}
                       </Button>
                     </td>
-                    <td>{pageWord.word}</td>
-                    <td>{pageWord.left}</td>
-                    <td>{pageWord.top}</td>
-                    <td>{pageWord.right}</td>
-                    <td>{pageWord.bottom}</td>
+                    <td>{pageWord.s_word}</td>
+                    <td>{pageWord.n_top}</td>
+                    <td>{pageWord.n_left}</td>
+                    <td>{pageWord.n_heigth}</td>
+                    <td>{pageWord.n_width}</td>
+                    <td>{pageWord.n_idx}</td>
                     <td>{pageWord.pageImage ? <Link to={`/page-image/${pageWord.pageImage.id}`}>{pageWord.pageImage.id}</Link> : ''}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">

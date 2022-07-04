@@ -1,6 +1,9 @@
 package org.jhipster.dich.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -25,6 +28,10 @@ public class Collections implements Serializable {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "collections")
+    @JsonIgnoreProperties(value = { "collections" }, allowSetters = true)
+    private Set<Media> media = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -65,6 +72,37 @@ public class Collections implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Media> getMedia() {
+        return this.media;
+    }
+
+    public void setMedia(Set<Media> media) {
+        if (this.media != null) {
+            this.media.forEach(i -> i.setCollections(null));
+        }
+        if (media != null) {
+            media.forEach(i -> i.setCollections(this));
+        }
+        this.media = media;
+    }
+
+    public Collections media(Set<Media> media) {
+        this.setMedia(media);
+        return this;
+    }
+
+    public Collections addMedia(Media media) {
+        this.media.add(media);
+        media.setCollections(this);
+        return this;
+    }
+
+    public Collections removeMedia(Media media) {
+        this.media.remove(media);
+        media.setCollections(null);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

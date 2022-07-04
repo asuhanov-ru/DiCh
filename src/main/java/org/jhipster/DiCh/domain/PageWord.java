@@ -1,5 +1,6 @@
 package org.jhipster.dich.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -18,22 +19,26 @@ public class PageWord implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "word")
-    private String word;
+    @Column(name = "s_word")
+    private String s_word;
 
-    @Column(name = "jhi_left")
-    private Long left;
+    @Column(name = "n_top")
+    private Long n_top;
 
-    @Column(name = "top")
-    private Long top;
+    @Column(name = "n_left")
+    private Long n_left;
 
-    @Column(name = "jhi_right")
-    private Long right;
+    @Column(name = "n_heigth")
+    private Long n_heigth;
 
-    @Column(name = "bottom")
-    private Long bottom;
+    @Column(name = "n_width")
+    private Long n_width;
+
+    @Column(name = "n_idx")
+    private Long n_idx;
 
     @ManyToOne
+    @JsonIgnoreProperties(value = { "pageWords" }, allowSetters = true)
     private PageImage pageImage;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -51,69 +56,82 @@ public class PageWord implements Serializable {
         this.id = id;
     }
 
-    public String getWord() {
-        return this.word;
+    public String gets_word() {
+        return this.s_word;
     }
 
-    public PageWord word(String word) {
-        this.setWord(word);
+    public PageWord s_word(String s_word) {
+        this.sets_word(s_word);
         return this;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public void sets_word(String s_word) {
+        this.s_word = s_word;
     }
 
-    public Long getLeft() {
-        return this.left;
+    public Long getn_top() {
+        return this.n_top;
     }
 
-    public PageWord left(Long left) {
-        this.setLeft(left);
+    public PageWord n_top(Long n_top) {
+        this.setn_top(n_top);
         return this;
     }
 
-    public void setLeft(Long left) {
-        this.left = left;
+    public void setn_top(Long n_top) {
+        this.n_top = n_top;
     }
 
-    public Long getTop() {
-        return this.top;
+    public Long getn_left() {
+        return this.n_left;
     }
 
-    public PageWord top(Long top) {
-        this.setTop(top);
+    public PageWord n_left(Long n_left) {
+        this.setn_left(n_left);
         return this;
     }
 
-    public void setTop(Long top) {
-        this.top = top;
+    public void setn_left(Long n_left) {
+        this.n_left = n_left;
     }
 
-    public Long getRight() {
-        return this.right;
+    public Long getn_heigth() {
+        return this.n_heigth;
     }
 
-    public PageWord right(Long right) {
-        this.setRight(right);
+    public PageWord n_heigth(Long n_heigth) {
+        this.setn_heigth(n_heigth);
         return this;
     }
 
-    public void setRight(Long right) {
-        this.right = right;
+    public void setn_heigth(Long n_heigth) {
+        this.n_heigth = n_heigth;
     }
 
-    public Long getBottom() {
-        return this.bottom;
+    public Long getn_width() {
+        return this.n_width;
     }
 
-    public PageWord bottom(Long bottom) {
-        this.setBottom(bottom);
+    public PageWord n_width(Long n_width) {
+        this.setn_width(n_width);
         return this;
     }
 
-    public void setBottom(Long bottom) {
-        this.bottom = bottom;
+    public void setn_width(Long n_width) {
+        this.n_width = n_width;
+    }
+
+    public Long getn_idx() {
+        return this.n_idx;
+    }
+
+    public PageWord n_idx(Long n_idx) {
+        this.setn_idx(n_idx);
+        return this;
+    }
+
+    public void setn_idx(Long n_idx) {
+        this.n_idx = n_idx;
     }
 
     public PageImage getPageImage() {
@@ -153,11 +171,12 @@ public class PageWord implements Serializable {
     public String toString() {
         return "PageWord{" +
             "id=" + getId() +
-            ", word='" + getWord() + "'" +
-            ", left=" + getLeft() +
-            ", top=" + getTop() +
-            ", right=" + getRight() +
-            ", bottom=" + getBottom() +
+            ", s_word='" + gets_word() + "'" +
+            ", n_top=" + getn_top() +
+            ", n_left=" + getn_left() +
+            ", n_heigth=" + getn_heigth() +
+            ", n_width=" + getn_width() +
+            ", n_idx=" + getn_idx() +
             "}";
     }
 }

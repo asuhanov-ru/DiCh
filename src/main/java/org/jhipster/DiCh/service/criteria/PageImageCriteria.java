@@ -28,12 +28,15 @@ public class PageImageCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
+    private LongFilter pageWordId;
+
     private Boolean distinct;
 
     public PageImageCriteria() {}
 
     public PageImageCriteria(PageImageCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
+        this.pageWordId = other.pageWordId == null ? null : other.pageWordId.copy();
         this.distinct = other.distinct;
     }
 
@@ -57,6 +60,21 @@ public class PageImageCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
+    public LongFilter getPageWordId() {
+        return pageWordId;
+    }
+
+    public LongFilter pageWordId() {
+        if (pageWordId == null) {
+            pageWordId = new LongFilter();
+        }
+        return pageWordId;
+    }
+
+    public void setPageWordId(LongFilter pageWordId) {
+        this.pageWordId = pageWordId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -74,12 +92,12 @@ public class PageImageCriteria implements Serializable, Criteria {
             return false;
         }
         final PageImageCriteria that = (PageImageCriteria) o;
-        return Objects.equals(id, that.id) && Objects.equals(distinct, that.distinct);
+        return Objects.equals(id, that.id) && Objects.equals(pageWordId, that.pageWordId) && Objects.equals(distinct, that.distinct);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, distinct);
+        return Objects.hash(id, pageWordId, distinct);
     }
 
     // prettier-ignore
@@ -87,6 +105,7 @@ public class PageImageCriteria implements Serializable, Criteria {
     public String toString() {
         return "PageImageCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
+            (pageWordId != null ? "pageWordId=" + pageWordId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

@@ -33,24 +33,28 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class PageWordResourceIT {
 
-    private static final String DEFAULT_WORD = "AAAAAAAAAA";
-    private static final String UPDATED_WORD = "BBBBBBBBBB";
+    private static final String DEFAULT_S_WORD = "AAAAAAAAAA";
+    private static final String UPDATED_S_WORD = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_LEFT = 1L;
-    private static final Long UPDATED_LEFT = 2L;
-    private static final Long SMALLER_LEFT = 1L - 1L;
+    private static final Long DEFAULT_N_TOP = 1L;
+    private static final Long UPDATED_N_TOP = 2L;
+    private static final Long SMALLER_N_TOP = 1L - 1L;
 
-    private static final Long DEFAULT_TOP = 1L;
-    private static final Long UPDATED_TOP = 2L;
-    private static final Long SMALLER_TOP = 1L - 1L;
+    private static final Long DEFAULT_N_LEFT = 1L;
+    private static final Long UPDATED_N_LEFT = 2L;
+    private static final Long SMALLER_N_LEFT = 1L - 1L;
 
-    private static final Long DEFAULT_RIGHT = 1L;
-    private static final Long UPDATED_RIGHT = 2L;
-    private static final Long SMALLER_RIGHT = 1L - 1L;
+    private static final Long DEFAULT_N_HEIGTH = 1L;
+    private static final Long UPDATED_N_HEIGTH = 2L;
+    private static final Long SMALLER_N_HEIGTH = 1L - 1L;
 
-    private static final Long DEFAULT_BOTTOM = 1L;
-    private static final Long UPDATED_BOTTOM = 2L;
-    private static final Long SMALLER_BOTTOM = 1L - 1L;
+    private static final Long DEFAULT_N_WIDTH = 1L;
+    private static final Long UPDATED_N_WIDTH = 2L;
+    private static final Long SMALLER_N_WIDTH = 1L - 1L;
+
+    private static final Long DEFAULT_N_IDX = 1L;
+    private static final Long UPDATED_N_IDX = 2L;
+    private static final Long SMALLER_N_IDX = 1L - 1L;
 
     private static final String ENTITY_API_URL = "/api/page-words";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -80,11 +84,12 @@ class PageWordResourceIT {
      */
     public static PageWord createEntity(EntityManager em) {
         PageWord pageWord = new PageWord()
-            .word(DEFAULT_WORD)
-            .left(DEFAULT_LEFT)
-            .top(DEFAULT_TOP)
-            .right(DEFAULT_RIGHT)
-            .bottom(DEFAULT_BOTTOM);
+            .s_word(DEFAULT_S_WORD)
+            .n_top(DEFAULT_N_TOP)
+            .n_left(DEFAULT_N_LEFT)
+            .n_heigth(DEFAULT_N_HEIGTH)
+            .n_width(DEFAULT_N_WIDTH)
+            .n_idx(DEFAULT_N_IDX);
         return pageWord;
     }
 
@@ -96,11 +101,12 @@ class PageWordResourceIT {
      */
     public static PageWord createUpdatedEntity(EntityManager em) {
         PageWord pageWord = new PageWord()
-            .word(UPDATED_WORD)
-            .left(UPDATED_LEFT)
-            .top(UPDATED_TOP)
-            .right(UPDATED_RIGHT)
-            .bottom(UPDATED_BOTTOM);
+            .s_word(UPDATED_S_WORD)
+            .n_top(UPDATED_N_TOP)
+            .n_left(UPDATED_N_LEFT)
+            .n_heigth(UPDATED_N_HEIGTH)
+            .n_width(UPDATED_N_WIDTH)
+            .n_idx(UPDATED_N_IDX);
         return pageWord;
     }
 
@@ -123,11 +129,12 @@ class PageWordResourceIT {
         List<PageWord> pageWordList = pageWordRepository.findAll();
         assertThat(pageWordList).hasSize(databaseSizeBeforeCreate + 1);
         PageWord testPageWord = pageWordList.get(pageWordList.size() - 1);
-        assertThat(testPageWord.getWord()).isEqualTo(DEFAULT_WORD);
-        assertThat(testPageWord.getLeft()).isEqualTo(DEFAULT_LEFT);
-        assertThat(testPageWord.getTop()).isEqualTo(DEFAULT_TOP);
-        assertThat(testPageWord.getRight()).isEqualTo(DEFAULT_RIGHT);
-        assertThat(testPageWord.getBottom()).isEqualTo(DEFAULT_BOTTOM);
+        assertThat(testPageWord.gets_word()).isEqualTo(DEFAULT_S_WORD);
+        assertThat(testPageWord.getn_top()).isEqualTo(DEFAULT_N_TOP);
+        assertThat(testPageWord.getn_left()).isEqualTo(DEFAULT_N_LEFT);
+        assertThat(testPageWord.getn_heigth()).isEqualTo(DEFAULT_N_HEIGTH);
+        assertThat(testPageWord.getn_width()).isEqualTo(DEFAULT_N_WIDTH);
+        assertThat(testPageWord.getn_idx()).isEqualTo(DEFAULT_N_IDX);
     }
 
     @Test
@@ -161,11 +168,12 @@ class PageWordResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pageWord.getId().intValue())))
-            .andExpect(jsonPath("$.[*].word").value(hasItem(DEFAULT_WORD)))
-            .andExpect(jsonPath("$.[*].left").value(hasItem(DEFAULT_LEFT.intValue())))
-            .andExpect(jsonPath("$.[*].top").value(hasItem(DEFAULT_TOP.intValue())))
-            .andExpect(jsonPath("$.[*].right").value(hasItem(DEFAULT_RIGHT.intValue())))
-            .andExpect(jsonPath("$.[*].bottom").value(hasItem(DEFAULT_BOTTOM.intValue())));
+            .andExpect(jsonPath("$.[*].s_word").value(hasItem(DEFAULT_S_WORD)))
+            .andExpect(jsonPath("$.[*].n_top").value(hasItem(DEFAULT_N_TOP.intValue())))
+            .andExpect(jsonPath("$.[*].n_left").value(hasItem(DEFAULT_N_LEFT.intValue())))
+            .andExpect(jsonPath("$.[*].n_heigth").value(hasItem(DEFAULT_N_HEIGTH.intValue())))
+            .andExpect(jsonPath("$.[*].n_width").value(hasItem(DEFAULT_N_WIDTH.intValue())))
+            .andExpect(jsonPath("$.[*].n_idx").value(hasItem(DEFAULT_N_IDX.intValue())));
     }
 
     @Test
@@ -180,11 +188,12 @@ class PageWordResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pageWord.getId().intValue()))
-            .andExpect(jsonPath("$.word").value(DEFAULT_WORD))
-            .andExpect(jsonPath("$.left").value(DEFAULT_LEFT.intValue()))
-            .andExpect(jsonPath("$.top").value(DEFAULT_TOP.intValue()))
-            .andExpect(jsonPath("$.right").value(DEFAULT_RIGHT.intValue()))
-            .andExpect(jsonPath("$.bottom").value(DEFAULT_BOTTOM.intValue()));
+            .andExpect(jsonPath("$.s_word").value(DEFAULT_S_WORD))
+            .andExpect(jsonPath("$.n_top").value(DEFAULT_N_TOP.intValue()))
+            .andExpect(jsonPath("$.n_left").value(DEFAULT_N_LEFT.intValue()))
+            .andExpect(jsonPath("$.n_heigth").value(DEFAULT_N_HEIGTH.intValue()))
+            .andExpect(jsonPath("$.n_width").value(DEFAULT_N_WIDTH.intValue()))
+            .andExpect(jsonPath("$.n_idx").value(DEFAULT_N_IDX.intValue()));
     }
 
     @Test
@@ -207,496 +216,600 @@ class PageWordResourceIT {
 
     @Test
     @Transactional
-    void getAllPageWordsByWordIsEqualToSomething() throws Exception {
+    void getAllPageWordsBys_wordIsEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where word equals to DEFAULT_WORD
-        defaultPageWordShouldBeFound("word.equals=" + DEFAULT_WORD);
+        // Get all the pageWordList where s_word equals to DEFAULT_S_WORD
+        defaultPageWordShouldBeFound("s_word.equals=" + DEFAULT_S_WORD);
 
-        // Get all the pageWordList where word equals to UPDATED_WORD
-        defaultPageWordShouldNotBeFound("word.equals=" + UPDATED_WORD);
+        // Get all the pageWordList where s_word equals to UPDATED_S_WORD
+        defaultPageWordShouldNotBeFound("s_word.equals=" + UPDATED_S_WORD);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByWordIsNotEqualToSomething() throws Exception {
+    void getAllPageWordsBys_wordIsNotEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where word not equals to DEFAULT_WORD
-        defaultPageWordShouldNotBeFound("word.notEquals=" + DEFAULT_WORD);
+        // Get all the pageWordList where s_word not equals to DEFAULT_S_WORD
+        defaultPageWordShouldNotBeFound("s_word.notEquals=" + DEFAULT_S_WORD);
 
-        // Get all the pageWordList where word not equals to UPDATED_WORD
-        defaultPageWordShouldBeFound("word.notEquals=" + UPDATED_WORD);
+        // Get all the pageWordList where s_word not equals to UPDATED_S_WORD
+        defaultPageWordShouldBeFound("s_word.notEquals=" + UPDATED_S_WORD);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByWordIsInShouldWork() throws Exception {
+    void getAllPageWordsBys_wordIsInShouldWork() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where word in DEFAULT_WORD or UPDATED_WORD
-        defaultPageWordShouldBeFound("word.in=" + DEFAULT_WORD + "," + UPDATED_WORD);
+        // Get all the pageWordList where s_word in DEFAULT_S_WORD or UPDATED_S_WORD
+        defaultPageWordShouldBeFound("s_word.in=" + DEFAULT_S_WORD + "," + UPDATED_S_WORD);
 
-        // Get all the pageWordList where word equals to UPDATED_WORD
-        defaultPageWordShouldNotBeFound("word.in=" + UPDATED_WORD);
+        // Get all the pageWordList where s_word equals to UPDATED_S_WORD
+        defaultPageWordShouldNotBeFound("s_word.in=" + UPDATED_S_WORD);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByWordIsNullOrNotNull() throws Exception {
+    void getAllPageWordsBys_wordIsNullOrNotNull() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where word is not null
-        defaultPageWordShouldBeFound("word.specified=true");
+        // Get all the pageWordList where s_word is not null
+        defaultPageWordShouldBeFound("s_word.specified=true");
 
-        // Get all the pageWordList where word is null
-        defaultPageWordShouldNotBeFound("word.specified=false");
+        // Get all the pageWordList where s_word is null
+        defaultPageWordShouldNotBeFound("s_word.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByWordContainsSomething() throws Exception {
+    void getAllPageWordsBys_wordContainsSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where word contains DEFAULT_WORD
-        defaultPageWordShouldBeFound("word.contains=" + DEFAULT_WORD);
+        // Get all the pageWordList where s_word contains DEFAULT_S_WORD
+        defaultPageWordShouldBeFound("s_word.contains=" + DEFAULT_S_WORD);
 
-        // Get all the pageWordList where word contains UPDATED_WORD
-        defaultPageWordShouldNotBeFound("word.contains=" + UPDATED_WORD);
+        // Get all the pageWordList where s_word contains UPDATED_S_WORD
+        defaultPageWordShouldNotBeFound("s_word.contains=" + UPDATED_S_WORD);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByWordNotContainsSomething() throws Exception {
+    void getAllPageWordsBys_wordNotContainsSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where word does not contain DEFAULT_WORD
-        defaultPageWordShouldNotBeFound("word.doesNotContain=" + DEFAULT_WORD);
+        // Get all the pageWordList where s_word does not contain DEFAULT_S_WORD
+        defaultPageWordShouldNotBeFound("s_word.doesNotContain=" + DEFAULT_S_WORD);
 
-        // Get all the pageWordList where word does not contain UPDATED_WORD
-        defaultPageWordShouldBeFound("word.doesNotContain=" + UPDATED_WORD);
+        // Get all the pageWordList where s_word does not contain UPDATED_S_WORD
+        defaultPageWordShouldBeFound("s_word.doesNotContain=" + UPDATED_S_WORD);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsEqualToSomething() throws Exception {
+    void getAllPageWordsByn_topIsEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left equals to DEFAULT_LEFT
-        defaultPageWordShouldBeFound("left.equals=" + DEFAULT_LEFT);
+        // Get all the pageWordList where n_top equals to DEFAULT_N_TOP
+        defaultPageWordShouldBeFound("n_top.equals=" + DEFAULT_N_TOP);
 
-        // Get all the pageWordList where left equals to UPDATED_LEFT
-        defaultPageWordShouldNotBeFound("left.equals=" + UPDATED_LEFT);
+        // Get all the pageWordList where n_top equals to UPDATED_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.equals=" + UPDATED_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsNotEqualToSomething() throws Exception {
+    void getAllPageWordsByn_topIsNotEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left not equals to DEFAULT_LEFT
-        defaultPageWordShouldNotBeFound("left.notEquals=" + DEFAULT_LEFT);
+        // Get all the pageWordList where n_top not equals to DEFAULT_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.notEquals=" + DEFAULT_N_TOP);
 
-        // Get all the pageWordList where left not equals to UPDATED_LEFT
-        defaultPageWordShouldBeFound("left.notEquals=" + UPDATED_LEFT);
+        // Get all the pageWordList where n_top not equals to UPDATED_N_TOP
+        defaultPageWordShouldBeFound("n_top.notEquals=" + UPDATED_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsInShouldWork() throws Exception {
+    void getAllPageWordsByn_topIsInShouldWork() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left in DEFAULT_LEFT or UPDATED_LEFT
-        defaultPageWordShouldBeFound("left.in=" + DEFAULT_LEFT + "," + UPDATED_LEFT);
+        // Get all the pageWordList where n_top in DEFAULT_N_TOP or UPDATED_N_TOP
+        defaultPageWordShouldBeFound("n_top.in=" + DEFAULT_N_TOP + "," + UPDATED_N_TOP);
 
-        // Get all the pageWordList where left equals to UPDATED_LEFT
-        defaultPageWordShouldNotBeFound("left.in=" + UPDATED_LEFT);
+        // Get all the pageWordList where n_top equals to UPDATED_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.in=" + UPDATED_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsNullOrNotNull() throws Exception {
+    void getAllPageWordsByn_topIsNullOrNotNull() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left is not null
-        defaultPageWordShouldBeFound("left.specified=true");
+        // Get all the pageWordList where n_top is not null
+        defaultPageWordShouldBeFound("n_top.specified=true");
 
-        // Get all the pageWordList where left is null
-        defaultPageWordShouldNotBeFound("left.specified=false");
+        // Get all the pageWordList where n_top is null
+        defaultPageWordShouldNotBeFound("n_top.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_topIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left is greater than or equal to DEFAULT_LEFT
-        defaultPageWordShouldBeFound("left.greaterThanOrEqual=" + DEFAULT_LEFT);
+        // Get all the pageWordList where n_top is greater than or equal to DEFAULT_N_TOP
+        defaultPageWordShouldBeFound("n_top.greaterThanOrEqual=" + DEFAULT_N_TOP);
 
-        // Get all the pageWordList where left is greater than or equal to UPDATED_LEFT
-        defaultPageWordShouldNotBeFound("left.greaterThanOrEqual=" + UPDATED_LEFT);
+        // Get all the pageWordList where n_top is greater than or equal to UPDATED_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.greaterThanOrEqual=" + UPDATED_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_topIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left is less than or equal to DEFAULT_LEFT
-        defaultPageWordShouldBeFound("left.lessThanOrEqual=" + DEFAULT_LEFT);
+        // Get all the pageWordList where n_top is less than or equal to DEFAULT_N_TOP
+        defaultPageWordShouldBeFound("n_top.lessThanOrEqual=" + DEFAULT_N_TOP);
 
-        // Get all the pageWordList where left is less than or equal to SMALLER_LEFT
-        defaultPageWordShouldNotBeFound("left.lessThanOrEqual=" + SMALLER_LEFT);
+        // Get all the pageWordList where n_top is less than or equal to SMALLER_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.lessThanOrEqual=" + SMALLER_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsLessThanSomething() throws Exception {
+    void getAllPageWordsByn_topIsLessThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left is less than DEFAULT_LEFT
-        defaultPageWordShouldNotBeFound("left.lessThan=" + DEFAULT_LEFT);
+        // Get all the pageWordList where n_top is less than DEFAULT_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.lessThan=" + DEFAULT_N_TOP);
 
-        // Get all the pageWordList where left is less than UPDATED_LEFT
-        defaultPageWordShouldBeFound("left.lessThan=" + UPDATED_LEFT);
+        // Get all the pageWordList where n_top is less than UPDATED_N_TOP
+        defaultPageWordShouldBeFound("n_top.lessThan=" + UPDATED_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByLeftIsGreaterThanSomething() throws Exception {
+    void getAllPageWordsByn_topIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where left is greater than DEFAULT_LEFT
-        defaultPageWordShouldNotBeFound("left.greaterThan=" + DEFAULT_LEFT);
+        // Get all the pageWordList where n_top is greater than DEFAULT_N_TOP
+        defaultPageWordShouldNotBeFound("n_top.greaterThan=" + DEFAULT_N_TOP);
 
-        // Get all the pageWordList where left is greater than SMALLER_LEFT
-        defaultPageWordShouldBeFound("left.greaterThan=" + SMALLER_LEFT);
+        // Get all the pageWordList where n_top is greater than SMALLER_N_TOP
+        defaultPageWordShouldBeFound("n_top.greaterThan=" + SMALLER_N_TOP);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsEqualToSomething() throws Exception {
+    void getAllPageWordsByn_leftIsEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top equals to DEFAULT_TOP
-        defaultPageWordShouldBeFound("top.equals=" + DEFAULT_TOP);
+        // Get all the pageWordList where n_left equals to DEFAULT_N_LEFT
+        defaultPageWordShouldBeFound("n_left.equals=" + DEFAULT_N_LEFT);
 
-        // Get all the pageWordList where top equals to UPDATED_TOP
-        defaultPageWordShouldNotBeFound("top.equals=" + UPDATED_TOP);
+        // Get all the pageWordList where n_left equals to UPDATED_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.equals=" + UPDATED_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsNotEqualToSomething() throws Exception {
+    void getAllPageWordsByn_leftIsNotEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top not equals to DEFAULT_TOP
-        defaultPageWordShouldNotBeFound("top.notEquals=" + DEFAULT_TOP);
+        // Get all the pageWordList where n_left not equals to DEFAULT_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.notEquals=" + DEFAULT_N_LEFT);
 
-        // Get all the pageWordList where top not equals to UPDATED_TOP
-        defaultPageWordShouldBeFound("top.notEquals=" + UPDATED_TOP);
+        // Get all the pageWordList where n_left not equals to UPDATED_N_LEFT
+        defaultPageWordShouldBeFound("n_left.notEquals=" + UPDATED_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsInShouldWork() throws Exception {
+    void getAllPageWordsByn_leftIsInShouldWork() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top in DEFAULT_TOP or UPDATED_TOP
-        defaultPageWordShouldBeFound("top.in=" + DEFAULT_TOP + "," + UPDATED_TOP);
+        // Get all the pageWordList where n_left in DEFAULT_N_LEFT or UPDATED_N_LEFT
+        defaultPageWordShouldBeFound("n_left.in=" + DEFAULT_N_LEFT + "," + UPDATED_N_LEFT);
 
-        // Get all the pageWordList where top equals to UPDATED_TOP
-        defaultPageWordShouldNotBeFound("top.in=" + UPDATED_TOP);
+        // Get all the pageWordList where n_left equals to UPDATED_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.in=" + UPDATED_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsNullOrNotNull() throws Exception {
+    void getAllPageWordsByn_leftIsNullOrNotNull() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top is not null
-        defaultPageWordShouldBeFound("top.specified=true");
+        // Get all the pageWordList where n_left is not null
+        defaultPageWordShouldBeFound("n_left.specified=true");
 
-        // Get all the pageWordList where top is null
-        defaultPageWordShouldNotBeFound("top.specified=false");
+        // Get all the pageWordList where n_left is null
+        defaultPageWordShouldNotBeFound("n_left.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_leftIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top is greater than or equal to DEFAULT_TOP
-        defaultPageWordShouldBeFound("top.greaterThanOrEqual=" + DEFAULT_TOP);
+        // Get all the pageWordList where n_left is greater than or equal to DEFAULT_N_LEFT
+        defaultPageWordShouldBeFound("n_left.greaterThanOrEqual=" + DEFAULT_N_LEFT);
 
-        // Get all the pageWordList where top is greater than or equal to UPDATED_TOP
-        defaultPageWordShouldNotBeFound("top.greaterThanOrEqual=" + UPDATED_TOP);
+        // Get all the pageWordList where n_left is greater than or equal to UPDATED_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.greaterThanOrEqual=" + UPDATED_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_leftIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top is less than or equal to DEFAULT_TOP
-        defaultPageWordShouldBeFound("top.lessThanOrEqual=" + DEFAULT_TOP);
+        // Get all the pageWordList where n_left is less than or equal to DEFAULT_N_LEFT
+        defaultPageWordShouldBeFound("n_left.lessThanOrEqual=" + DEFAULT_N_LEFT);
 
-        // Get all the pageWordList where top is less than or equal to SMALLER_TOP
-        defaultPageWordShouldNotBeFound("top.lessThanOrEqual=" + SMALLER_TOP);
+        // Get all the pageWordList where n_left is less than or equal to SMALLER_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.lessThanOrEqual=" + SMALLER_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsLessThanSomething() throws Exception {
+    void getAllPageWordsByn_leftIsLessThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top is less than DEFAULT_TOP
-        defaultPageWordShouldNotBeFound("top.lessThan=" + DEFAULT_TOP);
+        // Get all the pageWordList where n_left is less than DEFAULT_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.lessThan=" + DEFAULT_N_LEFT);
 
-        // Get all the pageWordList where top is less than UPDATED_TOP
-        defaultPageWordShouldBeFound("top.lessThan=" + UPDATED_TOP);
+        // Get all the pageWordList where n_left is less than UPDATED_N_LEFT
+        defaultPageWordShouldBeFound("n_left.lessThan=" + UPDATED_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByTopIsGreaterThanSomething() throws Exception {
+    void getAllPageWordsByn_leftIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where top is greater than DEFAULT_TOP
-        defaultPageWordShouldNotBeFound("top.greaterThan=" + DEFAULT_TOP);
+        // Get all the pageWordList where n_left is greater than DEFAULT_N_LEFT
+        defaultPageWordShouldNotBeFound("n_left.greaterThan=" + DEFAULT_N_LEFT);
 
-        // Get all the pageWordList where top is greater than SMALLER_TOP
-        defaultPageWordShouldBeFound("top.greaterThan=" + SMALLER_TOP);
+        // Get all the pageWordList where n_left is greater than SMALLER_N_LEFT
+        defaultPageWordShouldBeFound("n_left.greaterThan=" + SMALLER_N_LEFT);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsEqualToSomething() throws Exception {
+    void getAllPageWordsByn_heigthIsEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right equals to DEFAULT_RIGHT
-        defaultPageWordShouldBeFound("right.equals=" + DEFAULT_RIGHT);
+        // Get all the pageWordList where n_heigth equals to DEFAULT_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.equals=" + DEFAULT_N_HEIGTH);
 
-        // Get all the pageWordList where right equals to UPDATED_RIGHT
-        defaultPageWordShouldNotBeFound("right.equals=" + UPDATED_RIGHT);
+        // Get all the pageWordList where n_heigth equals to UPDATED_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.equals=" + UPDATED_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsNotEqualToSomething() throws Exception {
+    void getAllPageWordsByn_heigthIsNotEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right not equals to DEFAULT_RIGHT
-        defaultPageWordShouldNotBeFound("right.notEquals=" + DEFAULT_RIGHT);
+        // Get all the pageWordList where n_heigth not equals to DEFAULT_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.notEquals=" + DEFAULT_N_HEIGTH);
 
-        // Get all the pageWordList where right not equals to UPDATED_RIGHT
-        defaultPageWordShouldBeFound("right.notEquals=" + UPDATED_RIGHT);
+        // Get all the pageWordList where n_heigth not equals to UPDATED_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.notEquals=" + UPDATED_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsInShouldWork() throws Exception {
+    void getAllPageWordsByn_heigthIsInShouldWork() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right in DEFAULT_RIGHT or UPDATED_RIGHT
-        defaultPageWordShouldBeFound("right.in=" + DEFAULT_RIGHT + "," + UPDATED_RIGHT);
+        // Get all the pageWordList where n_heigth in DEFAULT_N_HEIGTH or UPDATED_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.in=" + DEFAULT_N_HEIGTH + "," + UPDATED_N_HEIGTH);
 
-        // Get all the pageWordList where right equals to UPDATED_RIGHT
-        defaultPageWordShouldNotBeFound("right.in=" + UPDATED_RIGHT);
+        // Get all the pageWordList where n_heigth equals to UPDATED_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.in=" + UPDATED_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsNullOrNotNull() throws Exception {
+    void getAllPageWordsByn_heigthIsNullOrNotNull() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right is not null
-        defaultPageWordShouldBeFound("right.specified=true");
+        // Get all the pageWordList where n_heigth is not null
+        defaultPageWordShouldBeFound("n_heigth.specified=true");
 
-        // Get all the pageWordList where right is null
-        defaultPageWordShouldNotBeFound("right.specified=false");
+        // Get all the pageWordList where n_heigth is null
+        defaultPageWordShouldNotBeFound("n_heigth.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_heigthIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right is greater than or equal to DEFAULT_RIGHT
-        defaultPageWordShouldBeFound("right.greaterThanOrEqual=" + DEFAULT_RIGHT);
+        // Get all the pageWordList where n_heigth is greater than or equal to DEFAULT_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.greaterThanOrEqual=" + DEFAULT_N_HEIGTH);
 
-        // Get all the pageWordList where right is greater than or equal to UPDATED_RIGHT
-        defaultPageWordShouldNotBeFound("right.greaterThanOrEqual=" + UPDATED_RIGHT);
+        // Get all the pageWordList where n_heigth is greater than or equal to UPDATED_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.greaterThanOrEqual=" + UPDATED_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_heigthIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right is less than or equal to DEFAULT_RIGHT
-        defaultPageWordShouldBeFound("right.lessThanOrEqual=" + DEFAULT_RIGHT);
+        // Get all the pageWordList where n_heigth is less than or equal to DEFAULT_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.lessThanOrEqual=" + DEFAULT_N_HEIGTH);
 
-        // Get all the pageWordList where right is less than or equal to SMALLER_RIGHT
-        defaultPageWordShouldNotBeFound("right.lessThanOrEqual=" + SMALLER_RIGHT);
+        // Get all the pageWordList where n_heigth is less than or equal to SMALLER_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.lessThanOrEqual=" + SMALLER_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsLessThanSomething() throws Exception {
+    void getAllPageWordsByn_heigthIsLessThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right is less than DEFAULT_RIGHT
-        defaultPageWordShouldNotBeFound("right.lessThan=" + DEFAULT_RIGHT);
+        // Get all the pageWordList where n_heigth is less than DEFAULT_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.lessThan=" + DEFAULT_N_HEIGTH);
 
-        // Get all the pageWordList where right is less than UPDATED_RIGHT
-        defaultPageWordShouldBeFound("right.lessThan=" + UPDATED_RIGHT);
+        // Get all the pageWordList where n_heigth is less than UPDATED_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.lessThan=" + UPDATED_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByRightIsGreaterThanSomething() throws Exception {
+    void getAllPageWordsByn_heigthIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where right is greater than DEFAULT_RIGHT
-        defaultPageWordShouldNotBeFound("right.greaterThan=" + DEFAULT_RIGHT);
+        // Get all the pageWordList where n_heigth is greater than DEFAULT_N_HEIGTH
+        defaultPageWordShouldNotBeFound("n_heigth.greaterThan=" + DEFAULT_N_HEIGTH);
 
-        // Get all the pageWordList where right is greater than SMALLER_RIGHT
-        defaultPageWordShouldBeFound("right.greaterThan=" + SMALLER_RIGHT);
+        // Get all the pageWordList where n_heigth is greater than SMALLER_N_HEIGTH
+        defaultPageWordShouldBeFound("n_heigth.greaterThan=" + SMALLER_N_HEIGTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsEqualToSomething() throws Exception {
+    void getAllPageWordsByn_widthIsEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom equals to DEFAULT_BOTTOM
-        defaultPageWordShouldBeFound("bottom.equals=" + DEFAULT_BOTTOM);
+        // Get all the pageWordList where n_width equals to DEFAULT_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.equals=" + DEFAULT_N_WIDTH);
 
-        // Get all the pageWordList where bottom equals to UPDATED_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.equals=" + UPDATED_BOTTOM);
+        // Get all the pageWordList where n_width equals to UPDATED_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.equals=" + UPDATED_N_WIDTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsNotEqualToSomething() throws Exception {
+    void getAllPageWordsByn_widthIsNotEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom not equals to DEFAULT_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.notEquals=" + DEFAULT_BOTTOM);
+        // Get all the pageWordList where n_width not equals to DEFAULT_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.notEquals=" + DEFAULT_N_WIDTH);
 
-        // Get all the pageWordList where bottom not equals to UPDATED_BOTTOM
-        defaultPageWordShouldBeFound("bottom.notEquals=" + UPDATED_BOTTOM);
+        // Get all the pageWordList where n_width not equals to UPDATED_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.notEquals=" + UPDATED_N_WIDTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsInShouldWork() throws Exception {
+    void getAllPageWordsByn_widthIsInShouldWork() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom in DEFAULT_BOTTOM or UPDATED_BOTTOM
-        defaultPageWordShouldBeFound("bottom.in=" + DEFAULT_BOTTOM + "," + UPDATED_BOTTOM);
+        // Get all the pageWordList where n_width in DEFAULT_N_WIDTH or UPDATED_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.in=" + DEFAULT_N_WIDTH + "," + UPDATED_N_WIDTH);
 
-        // Get all the pageWordList where bottom equals to UPDATED_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.in=" + UPDATED_BOTTOM);
+        // Get all the pageWordList where n_width equals to UPDATED_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.in=" + UPDATED_N_WIDTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsNullOrNotNull() throws Exception {
+    void getAllPageWordsByn_widthIsNullOrNotNull() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom is not null
-        defaultPageWordShouldBeFound("bottom.specified=true");
+        // Get all the pageWordList where n_width is not null
+        defaultPageWordShouldBeFound("n_width.specified=true");
 
-        // Get all the pageWordList where bottom is null
-        defaultPageWordShouldNotBeFound("bottom.specified=false");
+        // Get all the pageWordList where n_width is null
+        defaultPageWordShouldNotBeFound("n_width.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_widthIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom is greater than or equal to DEFAULT_BOTTOM
-        defaultPageWordShouldBeFound("bottom.greaterThanOrEqual=" + DEFAULT_BOTTOM);
+        // Get all the pageWordList where n_width is greater than or equal to DEFAULT_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.greaterThanOrEqual=" + DEFAULT_N_WIDTH);
 
-        // Get all the pageWordList where bottom is greater than or equal to UPDATED_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.greaterThanOrEqual=" + UPDATED_BOTTOM);
+        // Get all the pageWordList where n_width is greater than or equal to UPDATED_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.greaterThanOrEqual=" + UPDATED_N_WIDTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPageWordsByn_widthIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom is less than or equal to DEFAULT_BOTTOM
-        defaultPageWordShouldBeFound("bottom.lessThanOrEqual=" + DEFAULT_BOTTOM);
+        // Get all the pageWordList where n_width is less than or equal to DEFAULT_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.lessThanOrEqual=" + DEFAULT_N_WIDTH);
 
-        // Get all the pageWordList where bottom is less than or equal to SMALLER_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.lessThanOrEqual=" + SMALLER_BOTTOM);
+        // Get all the pageWordList where n_width is less than or equal to SMALLER_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.lessThanOrEqual=" + SMALLER_N_WIDTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsLessThanSomething() throws Exception {
+    void getAllPageWordsByn_widthIsLessThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom is less than DEFAULT_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.lessThan=" + DEFAULT_BOTTOM);
+        // Get all the pageWordList where n_width is less than DEFAULT_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.lessThan=" + DEFAULT_N_WIDTH);
 
-        // Get all the pageWordList where bottom is less than UPDATED_BOTTOM
-        defaultPageWordShouldBeFound("bottom.lessThan=" + UPDATED_BOTTOM);
+        // Get all the pageWordList where n_width is less than UPDATED_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.lessThan=" + UPDATED_N_WIDTH);
     }
 
     @Test
     @Transactional
-    void getAllPageWordsByBottomIsGreaterThanSomething() throws Exception {
+    void getAllPageWordsByn_widthIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pageWordRepository.saveAndFlush(pageWord);
 
-        // Get all the pageWordList where bottom is greater than DEFAULT_BOTTOM
-        defaultPageWordShouldNotBeFound("bottom.greaterThan=" + DEFAULT_BOTTOM);
+        // Get all the pageWordList where n_width is greater than DEFAULT_N_WIDTH
+        defaultPageWordShouldNotBeFound("n_width.greaterThan=" + DEFAULT_N_WIDTH);
 
-        // Get all the pageWordList where bottom is greater than SMALLER_BOTTOM
-        defaultPageWordShouldBeFound("bottom.greaterThan=" + SMALLER_BOTTOM);
+        // Get all the pageWordList where n_width is greater than SMALLER_N_WIDTH
+        defaultPageWordShouldBeFound("n_width.greaterThan=" + SMALLER_N_WIDTH);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx equals to DEFAULT_N_IDX
+        defaultPageWordShouldBeFound("n_idx.equals=" + DEFAULT_N_IDX);
+
+        // Get all the pageWordList where n_idx equals to UPDATED_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.equals=" + UPDATED_N_IDX);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx not equals to DEFAULT_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.notEquals=" + DEFAULT_N_IDX);
+
+        // Get all the pageWordList where n_idx not equals to UPDATED_N_IDX
+        defaultPageWordShouldBeFound("n_idx.notEquals=" + UPDATED_N_IDX);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx in DEFAULT_N_IDX or UPDATED_N_IDX
+        defaultPageWordShouldBeFound("n_idx.in=" + DEFAULT_N_IDX + "," + UPDATED_N_IDX);
+
+        // Get all the pageWordList where n_idx equals to UPDATED_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.in=" + UPDATED_N_IDX);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx is not null
+        defaultPageWordShouldBeFound("n_idx.specified=true");
+
+        // Get all the pageWordList where n_idx is null
+        defaultPageWordShouldNotBeFound("n_idx.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx is greater than or equal to DEFAULT_N_IDX
+        defaultPageWordShouldBeFound("n_idx.greaterThanOrEqual=" + DEFAULT_N_IDX);
+
+        // Get all the pageWordList where n_idx is greater than or equal to UPDATED_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.greaterThanOrEqual=" + UPDATED_N_IDX);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx is less than or equal to DEFAULT_N_IDX
+        defaultPageWordShouldBeFound("n_idx.lessThanOrEqual=" + DEFAULT_N_IDX);
+
+        // Get all the pageWordList where n_idx is less than or equal to SMALLER_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.lessThanOrEqual=" + SMALLER_N_IDX);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsLessThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx is less than DEFAULT_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.lessThan=" + DEFAULT_N_IDX);
+
+        // Get all the pageWordList where n_idx is less than UPDATED_N_IDX
+        defaultPageWordShouldBeFound("n_idx.lessThan=" + UPDATED_N_IDX);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByn_idxIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where n_idx is greater than DEFAULT_N_IDX
+        defaultPageWordShouldNotBeFound("n_idx.greaterThan=" + DEFAULT_N_IDX);
+
+        // Get all the pageWordList where n_idx is greater than SMALLER_N_IDX
+        defaultPageWordShouldBeFound("n_idx.greaterThan=" + SMALLER_N_IDX);
     }
 
     @Test
@@ -734,11 +847,12 @@ class PageWordResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pageWord.getId().intValue())))
-            .andExpect(jsonPath("$.[*].word").value(hasItem(DEFAULT_WORD)))
-            .andExpect(jsonPath("$.[*].left").value(hasItem(DEFAULT_LEFT.intValue())))
-            .andExpect(jsonPath("$.[*].top").value(hasItem(DEFAULT_TOP.intValue())))
-            .andExpect(jsonPath("$.[*].right").value(hasItem(DEFAULT_RIGHT.intValue())))
-            .andExpect(jsonPath("$.[*].bottom").value(hasItem(DEFAULT_BOTTOM.intValue())));
+            .andExpect(jsonPath("$.[*].s_word").value(hasItem(DEFAULT_S_WORD)))
+            .andExpect(jsonPath("$.[*].n_top").value(hasItem(DEFAULT_N_TOP.intValue())))
+            .andExpect(jsonPath("$.[*].n_left").value(hasItem(DEFAULT_N_LEFT.intValue())))
+            .andExpect(jsonPath("$.[*].n_heigth").value(hasItem(DEFAULT_N_HEIGTH.intValue())))
+            .andExpect(jsonPath("$.[*].n_width").value(hasItem(DEFAULT_N_WIDTH.intValue())))
+            .andExpect(jsonPath("$.[*].n_idx").value(hasItem(DEFAULT_N_IDX.intValue())));
 
         // Check, that the count call also returns 1
         restPageWordMockMvc
@@ -786,7 +900,13 @@ class PageWordResourceIT {
         PageWord updatedPageWord = pageWordRepository.findById(pageWord.getId()).get();
         // Disconnect from session so that the updates on updatedPageWord are not directly saved in db
         em.detach(updatedPageWord);
-        updatedPageWord.word(UPDATED_WORD).left(UPDATED_LEFT).top(UPDATED_TOP).right(UPDATED_RIGHT).bottom(UPDATED_BOTTOM);
+        updatedPageWord
+            .s_word(UPDATED_S_WORD)
+            .n_top(UPDATED_N_TOP)
+            .n_left(UPDATED_N_LEFT)
+            .n_heigth(UPDATED_N_HEIGTH)
+            .n_width(UPDATED_N_WIDTH)
+            .n_idx(UPDATED_N_IDX);
         PageWordDTO pageWordDTO = pageWordMapper.toDto(updatedPageWord);
 
         restPageWordMockMvc
@@ -801,11 +921,12 @@ class PageWordResourceIT {
         List<PageWord> pageWordList = pageWordRepository.findAll();
         assertThat(pageWordList).hasSize(databaseSizeBeforeUpdate);
         PageWord testPageWord = pageWordList.get(pageWordList.size() - 1);
-        assertThat(testPageWord.getWord()).isEqualTo(UPDATED_WORD);
-        assertThat(testPageWord.getLeft()).isEqualTo(UPDATED_LEFT);
-        assertThat(testPageWord.getTop()).isEqualTo(UPDATED_TOP);
-        assertThat(testPageWord.getRight()).isEqualTo(UPDATED_RIGHT);
-        assertThat(testPageWord.getBottom()).isEqualTo(UPDATED_BOTTOM);
+        assertThat(testPageWord.gets_word()).isEqualTo(UPDATED_S_WORD);
+        assertThat(testPageWord.getn_top()).isEqualTo(UPDATED_N_TOP);
+        assertThat(testPageWord.getn_left()).isEqualTo(UPDATED_N_LEFT);
+        assertThat(testPageWord.getn_heigth()).isEqualTo(UPDATED_N_HEIGTH);
+        assertThat(testPageWord.getn_width()).isEqualTo(UPDATED_N_WIDTH);
+        assertThat(testPageWord.getn_idx()).isEqualTo(UPDATED_N_IDX);
     }
 
     @Test
@@ -897,11 +1018,12 @@ class PageWordResourceIT {
         List<PageWord> pageWordList = pageWordRepository.findAll();
         assertThat(pageWordList).hasSize(databaseSizeBeforeUpdate);
         PageWord testPageWord = pageWordList.get(pageWordList.size() - 1);
-        assertThat(testPageWord.getWord()).isEqualTo(DEFAULT_WORD);
-        assertThat(testPageWord.getLeft()).isEqualTo(DEFAULT_LEFT);
-        assertThat(testPageWord.getTop()).isEqualTo(DEFAULT_TOP);
-        assertThat(testPageWord.getRight()).isEqualTo(DEFAULT_RIGHT);
-        assertThat(testPageWord.getBottom()).isEqualTo(DEFAULT_BOTTOM);
+        assertThat(testPageWord.gets_word()).isEqualTo(DEFAULT_S_WORD);
+        assertThat(testPageWord.getn_top()).isEqualTo(DEFAULT_N_TOP);
+        assertThat(testPageWord.getn_left()).isEqualTo(DEFAULT_N_LEFT);
+        assertThat(testPageWord.getn_heigth()).isEqualTo(DEFAULT_N_HEIGTH);
+        assertThat(testPageWord.getn_width()).isEqualTo(DEFAULT_N_WIDTH);
+        assertThat(testPageWord.getn_idx()).isEqualTo(DEFAULT_N_IDX);
     }
 
     @Test
@@ -916,7 +1038,13 @@ class PageWordResourceIT {
         PageWord partialUpdatedPageWord = new PageWord();
         partialUpdatedPageWord.setId(pageWord.getId());
 
-        partialUpdatedPageWord.word(UPDATED_WORD).left(UPDATED_LEFT).top(UPDATED_TOP).right(UPDATED_RIGHT).bottom(UPDATED_BOTTOM);
+        partialUpdatedPageWord
+            .s_word(UPDATED_S_WORD)
+            .n_top(UPDATED_N_TOP)
+            .n_left(UPDATED_N_LEFT)
+            .n_heigth(UPDATED_N_HEIGTH)
+            .n_width(UPDATED_N_WIDTH)
+            .n_idx(UPDATED_N_IDX);
 
         restPageWordMockMvc
             .perform(
@@ -930,11 +1058,12 @@ class PageWordResourceIT {
         List<PageWord> pageWordList = pageWordRepository.findAll();
         assertThat(pageWordList).hasSize(databaseSizeBeforeUpdate);
         PageWord testPageWord = pageWordList.get(pageWordList.size() - 1);
-        assertThat(testPageWord.getWord()).isEqualTo(UPDATED_WORD);
-        assertThat(testPageWord.getLeft()).isEqualTo(UPDATED_LEFT);
-        assertThat(testPageWord.getTop()).isEqualTo(UPDATED_TOP);
-        assertThat(testPageWord.getRight()).isEqualTo(UPDATED_RIGHT);
-        assertThat(testPageWord.getBottom()).isEqualTo(UPDATED_BOTTOM);
+        assertThat(testPageWord.gets_word()).isEqualTo(UPDATED_S_WORD);
+        assertThat(testPageWord.getn_top()).isEqualTo(UPDATED_N_TOP);
+        assertThat(testPageWord.getn_left()).isEqualTo(UPDATED_N_LEFT);
+        assertThat(testPageWord.getn_heigth()).isEqualTo(UPDATED_N_HEIGTH);
+        assertThat(testPageWord.getn_width()).isEqualTo(UPDATED_N_WIDTH);
+        assertThat(testPageWord.getn_idx()).isEqualTo(UPDATED_N_IDX);
     }
 
     @Test

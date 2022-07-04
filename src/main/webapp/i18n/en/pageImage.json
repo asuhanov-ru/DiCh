@@ -18,7 +18,8 @@
         "title": "Page Image"
       },
       "id": "ID",
-      "image": "Image"
+      "image": "Image",
+      "pageWord": "Page Word"
     }
   }
 }

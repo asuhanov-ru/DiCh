@@ -88,17 +88,36 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
                   validate={{ required: true }}
                 />
               ) : null}
-              <ValidatedField label={translate('diChApp.pageWord.word')} id="page-word-word" name="word" data-cy="word" type="text" />
-              <ValidatedField label={translate('diChApp.pageWord.left')} id="page-word-left" name="left" data-cy="left" type="text" />
-              <ValidatedField label={translate('diChApp.pageWord.top')} id="page-word-top" name="top" data-cy="top" type="text" />
-              <ValidatedField label={translate('diChApp.pageWord.right')} id="page-word-right" name="right" data-cy="right" type="text" />
               <ValidatedField
-                label={translate('diChApp.pageWord.bottom')}
-                id="page-word-bottom"
-                name="bottom"
-                data-cy="bottom"
+                label={translate('diChApp.pageWord.s_word')}
+                id="page-word-s_word"
+                name="s_word"
+                data-cy="s_word"
                 type="text"
               />
+              <ValidatedField label={translate('diChApp.pageWord.n_top')} id="page-word-n_top" name="n_top" data-cy="n_top" type="text" />
+              <ValidatedField
+                label={translate('diChApp.pageWord.n_left')}
+                id="page-word-n_left"
+                name="n_left"
+                data-cy="n_left"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageWord.n_heigth')}
+                id="page-word-n_heigth"
+                name="n_heigth"
+                data-cy="n_heigth"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageWord.n_width')}
+                id="page-word-n_width"
+                name="n_width"
+                data-cy="n_width"
+                type="text"
+              />
+              <ValidatedField label={translate('diChApp.pageWord.n_idx')} id="page-word-n_idx" name="n_idx" data-cy="n_idx" type="text" />
               <ValidatedField
                 id="page-word-pageImage"
                 name="pageImage"

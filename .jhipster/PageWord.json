@@ -1,25 +1,29 @@
 {
-  "changelogDate": "20220701134627",
+  "changelogDate": "20220704064936",
   "dto": "mapstruct",
   "fields": [
     {
-      "fieldName": "word",
+      "fieldName": "s_word",
       "fieldType": "String"
     },
     {
-      "fieldName": "left",
+      "fieldName": "n_top",
       "fieldType": "Long"
     },
     {
-      "fieldName": "top",
+      "fieldName": "n_left",
       "fieldType": "Long"
     },
     {
-      "fieldName": "right",
+      "fieldName": "n_heigth",
       "fieldType": "Long"
     },
     {
-      "fieldName": "bottom",
+      "fieldName": "n_width",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "n_idx",
       "fieldType": "Long"
     }
   ],

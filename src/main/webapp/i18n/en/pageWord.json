@@ -18,11 +18,12 @@
         "title": "Page Word"
       },
       "id": "ID",
-      "word": "Word",
-      "left": "Left",
-      "top": "Top",
-      "right": "Right",
-      "bottom": "Bottom",
+      "s_word": "S Word",
+      "n_top": "N Top",
+      "n_left": "N Left",
+      "n_heigth": "N Heigth",
+      "n_width": "N Width",
+      "n_idx": "N Idx",
       "pageImage": "Page Image"
     }
   }
