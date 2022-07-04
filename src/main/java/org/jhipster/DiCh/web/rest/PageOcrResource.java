@@ -32,4 +32,23 @@ import tech.jhipster.web.util.ResponseUtil;
 public class PageOcrResource {
 
     private final Logger log = LoggerFactory.getLogger(PageOcrResource.class);
+
+    private final PageTextService pageTextService;
+
+    public PageOcrResource(PageTextService pageTextService) {
+        this.pageTextService = pageTextService;
+    }
+
+    /**
+     * {@code GET  /page-texts/:id} : get the "id" pageText.
+     *
+     * @param id the id of the pageTextDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pageTextDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/page-ocr/{id}")
+    public ResponseEntity<PageTextDTO> getPageText(@PathVariable Long id) {
+        log.debug("REST request to get PageText : {}", id);
+        Optional<PageTextDTO> pageTextDTO = pageTextService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(pageTextDTO);
+    }
 }
