@@ -1,0 +1,30 @@
+{
+  "diChApp": {
+    "pageWord": {
+      "home": {
+        "title": "Page Words",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Page Word",
+        "createOrEditLabel": "Create or edit a Page Word",
+        "notFound": "No Page Words found"
+      },
+      "created": "A new Page Word is created with identifier {{ param }}",
+      "updated": "A Page Word is updated with identifier {{ param }}",
+      "deleted": "A Page Word is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Page Word {{ id }}?"
+      },
+      "detail": {
+        "title": "Page Word"
+      },
+      "id": "ID",
+      "s_word": "S Word",
+      "n_top": "N Top",
+      "n_left": "N Left",
+      "n_heigth": "N Heigth",
+      "n_width": "N Width",
+      "n_idx": "N Idx",
+      "pageImage": "Page Image"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "changelogDate": "20220704064936",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "s_word",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "n_top",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "n_left",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "n_heigth",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "n_width",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "n_idx",
+      "fieldType": "Long"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "PageWord",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "pageImage",
+      "relationshipName": "pageImage",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceImpl"
+}
