@@ -3,9 +3,8 @@
   "dto": "mapstruct",
   "fields": [
     {
-      "fieldName": "image",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "image"
+      "fieldName": "image_file_name",
+      "fieldType": "String"
     }
   ],
   "jpaMetamodelFiltering": true,

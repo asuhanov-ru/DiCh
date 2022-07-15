@@ -5,6 +5,7 @@ import pageImage from 'app/entities/page-image/page-image.reducer';
 import pageText from 'app/entities/page-text/page-text.reducer';
 import pageWord from 'app/entities/page-word/page-word.reducer';
 import pageOcr from 'app/pages/page-ocr/page-ocr.reducer';
+import translation from 'app/entities/translation/translation.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const entitiesReducers = {
@@ -15,6 +16,7 @@ const entitiesReducers = {
   pageText,
   pageWord,
   pageOcr,
+  translation,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
 };
 

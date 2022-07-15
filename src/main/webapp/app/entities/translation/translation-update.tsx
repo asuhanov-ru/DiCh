@@ -8,20 +8,20 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { IPageImage } from 'app/shared/model/page-image.model';
-import { getEntity, updateEntity, createEntity, reset } from './page-image.reducer';
+import { ITranslation } from 'app/shared/model/translation.model';
+import { getEntity, updateEntity, createEntity, reset } from './translation.reducer';
 
-export const PageImageUpdate = (props: RouteComponentProps<{ id: string }>) => {
+export const TranslationUpdate = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const pageImageEntity = useAppSelector(state => state.pageImage.entity);
-  const loading = useAppSelector(state => state.pageImage.loading);
-  const updating = useAppSelector(state => state.pageImage.updating);
-  const updateSuccess = useAppSelector(state => state.pageImage.updateSuccess);
+  const translationEntity = useAppSelector(state => state.translation.entity);
+  const loading = useAppSelector(state => state.translation.loading);
+  const updating = useAppSelector(state => state.translation.updating);
+  const updateSuccess = useAppSelector(state => state.translation.updateSuccess);
   const handleClose = () => {
-    props.history.push('/page-image' + props.location.search);
+    props.history.push('/translation');
   };
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export const PageImageUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const saveEntity = values => {
     const entity = {
-      ...pageImageEntity,
+      ...translationEntity,
       ...values,
     };
 
@@ -55,15 +55,15 @@ export const PageImageUpdate = (props: RouteComponentProps<{ id: string }>) => {
     isNew
       ? {}
       : {
-          ...pageImageEntity,
+          ...translationEntity,
         };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="diChApp.pageImage.home.createOrEditLabel" data-cy="PageImageCreateUpdateHeading">
-            <Translate contentKey="diChApp.pageImage.home.createOrEditLabel">Create or edit a PageImage</Translate>
+          <h2 id="diChApp.translation.home.createOrEditLabel" data-cy="TranslationCreateUpdateHeading">
+            <Translate contentKey="diChApp.translation.home.createOrEditLabel">Create or edit a Translation</Translate>
           </h2>
         </Col>
       </Row>
@@ -78,19 +78,20 @@ export const PageImageUpdate = (props: RouteComponentProps<{ id: string }>) => {
                   name="id"
                   required
                   readOnly
-                  id="page-image-id"
+                  id="translation-id"
                   label={translate('global.field.id')}
                   validate={{ required: true }}
                 />
               ) : null}
+              <ValidatedField label={translate('diChApp.translation.lang')} id="translation-lang" name="lang" data-cy="lang" type="text" />
               <ValidatedField
-                label={translate('diChApp.pageImage.image_file_name')}
-                id="page-image-image_file_name"
-                name="image_file_name"
-                data-cy="image_file_name"
+                label={translate('diChApp.translation.n_version')}
+                id="translation-n_version"
+                name="n_version"
+                data-cy="n_version"
                 type="text"
               />
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/page-image" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/translation" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -111,4 +112,4 @@ export const PageImageUpdate = (props: RouteComponentProps<{ id: string }>) => {
   );
 };
 
-export default PageImageUpdate;
+export default TranslationUpdate;

@@ -1,0 +1,18 @@
+{
+  "changelogDate": "20220707131530",
+  "fields": [
+    {
+      "fieldName": "lang",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "n_version",
+      "fieldType": "Integer"
+    }
+  ],
+  "name": "Translation",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}

@@ -24,7 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link PageImageResource} REST controller.
@@ -34,10 +33,8 @@ import org.springframework.util.Base64Utils;
 @WithMockUser
 class PageImageResourceIT {
 
-    private static final byte[] DEFAULT_IMAGE = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_IMAGE = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_IMAGE_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_IMAGE_CONTENT_TYPE = "image/png";
+    private static final String DEFAULT_IMAGE_FILE_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_IMAGE_FILE_NAME = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/page-images";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -66,7 +63,7 @@ class PageImageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static PageImage createEntity(EntityManager em) {
-        PageImage pageImage = new PageImage().image(DEFAULT_IMAGE).imageContentType(DEFAULT_IMAGE_CONTENT_TYPE);
+        PageImage pageImage = new PageImage().image_file_name(DEFAULT_IMAGE_FILE_NAME);
         return pageImage;
     }
 
@@ -77,7 +74,7 @@ class PageImageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static PageImage createUpdatedEntity(EntityManager em) {
-        PageImage pageImage = new PageImage().image(UPDATED_IMAGE).imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
+        PageImage pageImage = new PageImage().image_file_name(UPDATED_IMAGE_FILE_NAME);
         return pageImage;
     }
 
@@ -100,8 +97,7 @@ class PageImageResourceIT {
         List<PageImage> pageImageList = pageImageRepository.findAll();
         assertThat(pageImageList).hasSize(databaseSizeBeforeCreate + 1);
         PageImage testPageImage = pageImageList.get(pageImageList.size() - 1);
-        assertThat(testPageImage.getImage()).isEqualTo(DEFAULT_IMAGE);
-        assertThat(testPageImage.getImageContentType()).isEqualTo(DEFAULT_IMAGE_CONTENT_TYPE);
+        assertThat(testPageImage.getImage_file_name()).isEqualTo(DEFAULT_IMAGE_FILE_NAME);
     }
 
     @Test
@@ -135,8 +131,7 @@ class PageImageResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pageImage.getId().intValue())))
-            .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))));
+            .andExpect(jsonPath("$.[*].image_file_name").value(hasItem(DEFAULT_IMAGE_FILE_NAME)));
     }
 
     @Test
@@ -151,8 +146,7 @@ class PageImageResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pageImage.getId().intValue()))
-            .andExpect(jsonPath("$.imageContentType").value(DEFAULT_IMAGE_CONTENT_TYPE))
-            .andExpect(jsonPath("$.image").value(Base64Utils.encodeToString(DEFAULT_IMAGE)));
+            .andExpect(jsonPath("$.image_file_name").value(DEFAULT_IMAGE_FILE_NAME));
     }
 
     @Test
@@ -171,6 +165,84 @@ class PageImageResourceIT {
 
         defaultPageImageShouldBeFound("id.lessThanOrEqual=" + id);
         defaultPageImageShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageImagesByImage_file_nameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageImageRepository.saveAndFlush(pageImage);
+
+        // Get all the pageImageList where image_file_name equals to DEFAULT_IMAGE_FILE_NAME
+        defaultPageImageShouldBeFound("image_file_name.equals=" + DEFAULT_IMAGE_FILE_NAME);
+
+        // Get all the pageImageList where image_file_name equals to UPDATED_IMAGE_FILE_NAME
+        defaultPageImageShouldNotBeFound("image_file_name.equals=" + UPDATED_IMAGE_FILE_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageImagesByImage_file_nameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageImageRepository.saveAndFlush(pageImage);
+
+        // Get all the pageImageList where image_file_name not equals to DEFAULT_IMAGE_FILE_NAME
+        defaultPageImageShouldNotBeFound("image_file_name.notEquals=" + DEFAULT_IMAGE_FILE_NAME);
+
+        // Get all the pageImageList where image_file_name not equals to UPDATED_IMAGE_FILE_NAME
+        defaultPageImageShouldBeFound("image_file_name.notEquals=" + UPDATED_IMAGE_FILE_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageImagesByImage_file_nameIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageImageRepository.saveAndFlush(pageImage);
+
+        // Get all the pageImageList where image_file_name in DEFAULT_IMAGE_FILE_NAME or UPDATED_IMAGE_FILE_NAME
+        defaultPageImageShouldBeFound("image_file_name.in=" + DEFAULT_IMAGE_FILE_NAME + "," + UPDATED_IMAGE_FILE_NAME);
+
+        // Get all the pageImageList where image_file_name equals to UPDATED_IMAGE_FILE_NAME
+        defaultPageImageShouldNotBeFound("image_file_name.in=" + UPDATED_IMAGE_FILE_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageImagesByImage_file_nameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageImageRepository.saveAndFlush(pageImage);
+
+        // Get all the pageImageList where image_file_name is not null
+        defaultPageImageShouldBeFound("image_file_name.specified=true");
+
+        // Get all the pageImageList where image_file_name is null
+        defaultPageImageShouldNotBeFound("image_file_name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageImagesByImage_file_nameContainsSomething() throws Exception {
+        // Initialize the database
+        pageImageRepository.saveAndFlush(pageImage);
+
+        // Get all the pageImageList where image_file_name contains DEFAULT_IMAGE_FILE_NAME
+        defaultPageImageShouldBeFound("image_file_name.contains=" + DEFAULT_IMAGE_FILE_NAME);
+
+        // Get all the pageImageList where image_file_name contains UPDATED_IMAGE_FILE_NAME
+        defaultPageImageShouldNotBeFound("image_file_name.contains=" + UPDATED_IMAGE_FILE_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageImagesByImage_file_nameNotContainsSomething() throws Exception {
+        // Initialize the database
+        pageImageRepository.saveAndFlush(pageImage);
+
+        // Get all the pageImageList where image_file_name does not contain DEFAULT_IMAGE_FILE_NAME
+        defaultPageImageShouldNotBeFound("image_file_name.doesNotContain=" + DEFAULT_IMAGE_FILE_NAME);
+
+        // Get all the pageImageList where image_file_name does not contain UPDATED_IMAGE_FILE_NAME
+        defaultPageImageShouldBeFound("image_file_name.doesNotContain=" + UPDATED_IMAGE_FILE_NAME);
     }
 
     @Test
@@ -208,8 +280,7 @@ class PageImageResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pageImage.getId().intValue())))
-            .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))));
+            .andExpect(jsonPath("$.[*].image_file_name").value(hasItem(DEFAULT_IMAGE_FILE_NAME)));
 
         // Check, that the count call also returns 1
         restPageImageMockMvc
@@ -257,7 +328,7 @@ class PageImageResourceIT {
         PageImage updatedPageImage = pageImageRepository.findById(pageImage.getId()).get();
         // Disconnect from session so that the updates on updatedPageImage are not directly saved in db
         em.detach(updatedPageImage);
-        updatedPageImage.image(UPDATED_IMAGE).imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
+        updatedPageImage.image_file_name(UPDATED_IMAGE_FILE_NAME);
         PageImageDTO pageImageDTO = pageImageMapper.toDto(updatedPageImage);
 
         restPageImageMockMvc
@@ -272,8 +343,7 @@ class PageImageResourceIT {
         List<PageImage> pageImageList = pageImageRepository.findAll();
         assertThat(pageImageList).hasSize(databaseSizeBeforeUpdate);
         PageImage testPageImage = pageImageList.get(pageImageList.size() - 1);
-        assertThat(testPageImage.getImage()).isEqualTo(UPDATED_IMAGE);
-        assertThat(testPageImage.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
+        assertThat(testPageImage.getImage_file_name()).isEqualTo(UPDATED_IMAGE_FILE_NAME);
     }
 
     @Test
@@ -353,7 +423,7 @@ class PageImageResourceIT {
         PageImage partialUpdatedPageImage = new PageImage();
         partialUpdatedPageImage.setId(pageImage.getId());
 
-        partialUpdatedPageImage.image(UPDATED_IMAGE).imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
+        partialUpdatedPageImage.image_file_name(UPDATED_IMAGE_FILE_NAME);
 
         restPageImageMockMvc
             .perform(
@@ -367,8 +437,7 @@ class PageImageResourceIT {
         List<PageImage> pageImageList = pageImageRepository.findAll();
         assertThat(pageImageList).hasSize(databaseSizeBeforeUpdate);
         PageImage testPageImage = pageImageList.get(pageImageList.size() - 1);
-        assertThat(testPageImage.getImage()).isEqualTo(UPDATED_IMAGE);
-        assertThat(testPageImage.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
+        assertThat(testPageImage.getImage_file_name()).isEqualTo(UPDATED_IMAGE_FILE_NAME);
     }
 
     @Test
@@ -383,7 +452,7 @@ class PageImageResourceIT {
         PageImage partialUpdatedPageImage = new PageImage();
         partialUpdatedPageImage.setId(pageImage.getId());
 
-        partialUpdatedPageImage.image(UPDATED_IMAGE).imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
+        partialUpdatedPageImage.image_file_name(UPDATED_IMAGE_FILE_NAME);
 
         restPageImageMockMvc
             .perform(
@@ -397,8 +466,7 @@ class PageImageResourceIT {
         List<PageImage> pageImageList = pageImageRepository.findAll();
         assertThat(pageImageList).hasSize(databaseSizeBeforeUpdate);
         PageImage testPageImage = pageImageList.get(pageImageList.size() - 1);
-        assertThat(testPageImage.getImage()).isEqualTo(UPDATED_IMAGE);
-        assertThat(testPageImage.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
+        assertThat(testPageImage.getImage_file_name()).isEqualTo(UPDATED_IMAGE_FILE_NAME);
     }
 
     @Test

@@ -18,7 +18,7 @@
         "title": "Page Image"
       },
       "id": "ID",
-      "image": "Image",
+      "image_file_name": "Image File Name",
       "pageWord": "Page Word"
     }
   }

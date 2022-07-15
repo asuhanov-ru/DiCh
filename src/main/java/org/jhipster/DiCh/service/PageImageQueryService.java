@@ -90,6 +90,9 @@ public class PageImageQueryService extends QueryService<PageImage> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), PageImage_.id));
             }
+            if (criteria.getImage_file_name() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getImage_file_name(), PageImage_.image_file_name));
+            }
             if (criteria.getPageWordId() != null) {
                 specification =
                     specification.and(

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
-import { openFile, byteSize, Translate, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
+import { Translate, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -104,8 +104,8 @@ export const PageImage = (props: RouteComponentProps<{ url: string }>) => {
                 <th className="hand" onClick={sort('id')}>
                   <Translate contentKey="diChApp.pageImage.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={sort('image')}>
-                  <Translate contentKey="diChApp.pageImage.image">Image</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={sort('image_file_name')}>
+                  <Translate contentKey="diChApp.pageImage.image_file_name">Image File Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -118,21 +118,7 @@ export const PageImage = (props: RouteComponentProps<{ url: string }>) => {
                       {pageImage.id}
                     </Button>
                   </td>
-                  <td>
-                    {pageImage.image ? (
-                      <div>
-                        {pageImage.imageContentType ? (
-                          <a onClick={openFile(pageImage.imageContentType, pageImage.image)}>
-                            <img src={`data:${pageImage.imageContentType};base64,${pageImage.image}`} style={{ maxHeight: '30px' }} />
-                            &nbsp;
-                          </a>
-                        ) : null}
-                        <span>
-                          {pageImage.imageContentType}, {byteSize(pageImage.image)}
-                        </span>
-                      </div>
-                    ) : null}
-                  </td>
+                  <td>{pageImage.image_file_name}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/page-image/${pageImage.id}`} color="info" size="sm" data-cy="entityDetailsButton">

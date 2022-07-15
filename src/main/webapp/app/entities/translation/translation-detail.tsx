@@ -7,21 +7,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntity } from './page-image.reducer';
+import { getEntity } from './translation.reducer';
 
-export const PageImageDetail = (props: RouteComponentProps<{ id: string }>) => {
+export const TranslationDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const pageImageEntity = useAppSelector(state => state.pageImage.entity);
+  const translationEntity = useAppSelector(state => state.translation.entity);
   return (
     <Row>
       <Col md="8">
-        <h2 data-cy="pageImageDetailsHeading">
-          <Translate contentKey="diChApp.pageImage.detail.title">PageImage</Translate>
+        <h2 data-cy="translationDetailsHeading">
+          <Translate contentKey="diChApp.translation.detail.title">Translation</Translate>
         </h2>
         <dl className="jh-entity-details">
           <dt>
@@ -29,22 +29,28 @@ export const PageImageDetail = (props: RouteComponentProps<{ id: string }>) => {
               <Translate contentKey="global.field.id">ID</Translate>
             </span>
           </dt>
-          <dd>{pageImageEntity.id}</dd>
+          <dd>{translationEntity.id}</dd>
           <dt>
-            <span id="image_file_name">
-              <Translate contentKey="diChApp.pageImage.image_file_name">Image File Name</Translate>
+            <span id="lang">
+              <Translate contentKey="diChApp.translation.lang">Lang</Translate>
             </span>
           </dt>
-          <dd>{pageImageEntity.image_file_name}</dd>
+          <dd>{translationEntity.lang}</dd>
+          <dt>
+            <span id="n_version">
+              <Translate contentKey="diChApp.translation.n_version">N Version</Translate>
+            </span>
+          </dt>
+          <dd>{translationEntity.n_version}</dd>
         </dl>
-        <Button tag={Link} to="/page-image" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to="/translation" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/page-image/${pageImageEntity.id}/edit`} replace color="primary">
+        <Button tag={Link} to={`/translation/${translationEntity.id}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -55,4 +61,4 @@ export const PageImageDetail = (props: RouteComponentProps<{ id: string }>) => {
   );
 };
 
-export default PageImageDetail;
+export default TranslationDetail;

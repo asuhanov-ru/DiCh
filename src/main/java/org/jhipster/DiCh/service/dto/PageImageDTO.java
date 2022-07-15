@@ -2,7 +2,6 @@ package org.jhipster.dich.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Lob;
 
 /**
  * A DTO for the {@link org.jhipster.dich.domain.PageImage} entity.
@@ -11,10 +10,7 @@ public class PageImageDTO implements Serializable {
 
     private Long id;
 
-    @Lob
-    private byte[] image;
-
-    private String imageContentType;
+    private String image_file_name;
 
     public Long getId() {
         return id;
@@ -24,20 +20,12 @@ public class PageImageDTO implements Serializable {
         this.id = id;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getImage_file_name() {
+        return image_file_name;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    public String getImageContentType() {
-        return imageContentType;
-    }
-
-    public void setImageContentType(String imageContentType) {
-        this.imageContentType = imageContentType;
+    public void setImage_file_name(String image_file_name) {
+        this.image_file_name = image_file_name;
     }
 
     @Override
@@ -66,7 +54,7 @@ public class PageImageDTO implements Serializable {
     public String toString() {
         return "PageImageDTO{" +
             "id=" + getId() +
-            ", image='" + getImage() + "'" +
+            ", image_file_name='" + getImage_file_name() + "'" +
             "}";
     }
 }

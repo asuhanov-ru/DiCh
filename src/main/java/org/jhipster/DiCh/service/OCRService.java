@@ -3,19 +3,32 @@ package org.jhipster.dich.service;
 import static net.sourceforge.lept4j.Leptonica1.pixRead;
 
 import java.io.File;
+import java.util.Optional;
 import net.sourceforge.lept4j.Pix;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.TessAPI;
 import net.sourceforge.tess4j.TesseractException;
+import org.jhipster.dich.domain.PageImage;
+import org.jhipster.dich.repository.PageImageRepository;
+import org.jhipster.dich.service.dto.PageImageDTO;
+import org.jhipster.dich.service.mapper.PageImageMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class OCRService {
 
-    private final Logger log = LoggerFactory.getLogger(PdfDocService.class);
+    private final Logger log = LoggerFactory.getLogger(OCRService.class);
+
+    private final PageImageRepository pageImageRepository;
+
+    public OCRService(PageImageRepository pageImageRepository) {
+        this.pageImageRepository = pageImageRepository;
+    }
 
     @Value("${collections.location}")
     private String SRC;
@@ -33,5 +46,12 @@ public class OCRService {
         api.TessBaseAPISetImage2(handle, pixs);
         //log.debug("Try to OCR file: {} result: {}", file_name, result);
         if (handle != null) api.TessBaseAPIDelete(handle);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<PageImage> findOne(Long id) {
+        log.debug("Request to get PageImage : {}", id);
+        Optional<PageImage> pageImage = pageImageRepository.findById(id);
+        return pageImage;
     }
 }

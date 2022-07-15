@@ -21,12 +21,8 @@ public class PageImage implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
-
-    @Column(name = "image_content_type")
-    private String imageContentType;
+    @Column(name = "image_file_name")
+    private String image_file_name;
 
     @OneToMany(mappedBy = "pageImage")
     @JsonIgnoreProperties(value = { "pageImage" }, allowSetters = true)
@@ -47,30 +43,17 @@ public class PageImage implements Serializable {
         this.id = id;
     }
 
-    public byte[] getImage() {
-        return this.image;
+    public String getImage_file_name() {
+        return this.image_file_name;
     }
 
-    public PageImage image(byte[] image) {
-        this.setImage(image);
+    public PageImage image_file_name(String image_file_name) {
+        this.setImage_file_name(image_file_name);
         return this;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    public String getImageContentType() {
-        return this.imageContentType;
-    }
-
-    public PageImage imageContentType(String imageContentType) {
-        this.imageContentType = imageContentType;
-        return this;
-    }
-
-    public void setImageContentType(String imageContentType) {
-        this.imageContentType = imageContentType;
+    public void setImage_file_name(String image_file_name) {
+        this.image_file_name = image_file_name;
     }
 
     public Set<PageWord> getPageWords() {
@@ -128,8 +111,7 @@ public class PageImage implements Serializable {
     public String toString() {
         return "PageImage{" +
             "id=" + getId() +
-            ", image='" + getImage() + "'" +
-            ", imageContentType='" + getImageContentType() + "'" +
+            ", image_file_name='" + getImage_file_name() + "'" +
             "}";
     }
 }
