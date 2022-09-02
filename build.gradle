@@ -279,6 +279,9 @@ dependencies {
     implementation "com.itextpdf:itext7-core:7.2.2"
     implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '5.2.1'
     implementation group: 'net.sourceforge.lept4j', name: 'lept4j', version: '1.16.1'
+    //code generators
+    compileOnly("org.projectlombok:lombok:${lombok}")
+    annotationProcessor("org.projectlombok:lombok:${lombok}")
 }
 
 if (project.hasProperty("gae")) {
