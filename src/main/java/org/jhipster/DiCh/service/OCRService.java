@@ -3,6 +3,7 @@ package org.jhipster.dich.service;
 import static net.sourceforge.lept4j.Leptonica1.pixRead;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 import net.sourceforge.lept4j.Pix;
 import net.sourceforge.tess4j.ITessAPI;
@@ -10,6 +11,8 @@ import net.sourceforge.tess4j.TessAPI;
 import net.sourceforge.tess4j.TesseractException;
 import org.jhipster.dich.domain.PageImage;
 import org.jhipster.dich.repository.PageImageRepository;
+import org.jhipster.dich.service.criteria.OcrTasksCriteria;
+import org.jhipster.dich.service.dto.OcrTasksDTO;
 import org.jhipster.dich.service.dto.PageImageDTO;
 import org.jhipster.dich.service.mapper.PageImageMapper;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.StringFilter;
 
 @Service
 @Transactional
@@ -26,8 +30,11 @@ public class OCRService {
 
     private final PageImageRepository pageImageRepository;
 
-    public OCRService(PageImageRepository pageImageRepository) {
+    private final OcrTasksQueryService ocrTasksQueryService;
+
+    public OCRService(PageImageRepository pageImageRepository, OcrTasksQueryService ocrTasksQueryService) {
         this.pageImageRepository = pageImageRepository;
+        this.ocrTasksQueryService = ocrTasksQueryService;
     }
 
     @Value("${collections.location}")
@@ -53,5 +60,16 @@ public class OCRService {
         log.debug("Request to get PageImage : {}", id);
         Optional<PageImage> pageImage = pageImageRepository.findById(id);
         return pageImage;
+    }
+
+    public void processOCRTasks() {
+        OcrTasksCriteria criteria = new OcrTasksCriteria();
+        StringFilter jobStatusFilter = new StringFilter();
+        jobStatusFilter.setEquals("NEW");
+        criteria.setJobStatus(jobStatusFilter);
+
+        List<OcrTasksDTO> ocrTasks = ocrTasksQueryService.findByCriteria(criteria);
+
+        log.debug("Find tasks {}", ocrTasks);
     }
 }

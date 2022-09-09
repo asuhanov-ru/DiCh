@@ -1,0 +1,29 @@
+{
+  "diChApp": {
+    "ocrTasks": {
+      "home": {
+        "title": "Ocr Tasks",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Ocr Tasks",
+        "createOrEditLabel": "Создать или отредактировать Ocr Tasks",
+        "notFound": "Ocr Tasks не найдено"
+      },
+      "created": "Новый Ocr Tasks создан с идентификатором {{ param }}",
+      "updated": "Ocr Tasks обновлен с идентификатором {{ param }}",
+      "deleted": "Ocr Tasks удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Ocr Tasks {{ id }}?"
+      },
+      "detail": {
+        "title": "Ocr Tasks"
+      },
+      "id": "ID",
+      "mediaId": "Media Id",
+      "pageNumber": "Page Number",
+      "jobStatus": "Job Status",
+      "createTime": "Create Time",
+      "startTime": "Start Time",
+      "stopTime": "Stop Time"
+    }
+  }
+}
