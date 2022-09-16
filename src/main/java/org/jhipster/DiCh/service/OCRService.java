@@ -2,19 +2,28 @@ package org.jhipster.dich.service;
 
 import static net.sourceforge.lept4j.Leptonica1.pixRead;
 
+import com.ochafik.lang.jnaerator.runtime.NativeSize;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import net.sourceforge.lept4j.Leptonica;
 import net.sourceforge.lept4j.Pix;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.TessAPI;
+import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import org.jetbrains.annotations.NotNull;
+import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.domain.PageImage;
+import org.jhipster.dich.repository.MediaRepository;
 import org.jhipster.dich.repository.PageImageRepository;
 import org.jhipster.dich.service.criteria.OcrTasksCriteria;
 import org.jhipster.dich.service.dto.OcrTasksDTO;
-import org.jhipster.dich.service.dto.PageImageDTO;
-import org.jhipster.dich.service.mapper.PageImageMapper;
+import org.jhipster.dich.service.dto.PageImageTransferDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,9 +41,26 @@ public class OCRService {
 
     private final OcrTasksQueryService ocrTasksQueryService;
 
-    public OCRService(PageImageRepository pageImageRepository, OcrTasksQueryService ocrTasksQueryService) {
+    private final OcrTasksService ocrTasksService;
+
+    private final String testResourcesDataPath = "src/test/resources/test-data";
+
+    private final PdfDocService pdfDocService;
+
+    private final MediaRepository mediaRepository;
+
+    public OCRService(
+        PageImageRepository pageImageRepository,
+        OcrTasksQueryService ocrTasksQueryService,
+        OcrTasksService ocrTasksService,
+        PdfDocService pdfDocService,
+        MediaRepository mediaRepository
+    ) {
         this.pageImageRepository = pageImageRepository;
         this.ocrTasksQueryService = ocrTasksQueryService;
+        this.ocrTasksService = ocrTasksService;
+        this.pdfDocService = pdfDocService;
+        this.mediaRepository = mediaRepository;
     }
 
     @Value("${collections.location}")
@@ -43,16 +69,34 @@ public class OCRService {
     @Value("${tessdata.location}")
     private String tessdata;
 
-    public void doOCR() throws TesseractException {
-        String file_name = SRC + "29.jpg";
-        File image = new File(file_name);
-        Pix pixs = pixRead(file_name);
+    public void doOCR(@NotNull OcrTasksDTO ocrTask) throws Exception {
+        Optional<Media> media = mediaRepository.findOneWithEagerRelationships(ocrTask.getMediaId());
+        Optional<PageImageTransferDto> dto = pdfDocService.getPageImage(
+            media.map(el -> el.getFileName()).orElse(""),
+            ocrTask.getPageNumber()
+        );
+        byte[] imageData = dto.map(el -> el.getImage()).orElse(null);
+        ByteBuffer buf = ByteBuffer.wrap(imageData);
+
+        Leptonica leptInstance = Leptonica.INSTANCE;
+        Pix pixs = leptInstance.pixReadMem(buf, new NativeSize(imageData.length));
+        //Tesseract instance = new Tesseract();
+        //instance.setDatapath(tessdata);
+        //instance.setLanguage("lat");
+        //String result = instance.doOCR(image);
         TessAPI api = TessAPI.INSTANCE;
-        ITessAPI.TessBaseAPI handle = api.TessBaseAPICreate();
-        api.TessBaseAPIInit2(handle, tessdata, "lat", 1);
+        TessAPI.TessBaseAPI handle = api.TessBaseAPICreate();
+        api.TessBaseAPIInit3(handle, tessdata, "lat");
         api.TessBaseAPISetImage2(handle, pixs);
-        //log.debug("Try to OCR file: {} result: {}", file_name, result);
+        api.TessBaseAPISetPageSegMode(handle, ITessAPI.TessPageSegMode.PSM_AUTO_OSD);
+        Pointer utf8Text = api.TessBaseAPIGetUTF8Text(handle);
+        String result = utf8Text.getString(0);
+        log.debug("OCR page: {} from media: {} {}", ocrTask.getPageNumber(), ocrTask.getMediaId(), result);
         if (handle != null) api.TessBaseAPIDelete(handle);
+        //release Pix resource
+        PointerByReference pRef = new PointerByReference();
+        pRef.setValue(pixs.getPointer());
+        leptInstance.pixDestroy(pRef);
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +113,21 @@ public class OCRService {
         criteria.setJobStatus(jobStatusFilter);
 
         List<OcrTasksDTO> ocrTasks = ocrTasksQueryService.findByCriteria(criteria);
-
-        log.debug("Find tasks {}", ocrTasks);
+        if (ocrTasks.stream().count() > 0) {
+            OcrTasksDTO ocrTask = ocrTasks.get(0);
+            ocrTask.setJobStatus("PROCESSING");
+            ocrTask.setStartTime(ZonedDateTime.now());
+            Optional<OcrTasksDTO> result = ocrTasksService.partialUpdate(ocrTask);
+            log.debug("Start task {}", result);
+            try {
+                doOCR(ocrTask);
+                ocrTask.setJobStatus("PROCESSED");
+                ocrTask.setStopTime(ZonedDateTime.now());
+                result = ocrTasksService.partialUpdate(ocrTask);
+                log.debug("Task {} done", result);
+            } catch (Throwable e) {
+                log.debug("OCR filed with message {}", e.getMessage());
+            }
+        }
     }
 }

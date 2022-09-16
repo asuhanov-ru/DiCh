@@ -19,6 +19,7 @@ logging:
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     org.jhipster.dich: DEBUG
+    net.sourceforge.lept4j: DEBUG
 
 spring:
   devtools:

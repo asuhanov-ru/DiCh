@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class ScheduleOcr {
@@ -21,7 +20,7 @@ public class ScheduleOcr {
     }
 
     @Scheduled(fixedRate = 5000)
-    public void reportCurrentTime() {
+    public void reportCurrentTime() throws Exception {
         log.debug("The time is now {}", dateFormat.format(new Date()));
         ocrService.processOCRTasks();
     }
