@@ -263,6 +263,7 @@ dependencies {
     implementation "org.postgresql:postgresql"
     liquibaseRuntime "org.postgresql:postgresql"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation("org.jetbrains:annotations:23.0.0")
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:${hibernateVersion}"
     annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
@@ -282,6 +283,7 @@ dependencies {
     //code generators
     compileOnly("org.projectlombok:lombok:${lombok}")
     annotationProcessor("org.projectlombok:lombok:${lombok}")
+
 }
 
 if (project.hasProperty("gae")) {

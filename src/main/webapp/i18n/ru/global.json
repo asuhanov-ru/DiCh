@@ -15,6 +15,7 @@
         "pageWord": "Page Word",
         "translation": "Translation",
         "ocrTasks": "Ocr Tasks",
+        "pageLayout": "Page Layout",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

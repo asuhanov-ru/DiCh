@@ -25,19 +25,24 @@
     {
       "fieldName": "n_idx",
       "fieldType": "Long"
+    },
+    {
+      "fieldName": "mediaId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "pageNumber",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "ZonedDateTime"
     }
   ],
   "jpaMetamodelFiltering": true,
   "name": "PageWord",
   "pagination": "infinite-scroll",
   "readOnly": false,
-  "relationships": [
-    {
-      "otherEntityField": "id",
-      "otherEntityName": "pageImage",
-      "relationshipName": "pageImage",
-      "relationshipType": "many-to-one"
-    }
-  ],
+  "relationships": [],
   "service": "serviceImpl"
 }

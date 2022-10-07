@@ -8,8 +8,6 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { IPageImage } from 'app/shared/model/page-image.model';
-import { getEntities as getPageImages } from 'app/entities/page-image/page-image.reducer';
 import { IPageWord } from 'app/shared/model/page-word.model';
 import { getEntity, updateEntity, createEntity, reset } from './page-word.reducer';
 
@@ -18,7 +16,6 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const pageImages = useAppSelector(state => state.pageImage.entities);
   const pageWordEntity = useAppSelector(state => state.pageWord.entity);
   const loading = useAppSelector(state => state.pageWord.loading);
   const updating = useAppSelector(state => state.pageWord.updating);
@@ -31,8 +28,6 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
     if (!isNew) {
       dispatch(getEntity(props.match.params.id));
     }
-
-    dispatch(getPageImages({}));
   }, []);
 
   useEffect(() => {
@@ -42,10 +37,11 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
   }, [updateSuccess]);
 
   const saveEntity = values => {
+    values.version = convertDateTimeToServer(values.version);
+
     const entity = {
       ...pageWordEntity,
       ...values,
-      pageImage: pageImages.find(it => it.id.toString() === values.pageImage.toString()),
     };
 
     if (isNew) {
@@ -57,10 +53,12 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? {
+          version: displayDefaultDateTime(),
+        }
       : {
           ...pageWordEntity,
-          pageImage: pageWordEntity?.pageImage?.id,
+          version: convertDateTimeFromServer(pageWordEntity.version),
         };
 
   return (
@@ -119,21 +117,27 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
               />
               <ValidatedField label={translate('diChApp.pageWord.n_idx')} id="page-word-n_idx" name="n_idx" data-cy="n_idx" type="text" />
               <ValidatedField
-                id="page-word-pageImage"
-                name="pageImage"
-                data-cy="pageImage"
-                label={translate('diChApp.pageWord.pageImage')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {pageImages
-                  ? pageImages.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+                label={translate('diChApp.pageWord.mediaId')}
+                id="page-word-mediaId"
+                name="mediaId"
+                data-cy="mediaId"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageWord.pageNumber')}
+                id="page-word-pageNumber"
+                name="pageNumber"
+                data-cy="pageNumber"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageWord.version')}
+                id="page-word-version"
+                name="version"
+                data-cy="version"
+                type="datetime-local"
+                placeholder="YYYY-MM-DD HH:mm"
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/page-word" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

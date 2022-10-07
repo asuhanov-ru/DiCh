@@ -1,0 +1,25 @@
+{
+  "diChApp": {
+    "pageLayout": {
+      "home": {
+        "title": "Page Layouts",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Page Layout",
+        "createOrEditLabel": "Create or edit a Page Layout",
+        "notFound": "No Page Layouts found"
+      },
+      "created": "A new Page Layout is created with identifier {{ param }}",
+      "updated": "A Page Layout is updated with identifier {{ param }}",
+      "deleted": "A Page Layout is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Page Layout {{ id }}?"
+      },
+      "detail": {
+        "title": "Page Layout"
+      },
+      "id": "ID",
+      "mediaId": "Media Id",
+      "pageNumber": "Page Number"
+    }
+  }
+}

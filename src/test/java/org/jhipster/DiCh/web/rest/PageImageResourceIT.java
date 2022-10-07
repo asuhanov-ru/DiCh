@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.jhipster.dich.IntegrationTest;
 import org.jhipster.dich.domain.PageImage;
-import org.jhipster.dich.domain.PageWord;
 import org.jhipster.dich.repository.PageImageRepository;
 import org.jhipster.dich.service.criteria.PageImageCriteria;
 import org.jhipster.dich.service.dto.PageImageDTO;
@@ -243,32 +242,6 @@ class PageImageResourceIT {
 
         // Get all the pageImageList where image_file_name does not contain UPDATED_IMAGE_FILE_NAME
         defaultPageImageShouldBeFound("image_file_name.doesNotContain=" + UPDATED_IMAGE_FILE_NAME);
-    }
-
-    @Test
-    @Transactional
-    void getAllPageImagesByPageWordIsEqualToSomething() throws Exception {
-        // Initialize the database
-        pageImageRepository.saveAndFlush(pageImage);
-        PageWord pageWord;
-        if (TestUtil.findAll(em, PageWord.class).isEmpty()) {
-            pageWord = PageWordResourceIT.createEntity(em);
-            em.persist(pageWord);
-            em.flush();
-        } else {
-            pageWord = TestUtil.findAll(em, PageWord.class).get(0);
-        }
-        em.persist(pageWord);
-        em.flush();
-        pageImage.addPageWord(pageWord);
-        pageImageRepository.saveAndFlush(pageImage);
-        Long pageWordId = pageWord.getId();
-
-        // Get all the pageImageList where pageWord equals to pageWordId
-        defaultPageImageShouldBeFound("pageWordId.equals=" + pageWordId);
-
-        // Get all the pageImageList where pageWord equals to (pageWordId + 1)
-        defaultPageImageShouldNotBeFound("pageWordId.equals=" + (pageWordId + 1));
     }
 
     /**

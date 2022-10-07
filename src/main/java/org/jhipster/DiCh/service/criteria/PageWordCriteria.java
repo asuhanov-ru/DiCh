@@ -11,6 +11,7 @@ import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link org.jhipster.dich.domain.PageWord} entity. This class is used
@@ -40,7 +41,11 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     private LongFilter n_idx;
 
-    private LongFilter pageImageId;
+    private LongFilter mediaId;
+
+    private IntegerFilter pageNumber;
+
+    private ZonedDateTimeFilter version;
 
     private Boolean distinct;
 
@@ -54,7 +59,9 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.n_heigth = other.n_heigth == null ? null : other.n_heigth.copy();
         this.n_width = other.n_width == null ? null : other.n_width.copy();
         this.n_idx = other.n_idx == null ? null : other.n_idx.copy();
-        this.pageImageId = other.pageImageId == null ? null : other.pageImageId.copy();
+        this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
+        this.pageNumber = other.pageNumber == null ? null : other.pageNumber.copy();
+        this.version = other.version == null ? null : other.version.copy();
         this.distinct = other.distinct;
     }
 
@@ -168,19 +175,49 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.n_idx = n_idx;
     }
 
-    public LongFilter getPageImageId() {
-        return pageImageId;
+    public LongFilter getMediaId() {
+        return mediaId;
     }
 
-    public LongFilter pageImageId() {
-        if (pageImageId == null) {
-            pageImageId = new LongFilter();
+    public LongFilter mediaId() {
+        if (mediaId == null) {
+            mediaId = new LongFilter();
         }
-        return pageImageId;
+        return mediaId;
     }
 
-    public void setPageImageId(LongFilter pageImageId) {
-        this.pageImageId = pageImageId;
+    public void setMediaId(LongFilter mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public IntegerFilter getPageNumber() {
+        return pageNumber;
+    }
+
+    public IntegerFilter pageNumber() {
+        if (pageNumber == null) {
+            pageNumber = new IntegerFilter();
+        }
+        return pageNumber;
+    }
+
+    public void setPageNumber(IntegerFilter pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public ZonedDateTimeFilter getVersion() {
+        return version;
+    }
+
+    public ZonedDateTimeFilter version() {
+        if (version == null) {
+            version = new ZonedDateTimeFilter();
+        }
+        return version;
+    }
+
+    public void setVersion(ZonedDateTimeFilter version) {
+        this.version = version;
     }
 
     public Boolean getDistinct() {
@@ -208,14 +245,16 @@ public class PageWordCriteria implements Serializable, Criteria {
             Objects.equals(n_heigth, that.n_heigth) &&
             Objects.equals(n_width, that.n_width) &&
             Objects.equals(n_idx, that.n_idx) &&
-            Objects.equals(pageImageId, that.pageImageId) &&
+            Objects.equals(mediaId, that.mediaId) &&
+            Objects.equals(pageNumber, that.pageNumber) &&
+            Objects.equals(version, that.version) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, s_word, n_top, n_left, n_heigth, n_width, n_idx, pageImageId, distinct);
+        return Objects.hash(id, s_word, n_top, n_left, n_heigth, n_width, n_idx, mediaId, pageNumber, version, distinct);
     }
 
     // prettier-ignore
@@ -229,7 +268,9 @@ public class PageWordCriteria implements Serializable, Criteria {
             (n_heigth != null ? "n_heigth=" + n_heigth + ", " : "") +
             (n_width != null ? "n_width=" + n_width + ", " : "") +
             (n_idx != null ? "n_idx=" + n_idx + ", " : "") +
-            (pageImageId != null ? "pageImageId=" + pageImageId + ", " : "") +
+            (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
+            (pageNumber != null ? "pageNumber=" + pageNumber + ", " : "") +
+            (version != null ? "version=" + version + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

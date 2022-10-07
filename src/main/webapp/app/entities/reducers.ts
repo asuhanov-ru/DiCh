@@ -8,6 +8,8 @@ import pageOcr from 'app/pages/page-ocr/page-ocr.reducer';
 import translation from 'app/entities/translation/translation.reducer';
 import pageImageTransfer from 'app/pages/media/image/reducer';
 import ocrTasks from 'app/entities/ocr-tasks/ocr-tasks.reducer';
+import pageLayout from 'app/entities/page-layout/page-layout.reducer';
+import ocrTransfer from 'app/pages/media/ocr/reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const entitiesReducers = {
@@ -21,6 +23,8 @@ const entitiesReducers = {
   translation,
   pageImageTransfer,
   ocrTasks,
+  pageLayout,
+  ocrTransfer,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
 };
 

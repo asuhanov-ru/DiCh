@@ -11,13 +11,6 @@
   "name": "PageImage",
   "pagination": "pagination",
   "readOnly": false,
-  "relationships": [
-    {
-      "otherEntityName": "pageWord",
-      "otherEntityRelationshipName": "pageImage",
-      "relationshipName": "pageWord",
-      "relationshipType": "one-to-many"
-    }
-  ],
+  "relationships": [],
   "service": "serviceClass"
 }

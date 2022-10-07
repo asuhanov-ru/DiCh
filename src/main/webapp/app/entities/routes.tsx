@@ -10,6 +10,7 @@ import PageText from './page-text';
 import PageWord from './page-word';
 import Translation from './translation';
 import OcrTasks from './ocr-tasks';
+import PageLayout from './page-layout';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default ({ match }) => {
@@ -25,6 +26,7 @@ export default ({ match }) => {
         <ErrorBoundaryRoute path={`${match.url}page-word`} component={PageWord} />
         <ErrorBoundaryRoute path={`${match.url}translation`} component={Translation} />
         <ErrorBoundaryRoute path={`${match.url}ocr-tasks`} component={OcrTasks} />
+        <ErrorBoundaryRoute path={`${match.url}page-layout`} component={PageLayout} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </Switch>
     </div>

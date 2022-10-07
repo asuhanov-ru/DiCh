@@ -108,14 +108,14 @@ public class PageWordQueryService extends QueryService<PageWord> {
             if (criteria.getn_idx() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getn_idx(), PageWord_.n_idx));
             }
-            if (criteria.getPageImageId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getPageImageId(),
-                            root -> root.join(PageWord_.pageImage, JoinType.LEFT).get(PageImage_.id)
-                        )
-                    );
+            if (criteria.getMediaId() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getMediaId(), PageWord_.mediaId));
+            }
+            if (criteria.getPageNumber() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getPageNumber(), PageWord_.pageNumber));
+            }
+            if (criteria.getVersion() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getVersion(), PageWord_.version));
             }
         }
         return specification;

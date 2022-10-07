@@ -1,7 +1,7 @@
 package org.jhipster.dich.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import javax.persistence.*;
 
 /**
@@ -37,9 +37,14 @@ public class PageWord implements Serializable {
     @Column(name = "n_idx")
     private Long n_idx;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "pageWords" }, allowSetters = true)
-    private PageImage pageImage;
+    @Column(name = "media_id")
+    private Long mediaId;
+
+    @Column(name = "page_number")
+    private Integer pageNumber;
+
+    @Column(name = "version")
+    private ZonedDateTime version;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -134,17 +139,43 @@ public class PageWord implements Serializable {
         this.n_idx = n_idx;
     }
 
-    public PageImage getPageImage() {
-        return this.pageImage;
+    public Long getMediaId() {
+        return this.mediaId;
     }
 
-    public void setPageImage(PageImage pageImage) {
-        this.pageImage = pageImage;
-    }
-
-    public PageWord pageImage(PageImage pageImage) {
-        this.setPageImage(pageImage);
+    public PageWord mediaId(Long mediaId) {
+        this.setMediaId(mediaId);
         return this;
+    }
+
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public Integer getPageNumber() {
+        return this.pageNumber;
+    }
+
+    public PageWord pageNumber(Integer pageNumber) {
+        this.setPageNumber(pageNumber);
+        return this;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public ZonedDateTime getVersion() {
+        return this.version;
+    }
+
+    public PageWord version(ZonedDateTime version) {
+        this.setVersion(version);
+        return this;
+    }
+
+    public void setVersion(ZonedDateTime version) {
+        this.version = version;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -177,6 +208,9 @@ public class PageWord implements Serializable {
             ", n_heigth=" + getn_heigth() +
             ", n_width=" + getn_width() +
             ", n_idx=" + getn_idx() +
+            ", mediaId=" + getMediaId() +
+            ", pageNumber=" + getPageNumber() +
+            ", version='" + getVersion() + "'" +
             "}";
     }
 }

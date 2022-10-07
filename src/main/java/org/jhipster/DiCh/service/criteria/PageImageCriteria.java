@@ -30,8 +30,6 @@ public class PageImageCriteria implements Serializable, Criteria {
 
     private StringFilter image_file_name;
 
-    private LongFilter pageWordId;
-
     private Boolean distinct;
 
     public PageImageCriteria() {}
@@ -39,7 +37,6 @@ public class PageImageCriteria implements Serializable, Criteria {
     public PageImageCriteria(PageImageCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.image_file_name = other.image_file_name == null ? null : other.image_file_name.copy();
-        this.pageWordId = other.pageWordId == null ? null : other.pageWordId.copy();
         this.distinct = other.distinct;
     }
 
@@ -78,21 +75,6 @@ public class PageImageCriteria implements Serializable, Criteria {
         this.image_file_name = image_file_name;
     }
 
-    public LongFilter getPageWordId() {
-        return pageWordId;
-    }
-
-    public LongFilter pageWordId() {
-        if (pageWordId == null) {
-            pageWordId = new LongFilter();
-        }
-        return pageWordId;
-    }
-
-    public void setPageWordId(LongFilter pageWordId) {
-        this.pageWordId = pageWordId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -111,16 +93,13 @@ public class PageImageCriteria implements Serializable, Criteria {
         }
         final PageImageCriteria that = (PageImageCriteria) o;
         return (
-            Objects.equals(id, that.id) &&
-            Objects.equals(image_file_name, that.image_file_name) &&
-            Objects.equals(pageWordId, that.pageWordId) &&
-            Objects.equals(distinct, that.distinct)
+            Objects.equals(id, that.id) && Objects.equals(image_file_name, that.image_file_name) && Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, image_file_name, pageWordId, distinct);
+        return Objects.hash(id, image_file_name, distinct);
     }
 
     // prettier-ignore
@@ -129,7 +108,6 @@ public class PageImageCriteria implements Serializable, Criteria {
         return "PageImageCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
             (image_file_name != null ? "image_file_name=" + image_file_name + ", " : "") +
-            (pageWordId != null ? "pageWordId=" + pageWordId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -67,9 +67,23 @@ export const PageWordDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{pageWordEntity.n_idx}</dd>
           <dt>
-            <Translate contentKey="diChApp.pageWord.pageImage">Page Image</Translate>
+            <span id="mediaId">
+              <Translate contentKey="diChApp.pageWord.mediaId">Media Id</Translate>
+            </span>
           </dt>
-          <dd>{pageWordEntity.pageImage ? pageWordEntity.pageImage.id : ''}</dd>
+          <dd>{pageWordEntity.mediaId}</dd>
+          <dt>
+            <span id="pageNumber">
+              <Translate contentKey="diChApp.pageWord.pageNumber">Page Number</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.pageNumber}</dd>
+          <dt>
+            <span id="version">
+              <Translate contentKey="diChApp.pageWord.version">Version</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.version ? <TextFormat value={pageWordEntity.version} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
         </dl>
         <Button tag={Link} to="/page-word" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

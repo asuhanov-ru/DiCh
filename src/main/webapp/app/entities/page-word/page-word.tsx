@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
-import { Translate, getSortState } from 'react-jhipster';
+import { Translate, TextFormat, getSortState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -142,8 +142,14 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('n_idx')}>
                     <Translate contentKey="diChApp.pageWord.n_idx">N Idx</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th>
-                    <Translate contentKey="diChApp.pageWord.pageImage">Page Image</Translate> <FontAwesomeIcon icon="sort" />
+                  <th className="hand" onClick={sort('mediaId')}>
+                    <Translate contentKey="diChApp.pageWord.mediaId">Media Id</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('pageNumber')}>
+                    <Translate contentKey="diChApp.pageWord.pageNumber">Page Number</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('version')}>
+                    <Translate contentKey="diChApp.pageWord.version">Version</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th />
                 </tr>
@@ -162,7 +168,9 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                     <td>{pageWord.n_heigth}</td>
                     <td>{pageWord.n_width}</td>
                     <td>{pageWord.n_idx}</td>
-                    <td>{pageWord.pageImage ? <Link to={`/page-image/${pageWord.pageImage.id}`}>{pageWord.pageImage.id}</Link> : ''}</td>
+                    <td>{pageWord.mediaId}</td>
+                    <td>{pageWord.pageNumber}</td>
+                    <td>{pageWord.version ? <TextFormat type="date" value={pageWord.version} format={APP_DATE_FORMAT} /> : null}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/page-word/${pageWord.id}`} color="info" size="sm" data-cy="entityDetailsButton">

@@ -1,6 +1,7 @@
 package org.jhipster.dich.service.dto;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
@@ -22,7 +23,11 @@ public class PageWordDTO implements Serializable {
 
     private Long n_idx;
 
-    private PageImageDTO pageImage;
+    private Long mediaId;
+
+    private Integer pageNumber;
+
+    private ZonedDateTime version;
 
     public Long getId() {
         return id;
@@ -80,12 +85,28 @@ public class PageWordDTO implements Serializable {
         this.n_idx = n_idx;
     }
 
-    public PageImageDTO getPageImage() {
-        return pageImage;
+    public Long getMediaId() {
+        return mediaId;
     }
 
-    public void setPageImage(PageImageDTO pageImage) {
-        this.pageImage = pageImage;
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public ZonedDateTime getVersion() {
+        return version;
+    }
+
+    public void setVersion(ZonedDateTime version) {
+        this.version = version;
     }
 
     @Override
@@ -120,7 +141,9 @@ public class PageWordDTO implements Serializable {
             ", n_heigth=" + getn_heigth() +
             ", n_width=" + getn_width() +
             ", n_idx=" + getn_idx() +
-            ", pageImage=" + getPageImage() +
+            ", mediaId=" + getMediaId() +
+            ", pageNumber=" + getPageNumber() +
+            ", version='" + getVersion() + "'" +
             "}";
     }
 }

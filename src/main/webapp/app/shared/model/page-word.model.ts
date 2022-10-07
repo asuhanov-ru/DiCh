@@ -1,5 +1,3 @@
-import { IPageImage } from 'app/shared/model/page-image.model';
-
 export interface IPageWord {
   id?: number;
   s_word?: string | null;
@@ -8,7 +6,9 @@ export interface IPageWord {
   n_heigth?: number | null;
   n_width?: number | null;
   n_idx?: number | null;
-  pageImage?: IPageImage | null;
+  mediaId?: number | null;
+  pageNumber?: number | null;
+  version?: string | null;
 }
 
 export const defaultValue: Readonly<IPageWord> = {};
