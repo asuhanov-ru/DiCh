@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
+import { convertFromRaw, EditorState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import '../../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
@@ -15,7 +18,22 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const [selectedPageNumber, setSelectedPageNumber] = useState<number>(1);
   const isFetching = useAppSelector(state => state.media.loading || state.pageImageTransfer.loading);
   const mediaEntity = useAppSelector(state => state.media.entity);
+  const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
+  const [contentState, setContentState] = useState({
+    entityMap: {},
+    blocks: [
+      {
+        key: '1004,1005,1006',
+        text: 'Initialized from content state.',
+        type: 'unstyled',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data: {},
+      },
+    ],
+  });
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -28,6 +46,40 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     }
   }, [currentPage, mediaEntity]);
 
+  useEffect(() => {
+    const content = {
+      entityMap: {},
+      blocks: [],
+    };
+    let i = 0;
+    let keys = [];
+    let text = [];
+
+    if (ocrEntities && ocrEntities?.length) {
+      ocrEntities.forEach(ocr_entity => {
+        keys.push(ocr_entity.id);
+        text.push(ocr_entity.s_word);
+        i++;
+        if (i > 10) {
+          i = 0;
+          const block = {
+            key: keys.join(','),
+            text: text.join(' '),
+            depth: 0,
+            type: 'unstyled',
+            entityRanges: [],
+            data: {},
+          };
+          content.blocks.push(block);
+          keys = [];
+          text = [];
+        }
+      });
+
+      setContentState(content);
+    }
+  }, [ocrEntities]);
+
   const handlePrev = () => {
     if (currentPage > 0) setCurrentPage(currentPage - 1);
   };
@@ -39,6 +91,10 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   };
 
   const handleGo = () => setCurrentPage(selectedPageNumber);
+
+  const onContentStateChange = content => {
+    setContentState(content);
+  };
 
   return (
     <>
@@ -71,7 +127,20 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
       </Row>
       &nbsp;
       <Row>
-        <Ocr image={`data:image/jpeg;base64,${imageTransfer?.image}`} />
+        <Col>
+          <Ocr image={`data:image/jpeg;base64,${imageTransfer?.image}`} />
+        </Col>
+        <Col>
+          <div>
+            <Editor
+              contentState={contentState}
+              wrapperClassName="wrapper-class"
+              editorClassName="editor-class"
+              toolbarClassName="toolbar-class"
+              onContentStateChange={onContentStateChange}
+            />
+          </div>
+        </Col>
       </Row>
     </>
   );
