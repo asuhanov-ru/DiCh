@@ -3,6 +3,7 @@
     "media": {
       "home": {
         "title": "Media",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Media",
         "createOrEditLabel": "Create or edit a Media",
         "notFound": "No Media found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Media"
       },
+      "id": "ID",
       "fileName": "File Name",
       "fileType": "File Type",
       "fileDesc": "File Desc",

@@ -1,0 +1,29 @@
+{
+  "diChApp": {
+    "ocrTasks": {
+      "home": {
+        "title": "Ocr Tasks",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Ocr Tasks",
+        "createOrEditLabel": "Create or edit a Ocr Tasks",
+        "notFound": "No Ocr Tasks found"
+      },
+      "created": "A new Ocr Tasks is created with identifier {{ param }}",
+      "updated": "A Ocr Tasks is updated with identifier {{ param }}",
+      "deleted": "A Ocr Tasks is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Ocr Tasks {{ id }}?"
+      },
+      "detail": {
+        "title": "Ocr Tasks"
+      },
+      "id": "ID",
+      "mediaId": "Media Id",
+      "pageNumber": "Page Number",
+      "jobStatus": "Job Status",
+      "createTime": "Create Time",
+      "startTime": "Start Time",
+      "stopTime": "Stop Time"
+    }
+  }
+}

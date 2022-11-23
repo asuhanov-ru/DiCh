@@ -1,0 +1,20 @@
+{
+  "changelogDate": "20220916075321",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "mediaId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "pageNumber",
+      "fieldType": "Integer"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "PageLayout",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

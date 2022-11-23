@@ -1,0 +1,16 @@
+{
+  "changelogDate": "20220617123302",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "image_file_name",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "PageImage",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

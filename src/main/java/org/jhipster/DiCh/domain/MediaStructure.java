@@ -1,10 +1,8 @@
 package org.jhipster.dich.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
+import javax.persistence.*;
 
 /**
  * A MediaStructure.
@@ -18,6 +16,7 @@ public class MediaStructure implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "obj_name")
@@ -33,12 +32,18 @@ public class MediaStructure implements Serializable {
     private String tag;
 
     @ManyToOne
-    @JsonIgnoreProperties("mediaStructures")
+    @JsonIgnoreProperties(value = { "collections" }, allowSetters = true)
     private Media media;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public MediaStructure id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -46,11 +51,11 @@ public class MediaStructure implements Serializable {
     }
 
     public String getObjName() {
-        return objName;
+        return this.objName;
     }
 
     public MediaStructure objName(String objName) {
-        this.objName = objName;
+        this.setObjName(objName);
         return this;
     }
 
@@ -59,11 +64,11 @@ public class MediaStructure implements Serializable {
     }
 
     public String getObjType() {
-        return objType;
+        return this.objType;
     }
 
     public MediaStructure objType(String objType) {
-        this.objType = objType;
+        this.setObjType(objType);
         return this;
     }
 
@@ -72,11 +77,11 @@ public class MediaStructure implements Serializable {
     }
 
     public Long getParentId() {
-        return parentId;
+        return this.parentId;
     }
 
     public MediaStructure parentId(Long parentId) {
-        this.parentId = parentId;
+        this.setParentId(parentId);
         return this;
     }
 
@@ -85,11 +90,11 @@ public class MediaStructure implements Serializable {
     }
 
     public String getTag() {
-        return tag;
+        return this.tag;
     }
 
     public MediaStructure tag(String tag) {
-        this.tag = tag;
+        this.setTag(tag);
         return this;
     }
 
@@ -98,18 +103,19 @@ public class MediaStructure implements Serializable {
     }
 
     public Media getMedia() {
-        return media;
-    }
-
-    public MediaStructure media(Media media) {
-        this.media = media;
-        return this;
+        return this.media;
     }
 
     public void setMedia(Media media) {
         this.media = media;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public MediaStructure media(Media media) {
+        this.setMedia(media);
+        return this;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -124,9 +130,11 @@ public class MediaStructure implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MediaStructure{" +

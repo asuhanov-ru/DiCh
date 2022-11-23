@@ -1,0 +1,32 @@
+{
+  "diChApp": {
+    "pageWord": {
+      "home": {
+        "title": "Page Words",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Page Word",
+        "createOrEditLabel": "Создать или отредактировать Page Word",
+        "notFound": "Page Words не найдено"
+      },
+      "created": "Новый Page Word создан с идентификатором {{ param }}",
+      "updated": "Page Word обновлен с идентификатором {{ param }}",
+      "deleted": "Page Word удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Page Word {{ id }}?"
+      },
+      "detail": {
+        "title": "Page Word"
+      },
+      "id": "ID",
+      "s_word": "S Word",
+      "n_top": "N Top",
+      "n_left": "N Left",
+      "n_heigth": "N Heigth",
+      "n_width": "N Width",
+      "n_idx": "N Idx",
+      "mediaId": "Media Id",
+      "pageNumber": "Page Number",
+      "version": "Version"
+    }
+  }
+}

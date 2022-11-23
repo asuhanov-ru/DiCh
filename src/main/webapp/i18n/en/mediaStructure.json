@@ -3,6 +3,7 @@
     "mediaStructure": {
       "home": {
         "title": "Media Structures",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Media Structure",
         "createOrEditLabel": "Create or edit a Media Structure",
         "notFound": "No Media Structures found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Media Structure"
       },
+      "id": "ID",
       "objName": "Obj Name",
       "objType": "Obj Type",
       "parentId": "Parent Id",

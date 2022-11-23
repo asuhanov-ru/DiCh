@@ -1,37 +1,41 @@
 package org.jhipster.dich.web.rest;
 
-import org.jhipster.dich.DiChApp;
-import org.jhipster.dich.domain.MediaStructure;
-import org.jhipster.dich.repository.MediaStructureRepository;
-import org.jhipster.dich.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.jhipster.dich.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.jhipster.dich.IntegrationTest;
+import org.jhipster.dich.domain.MediaStructure;
+import org.jhipster.dich.repository.MediaStructureRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link MediaStructureResource} REST controller.
  */
-@SpringBootTest(classes = DiChApp.class)
-public class MediaStructureResourceIT {
+@IntegrationTest
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@WithMockUser
+class MediaStructureResourceIT {
 
     private static final String DEFAULT_OBJ_NAME = "AAAAAAAAAA";
     private static final String UPDATED_OBJ_NAME = "BBBBBBBBBB";
@@ -45,39 +49,25 @@ public class MediaStructureResourceIT {
     private static final String DEFAULT_TAG = "AAAAAAAAAA";
     private static final String UPDATED_TAG = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/media-structures";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private MediaStructureRepository mediaStructureRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
+    @Mock
+    private MediaStructureRepository mediaStructureRepositoryMock;
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restMediaStructureMockMvc;
 
     private MediaStructure mediaStructure;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final MediaStructureResource mediaStructureResource = new MediaStructureResource(mediaStructureRepository);
-        this.restMediaStructureMockMvc = MockMvcBuilders.standaloneSetup(mediaStructureResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -93,6 +83,7 @@ public class MediaStructureResourceIT {
             .tag(DEFAULT_TAG);
         return mediaStructure;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -115,13 +106,13 @@ public class MediaStructureResourceIT {
 
     @Test
     @Transactional
-    public void createMediaStructure() throws Exception {
+    void createMediaStructure() throws Exception {
         int databaseSizeBeforeCreate = mediaStructureRepository.findAll().size();
-
         // Create the MediaStructure
-        restMediaStructureMockMvc.perform(post("/api/media-structures")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(mediaStructure)))
+        restMediaStructureMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
             .andExpect(status().isCreated());
 
         // Validate the MediaStructure in the database
@@ -136,16 +127,17 @@ public class MediaStructureResourceIT {
 
     @Test
     @Transactional
-    public void createMediaStructureWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = mediaStructureRepository.findAll().size();
-
+    void createMediaStructureWithExistingId() throws Exception {
         // Create the MediaStructure with an existing ID
         mediaStructure.setId(1L);
 
+        int databaseSizeBeforeCreate = mediaStructureRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restMediaStructureMockMvc.perform(post("/api/media-structures")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(mediaStructure)))
+        restMediaStructureMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the MediaStructure in the database
@@ -153,15 +145,15 @@ public class MediaStructureResourceIT {
         assertThat(mediaStructureList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllMediaStructures() throws Exception {
+    void getAllMediaStructures() throws Exception {
         // Initialize the database
         mediaStructureRepository.saveAndFlush(mediaStructure);
 
         // Get all the mediaStructureList
-        restMediaStructureMockMvc.perform(get("/api/media-structures?sort=id,desc"))
+        restMediaStructureMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(mediaStructure.getId().intValue())))
@@ -170,15 +162,34 @@ public class MediaStructureResourceIT {
             .andExpect(jsonPath("$.[*].parentId").value(hasItem(DEFAULT_PARENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].tag").value(hasItem(DEFAULT_TAG)));
     }
-    
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllMediaStructuresWithEagerRelationshipsIsEnabled() throws Exception {
+        when(mediaStructureRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restMediaStructureMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(mediaStructureRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllMediaStructuresWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(mediaStructureRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restMediaStructureMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(mediaStructureRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
-    public void getMediaStructure() throws Exception {
+    void getMediaStructure() throws Exception {
         // Initialize the database
         mediaStructureRepository.saveAndFlush(mediaStructure);
 
         // Get the mediaStructure
-        restMediaStructureMockMvc.perform(get("/api/media-structures/{id}", mediaStructure.getId()))
+        restMediaStructureMockMvc
+            .perform(get(ENTITY_API_URL_ID, mediaStructure.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(mediaStructure.getId().intValue()))
@@ -190,15 +201,14 @@ public class MediaStructureResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingMediaStructure() throws Exception {
+    void getNonExistingMediaStructure() throws Exception {
         // Get the mediaStructure
-        restMediaStructureMockMvc.perform(get("/api/media-structures/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restMediaStructureMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateMediaStructure() throws Exception {
+    void putNewMediaStructure() throws Exception {
         // Initialize the database
         mediaStructureRepository.saveAndFlush(mediaStructure);
 
@@ -208,15 +218,14 @@ public class MediaStructureResourceIT {
         MediaStructure updatedMediaStructure = mediaStructureRepository.findById(mediaStructure.getId()).get();
         // Disconnect from session so that the updates on updatedMediaStructure are not directly saved in db
         em.detach(updatedMediaStructure);
-        updatedMediaStructure
-            .objName(UPDATED_OBJ_NAME)
-            .objType(UPDATED_OBJ_TYPE)
-            .parentId(UPDATED_PARENT_ID)
-            .tag(UPDATED_TAG);
+        updatedMediaStructure.objName(UPDATED_OBJ_NAME).objType(UPDATED_OBJ_TYPE).parentId(UPDATED_PARENT_ID).tag(UPDATED_TAG);
 
-        restMediaStructureMockMvc.perform(put("/api/media-structures")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedMediaStructure)))
+        restMediaStructureMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedMediaStructure.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedMediaStructure))
+            )
             .andExpect(status().isOk());
 
         // Validate the MediaStructure in the database
@@ -231,15 +240,17 @@ public class MediaStructureResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingMediaStructure() throws Exception {
+    void putNonExistingMediaStructure() throws Exception {
         int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
-
-        // Create the MediaStructure
+        mediaStructure.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restMediaStructureMockMvc.perform(put("/api/media-structures")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(mediaStructure)))
+        restMediaStructureMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, mediaStructure.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the MediaStructure in the database
@@ -249,15 +260,173 @@ public class MediaStructureResourceIT {
 
     @Test
     @Transactional
-    public void deleteMediaStructure() throws Exception {
+    void putWithIdMismatchMediaStructure() throws Exception {
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+        mediaStructure.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMediaStructureMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamMediaStructure() throws Exception {
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+        mediaStructure.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMediaStructureMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaStructure)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateMediaStructureWithPatch() throws Exception {
+        // Initialize the database
+        mediaStructureRepository.saveAndFlush(mediaStructure);
+
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+
+        // Update the mediaStructure using partial update
+        MediaStructure partialUpdatedMediaStructure = new MediaStructure();
+        partialUpdatedMediaStructure.setId(mediaStructure.getId());
+
+        partialUpdatedMediaStructure.objName(UPDATED_OBJ_NAME);
+
+        restMediaStructureMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMediaStructure.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMediaStructure))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+        MediaStructure testMediaStructure = mediaStructureList.get(mediaStructureList.size() - 1);
+        assertThat(testMediaStructure.getObjName()).isEqualTo(UPDATED_OBJ_NAME);
+        assertThat(testMediaStructure.getObjType()).isEqualTo(DEFAULT_OBJ_TYPE);
+        assertThat(testMediaStructure.getParentId()).isEqualTo(DEFAULT_PARENT_ID);
+        assertThat(testMediaStructure.getTag()).isEqualTo(DEFAULT_TAG);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateMediaStructureWithPatch() throws Exception {
+        // Initialize the database
+        mediaStructureRepository.saveAndFlush(mediaStructure);
+
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+
+        // Update the mediaStructure using partial update
+        MediaStructure partialUpdatedMediaStructure = new MediaStructure();
+        partialUpdatedMediaStructure.setId(mediaStructure.getId());
+
+        partialUpdatedMediaStructure.objName(UPDATED_OBJ_NAME).objType(UPDATED_OBJ_TYPE).parentId(UPDATED_PARENT_ID).tag(UPDATED_TAG);
+
+        restMediaStructureMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMediaStructure.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMediaStructure))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+        MediaStructure testMediaStructure = mediaStructureList.get(mediaStructureList.size() - 1);
+        assertThat(testMediaStructure.getObjName()).isEqualTo(UPDATED_OBJ_NAME);
+        assertThat(testMediaStructure.getObjType()).isEqualTo(UPDATED_OBJ_TYPE);
+        assertThat(testMediaStructure.getParentId()).isEqualTo(UPDATED_PARENT_ID);
+        assertThat(testMediaStructure.getTag()).isEqualTo(UPDATED_TAG);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingMediaStructure() throws Exception {
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+        mediaStructure.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restMediaStructureMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, mediaStructure.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchMediaStructure() throws Exception {
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+        mediaStructure.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMediaStructureMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamMediaStructure() throws Exception {
+        int databaseSizeBeforeUpdate = mediaStructureRepository.findAll().size();
+        mediaStructure.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMediaStructureMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(mediaStructure))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the MediaStructure in the database
+        List<MediaStructure> mediaStructureList = mediaStructureRepository.findAll();
+        assertThat(mediaStructureList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteMediaStructure() throws Exception {
         // Initialize the database
         mediaStructureRepository.saveAndFlush(mediaStructure);
 
         int databaseSizeBeforeDelete = mediaStructureRepository.findAll().size();
 
         // Delete the mediaStructure
-        restMediaStructureMockMvc.perform(delete("/api/media-structures/{id}", mediaStructure.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+        restMediaStructureMockMvc
+            .perform(delete(ENTITY_API_URL_ID, mediaStructure.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

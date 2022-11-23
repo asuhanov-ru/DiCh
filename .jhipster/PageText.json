@@ -1,0 +1,28 @@
+{
+  "changelogDate": "20220629134052",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "page_id",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "text",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "PageText",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "pageImage",
+      "relationshipName": "pageImage",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceImpl"
+}

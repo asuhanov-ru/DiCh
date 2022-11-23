@@ -12,8 +12,10 @@
     },
     "indicator": {
       "diskSpace": "Место на диске",
-      "mail": "Email",
-      "ping": "Application",
+      "mail": "Эл. почта",
+      "livenessState": "Живой",
+      "readinessState": "Готово",
+      "ping": "Приложение",
       "db": "База данных"
     },
     "table": {
