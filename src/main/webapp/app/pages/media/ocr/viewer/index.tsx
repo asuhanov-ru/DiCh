@@ -30,6 +30,7 @@ export interface IReactPanZoomProps {
   onClick?: (e: React.MouseEvent<any>) => void;
   style?: any;
   children?: React.ReactNode;
+  setPointerPosition: (x: number, y: number) => void;
 }
 export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   // In strict null checking setting default props doesn't seem to work. Hence the non-null assertion.
@@ -47,7 +48,7 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
 
   private panWrapper: any;
 
-  private panContainer: any;
+  public panContainer: any;
 
   public state;
 
@@ -74,6 +75,8 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
         pandy, // [zoom, skew, skew, zoom, dx, dy]
       ],
       mouseDown: false,
+      mouseX: 0,
+      mouseY: 0,
     };
   }
 
@@ -215,7 +218,9 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   }
 
   private onMouseMove = (e: React.MouseEvent<EventTarget>) => {
-    this.updateMousePosition(e.pageX, e.pageY);
+    /* eslint no-console: off */
+    console.log(`${JSON.stringify(this.panContainer.getBoundingClientRect())}`);
+    this.updateMousePosition(e.clientX, e.clientY);
   };
 
   private onWheel = (e: React.WheelEvent<EventTarget>) => {
@@ -235,6 +240,10 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   };
 
   private updateMousePosition = (pageX: number, pageY: number) => {
+    const { setPointerPosition } = this.props;
+
+    setPointerPosition(pageX, pageY);
+
     if (!this.state.mouseDown) return;
 
     const matrixData = this.getNewMatrixData(pageX, pageY);

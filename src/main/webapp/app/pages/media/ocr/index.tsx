@@ -13,6 +13,8 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
   const [zoom, setZoom] = React.useState(1);
   const [rotation, setRotation] = React.useState(0);
   const [flip, setFlip] = React.useState(false);
+  const [mouseX, setMouseX] = React.useState(0);
+  const [mouseY, setMouseY] = React.useState(0);
 
   const resetAll = () => {
     setDx(0);
@@ -70,7 +72,6 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           cursor: 'pointer',
           height: 40,
           width: 40,
-          borderBottom: ' 1px solid #ccc',
         }}
       >
         <svg
@@ -84,7 +85,6 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           height="24"
           viewBox="0 0 24 24"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path d="M4 12H20" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" />
           <path d="M12 4L12 20" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" />
@@ -97,7 +97,6 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           cursor: 'pointer',
           height: 40,
           width: 40,
-          borderBottom: ' 1px solid #ccc',
         }}
       >
         <svg
@@ -123,7 +122,6 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           cursor: 'pointer',
           height: 40,
           width: 40,
-          borderBottom: ' 1px solid #ccc',
         }}
       >
         <svg
@@ -150,7 +148,6 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           cursor: 'pointer',
           height: 40,
           width: 40,
-          borderBottom: ' 1px solid #ccc',
         }}
       >
         <svg
@@ -211,8 +208,23 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
         </svg>
       </div>
+      <div
+        style={{
+          textAlign: 'right',
+          marginTop: 'auto',
+          marginBottom: 'auto',
+          marginRight: '8px',
+          width: '100%',
+        }}
+      >
+        <span>{`mouseX ${mouseX} mouseY: ${mouseY}`}</span>
+      </div>
     </div>
   );
+
+  const setPointerPosition = (x, y) => {
+    setMouseX(x), setMouseY(y);
+  };
 
   return (
     <div>
@@ -227,6 +239,7 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
         }}
       >
         <PanViewer
+          setPointerPosition={setPointerPosition}
           style={{
             width: '100%',
             height: '100%',

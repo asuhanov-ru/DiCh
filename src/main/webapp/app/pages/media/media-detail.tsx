@@ -4,6 +4,7 @@ import { Button, Row, Col } from 'reactstrap';
 import { convertFromRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import '../../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import './styles.css';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
@@ -11,6 +12,15 @@ import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
 import { getEntities as getPageOcr } from './ocr/reducer';
 import { Ocr } from './ocr';
+
+type Props = {
+  onClick: () => void;
+};
+const CustomOption: React.FC<Props> = ({ onClick }) => (
+  <div className="rdw-storybook-custom-option" onClick={onClick}>
+    B
+  </div>
+);
 
 export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
@@ -34,6 +44,8 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
       },
     ],
   });
+  const [editorState, setEditorState] = useState(EditorState.createWithContent(convertFromRaw(contentState)));
+  const [showOcrProps, setShowOcrProps] = useState(false);
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -49,36 +61,68 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   useEffect(() => {
     const content = {
       entityMap: {},
-      blocks: [],
+      blocks: [
+        {
+          key: 'empty',
+          text: '',
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
     };
     let i = 0;
     let keys = [];
     let text = [];
 
     if (ocrEntities && ocrEntities?.length) {
-      ocrEntities.forEach(ocr_entity => {
-        keys.push(ocr_entity.id);
-        text.push(ocr_entity.s_word);
-        i++;
-        if (i > 10) {
-          i = 0;
+      content.blocks = [];
+      if (!showOcrProps)
+        ocrEntities.forEach((ocr_entity, idx) => {
+          keys.push(ocr_entity.id);
+          text.push(`${ocr_entity.s_word}`);
+          i++;
+          if (i > 10) {
+            i = 0;
+            const block = {
+              key: keys.join(','),
+              text: text.join(' '),
+              depth: 0,
+              inlineStyleRanges: [],
+              type: 'unstyled',
+              entityRanges: [],
+              data: {},
+            };
+            content.blocks.push(block);
+            keys = [];
+            text = [];
+          }
+        });
+      else
+        ocrEntities.forEach((ocr_entity, idx) => {
           const block = {
-            key: keys.join(','),
-            text: text.join(' '),
+            key: `${ocr_entity.id}`,
+            text: `${idx} (${ocr_entity.n_left},${ocr_entity.n_top}). ${ocr_entity.s_word}`,
             depth: 0,
+            inlineStyleRanges: [
+              {
+                offset: `${idx} (${ocr_entity.n_left},${ocr_entity.n_top}). `.length,
+                length: `${ocr_entity.s_word}`.length,
+                style: 'BOLD',
+              },
+            ],
             type: 'unstyled',
             entityRanges: [],
             data: {},
           };
           content.blocks.push(block);
-          keys = [];
-          text = [];
-        }
-      });
-
-      setContentState(content);
+        });
     }
-  }, [ocrEntities]);
+    setContentState(content);
+    setEditorState(EditorState.createWithContent(convertFromRaw(content)));
+  }, [ocrEntities, showOcrProps]);
 
   const handlePrev = () => {
     if (currentPage > 0) setCurrentPage(currentPage - 1);
@@ -94,6 +138,10 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 
   const onContentStateChange = content => {
     setContentState(content);
+  };
+
+  const onEditorStateChange = newEditorState => {
+    setEditorState(newEditorState);
   };
 
   return (
@@ -133,11 +181,13 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
         <Col>
           <div>
             <Editor
-              contentState={contentState}
-              wrapperClassName="wrapper-class"
-              editorClassName="editor-class"
+              editorState={editorState}
+              wrapperClassName="rdw-storybook-wrapper"
+              editorClassName="rdw-storybook-editor"
               toolbarClassName="toolbar-class"
+              onEditorStateChange={onEditorStateChange}
               onContentStateChange={onContentStateChange}
+              toolbarCustomButtons={[<CustomOption key="togleView" onClick={() => setShowOcrProps(!showOcrProps)} />]}
             />
           </div>
         </Col>

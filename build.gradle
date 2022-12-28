@@ -281,8 +281,8 @@ dependencies {
     implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '5.4.0'
     implementation group: 'net.sourceforge.lept4j', name: 'lept4j', version: '1.16.2'
     //code generators
-    compileOnly("org.projectlombok:lombok:${lombok}")
-    annotationProcessor("org.projectlombok:lombok:${lombok}")
+    //compileOnly("org.projectlombok:lombok:${lombok}")
+    //annotationProcessor("org.projectlombok:lombok:${lombok}")
 
 }
 
