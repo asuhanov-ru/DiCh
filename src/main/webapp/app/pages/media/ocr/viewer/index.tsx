@@ -1,5 +1,7 @@
 import React from 'react';
 
+import '../../styles.css';
+
 export interface IDragData {
   x: number;
   y: number;
@@ -31,6 +33,7 @@ export interface IReactPanZoomProps {
   style?: any;
   children?: React.ReactNode;
   setPointerPosition: (x: number, y: number) => void;
+  highlights?: object[];
 }
 export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   // In strict null checking setting default props doesn't seem to work. Hence the non-null assertion.
@@ -127,8 +130,30 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
     this.updateMousePosition(e.touches[0].pageX, e.touches[0].pageY);
   };
 
+  getHighlightStyle(highlight) {
+    if (!highlight) {
+      return undefined;
+    }
+
+    return {
+      top: `${highlight.n_top}px`,
+      left: `${highlight.n_left}px`,
+      width: `${highlight.n_width}px`,
+      height: `${highlight.n_heigth}px`,
+    };
+  }
+
+  createHighlights() {
+    const { highlights } = this.props;
+    if (!highlights || highlights.length < 1) return undefined;
+    const style = this.getHighlightStyle(highlights[0]);
+    return <div style={style} className="rdw-highlight"></div>;
+  }
+
   // tslint:disable-next-line: member-ordering
   public render() {
+    const { highlights } = this.props;
+    const highlighted = highlights ? this.createHighlights() : null;
     return (
       <div
         className={`pan-container ${this.props.className || ''}`}
@@ -144,18 +169,25 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
         onClick={this.onClick}
         style={{
           height: this.props.height,
-          userSelect: 'none',
           width: this.props.width,
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
         ref={ref => (this.panWrapper = ref)}
       >
         <div
           ref={ref => (ref ? (this.panContainer = ref) : null)}
           style={{
+            transformOrigin: 'top left',
             transform: `matrix(${this.state.matrixData.toString()})`,
+            display: 'flex',
+            alignSelf: 'flex-start',
           }}
         >
           {this.props.children}
+          {highlighted}
         </div>
       </div>
     );
@@ -218,8 +250,6 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   }
 
   private onMouseMove = (e: React.MouseEvent<EventTarget>) => {
-    /* eslint no-console: off */
-    console.log(`${JSON.stringify(this.panContainer.getBoundingClientRect())}`);
     this.updateMousePosition(e.clientX, e.clientY);
   };
 
@@ -242,7 +272,10 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   private updateMousePosition = (pageX: number, pageY: number) => {
     const { setPointerPosition } = this.props;
 
-    setPointerPosition(pageX, pageY);
+    if (this.panContainer) {
+      const { x, y, width, height } = this.panContainer.getBoundingClientRect();
+      setPointerPosition(pageX - x, pageY - y);
+    }
 
     if (!this.state.mouseDown) return;
 

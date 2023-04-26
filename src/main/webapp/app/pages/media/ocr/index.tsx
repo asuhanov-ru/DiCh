@@ -1,13 +1,20 @@
 import React, { useRef } from 'react';
 import { PanViewer } from './viewer';
 
+import { defaultToolbar } from './config';
+import { ToolGroup } from './controls';
+
 type ReactPanZoomProps = {
   image: string;
   alt?: string;
   ref?: any;
+  highlights?: object[];
+  currentPage: number;
+  totalPages: number;
+  setPage: (number) => void;
 };
 
-export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
+export const Ocr = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage }: ReactPanZoomProps) => {
   const [dx, setDx] = React.useState(0);
   const [dy, setDy] = React.useState(0);
   const [zoom, setZoom] = React.useState(1);
@@ -15,6 +22,14 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
   const [flip, setFlip] = React.useState(false);
   const [mouseX, setMouseX] = React.useState(0);
   const [mouseY, setMouseY] = React.useState(0);
+
+  const [toolbar, setToolbar] = React.useState(defaultToolbar);
+  const editorState = {
+    navigate: {
+      page: currentPage,
+      total: totalPages,
+    },
+  };
 
   const resetAll = () => {
     setDx(0);
@@ -50,186 +65,47 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
     setDy(paramDy);
   };
 
-  const renderBar = () => (
-    <div
-      style={{
-        right: '10px',
-        zIndex: 2,
-        top: 10,
-        userSelect: 'none',
-        borderRadius: 2,
-        background: '#fff',
-        boxShadow: '0px 2px 6px rgba(53, 67, 93, 0.32)',
-        display: 'flex',
-        paddingTop: '4px',
-        paddingBottom: '4px',
-      }}
-    >
-      <div
-        onClick={zoomIn}
-        style={{
-          textAlign: 'center',
-          cursor: 'pointer',
-          height: 40,
-          width: 40,
-        }}
-      >
-        <svg
-          style={{
-            height: '100%',
-            width: '100%',
-            padding: 10,
-            boxSizing: 'border-box',
-          }}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path d="M4 12H20" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" />
-          <path d="M12 4L12 20" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </div>
-      <div
-        onClick={zoomOut}
-        style={{
-          textAlign: 'center',
-          cursor: 'pointer',
-          height: 40,
-          width: 40,
-        }}
-      >
-        <svg
-          style={{
-            height: '100%',
-            width: '100%',
-            padding: 10,
-            boxSizing: 'border-box',
-          }}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M4 12H20" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </div>
-      <div
-        onClick={rotateLeft}
-        style={{
-          textAlign: 'center',
-          cursor: 'pointer',
-          height: 40,
-          width: 40,
-        }}
-      >
-        <svg
-          style={{
-            height: '100%',
-            width: '100%',
-            padding: 10,
-            boxSizing: 'border-box',
-          }}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M14 15L9 20L4 15" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M20 4H13C10.7909 4 9 5.79086 9 8V20" stroke="#4C68C1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-      <div
-        onClick={flipImage}
-        style={{
-          textAlign: 'center',
-          cursor: 'pointer',
-          height: 40,
-          width: 40,
-        }}
-      >
-        <svg
-          style={{
-            height: '100%',
-            width: '100%',
-            padding: 10,
-            boxSizing: 'border-box',
-          }}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke="#4C68C1"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9.178,18.799V1.763L0,18.799H9.178z M8.517,18.136h-7.41l7.41-13.752V18.136z"
-          />
-          <polygon
-            stroke="#4C68C1"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            points="11.385,1.763 11.385,18.799 20.562,18.799 "
-          />
-        </svg>
-      </div>
-      <div
-        onClick={resetAll}
-        style={{
-          textAlign: 'center',
-          cursor: 'pointer',
-          height: 40,
-          width: 40,
-        }}
-      >
-        <svg
-          style={{
-            height: '100%',
-            width: '100%',
-            padding: 10,
-            boxSizing: 'border-box',
-          }}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          stroke="#4C68C1"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-        </svg>
-      </div>
-      <div
-        style={{
-          textAlign: 'right',
-          marginTop: 'auto',
-          marginBottom: 'auto',
-          marginRight: '8px',
-          width: '100%',
-        }}
-      >
-        <span>{`mouseX ${mouseX} mouseY: ${mouseY}`}</span>
-      </div>
-    </div>
-  );
-
   const setPointerPosition = (x, y) => {
     setMouseX(x), setMouseY(y);
   };
 
+  const handleSetState = (state: any) => {
+    const { command, value } = state;
+    switch (command) {
+      case 'next':
+        setPage(currentPage + 1);
+        break;
+      case 'prev':
+        setPage(currentPage - 1);
+        break;
+      case 'page':
+        setPage(value);
+        break;
+      case 'resetTransfrom':
+        resetAll();
+        break;
+      case 'zoomIn':
+        zoomIn();
+        break;
+      case 'zoomOut':
+        zoomOut();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div>
-      {renderBar()}
+      <div className="rdw-editor-toolbar">
+        {toolbar.options.map((opt, index) => {
+          const config = toolbar[opt];
+          const state = editorState[opt];
+          return <ToolGroup key={index} name={opt} config={config} state={state} setState={handleSetState} />;
+        })}
+      </div>
       <div
+        className="pan-viewer-wrapper"
         style={{
           float: 'left',
           border: '1px solid',
@@ -255,16 +131,9 @@ export const Ocr = ({ image, alt, ref }: ReactPanZoomProps) => {
           onPan={onPan}
           rotation={rotation}
           key={dx}
+          highlights={highlights}
         >
-          <img
-            style={{
-              transform: `rotate(${rotation * 90}deg) scaleX(${flip ? -1 : 1})`,
-              width: '100%',
-            }}
-            src={image}
-            alt={alt}
-            ref={ref}
-          />
+          <img src={image} alt={alt} ref={ref} />
         </PanViewer>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { convertFromRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import '../../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles.css';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -16,11 +16,6 @@ import { Ocr } from './ocr';
 type Props = {
   onClick: () => void;
 };
-const CustomOption: React.FC<Props> = ({ onClick }) => (
-  <div className="rdw-storybook-custom-option" onClick={onClick}>
-    B
-  </div>
-);
 
 export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
@@ -30,22 +25,10 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const mediaEntity = useAppSelector(state => state.media.entity);
   const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
-  const [contentState, setContentState] = useState({
-    entityMap: {},
-    blocks: [
-      {
-        key: '1004,1005,1006',
-        text: 'Initialized from content state.',
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {},
-      },
-    ],
-  });
-  const [editorState, setEditorState] = useState(EditorState.createWithContent(convertFromRaw(contentState)));
-  const [showOcrProps, setShowOcrProps] = useState(false);
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [selectionState, setSelectionState] = useState('');
+  const [editorFocus, setEditorFocus] = useState({});
+  const [highlighted, setHighlighted] = useState([]);
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -79,69 +62,61 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 
     if (ocrEntities && ocrEntities?.length) {
       content.blocks = [];
-      if (!showOcrProps)
-        ocrEntities.forEach((ocr_entity, idx) => {
-          keys.push(ocr_entity.id);
-          text.push(`${ocr_entity.s_word}`);
-          i++;
-          if (i > 10) {
-            i = 0;
-            const block = {
-              key: keys.join(','),
-              text: text.join(' '),
-              depth: 0,
-              inlineStyleRanges: [],
-              type: 'unstyled',
-              entityRanges: [],
-              data: {},
-            };
-            content.blocks.push(block);
-            keys = [];
-            text = [];
-          }
-        });
-      else
-        ocrEntities.forEach((ocr_entity, idx) => {
+
+      ocrEntities.forEach((ocr_entity, idx) => {
+        keys.push(idx);
+        text.push(`${ocr_entity.s_word}`);
+        i++;
+        if (i > 10) {
+          i = 0;
           const block = {
-            key: `${ocr_entity.id}`,
-            text: `${idx} (${ocr_entity.n_left},${ocr_entity.n_top}). ${ocr_entity.s_word}`,
+            key: keys.join(','),
+            text: text.join(' '),
             depth: 0,
-            inlineStyleRanges: [
-              {
-                offset: `${idx} (${ocr_entity.n_left},${ocr_entity.n_top}). `.length,
-                length: `${ocr_entity.s_word}`.length,
-                style: 'BOLD',
-              },
-            ],
+            inlineStyleRanges: [],
             type: 'unstyled',
             entityRanges: [],
             data: {},
           };
           content.blocks.push(block);
-        });
+          keys = [];
+          text = [];
+        }
+      });
     }
-    setContentState(content);
+
     setEditorState(EditorState.createWithContent(convertFromRaw(content)));
-  }, [ocrEntities, showOcrProps]);
+  }, [ocrEntities]);
 
-  const handlePrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  const changePageNumber = evt => setSelectedPageNumber(evt.target.valueAsNumber);
-
-  const handleNext = () => {
-    if (currentPage < mediaEntity?.lastPageNumber) setCurrentPage(currentPage + 1);
-  };
-
-  const handleGo = () => setCurrentPage(selectedPageNumber);
-
-  const onContentStateChange = content => {
-    setContentState(content);
+  const handleSetPage = page => {
+    if (page > 0 && page < mediaEntity?.lastPageNumber) {
+      setCurrentPage(page);
+    }
   };
 
   const onEditorStateChange = newEditorState => {
     setEditorState(newEditorState);
+    const selection = newEditorState.getSelection();
+    const focusKey = selection.getFocusKey();
+    const focusOffset = selection.getFocusOffset();
+    const wordIndexes = selection
+      .getFocusKey()
+      .split(',')
+      .map(el => Number(el));
+    const words = ocrEntities.filter((_, idx) => wordIndexes.includes(idx)).map(el => ({ ...el, wordLenght: el?.s_word?.length }));
+    let selectedWordIndex = 0;
+    let wordEndPosition = 0;
+    for (let i = 0; i < words.length; i++) {
+      wordEndPosition = wordEndPosition + words[i].wordLenght + 1;
+      if (focusOffset <= wordEndPosition) {
+        selectedWordIndex = i;
+        break;
+      }
+    }
+    const selectedWord = words[selectedWordIndex];
+    setSelectionState(selection.serialize());
+    setEditorFocus({ focusKey, focusOffset, wordIndexes, words, selectedWordIndex, selectedWord });
+    setHighlighted([selectedWord]);
   };
 
   return (
@@ -154,42 +129,18 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
       </Row>
       &nbsp;
       <Row>
-        <Col md="8">
-          <h4>
-            Page {currentPage} of {mediaEntity?.lastPageNumber}
-          </h4>
-          <Button onClick={handlePrev} color="info">
-            Previous
-          </Button>
-          &nbsp;
-          <Button color="info" onClick={handleNext}>
-            Next
-          </Button>
-          &nbsp;
-          <input type="number" value={selectedPageNumber} onChange={changePageNumber} disabled={isFetching} />
-          &nbsp;
-          <Button color="info" onClick={handleGo}>
-            Go
-          </Button>
-        </Col>
-      </Row>
-      &nbsp;
-      <Row>
         <Col>
-          <Ocr image={`data:image/jpeg;base64,${imageTransfer?.image}`} />
+          <Ocr
+            image={`data:image/jpeg;base64,${imageTransfer?.image}`}
+            highlights={highlighted}
+            currentPage={currentPage}
+            totalPages={mediaEntity?.lastPageNumber}
+            setPage={handleSetPage}
+          />
         </Col>
         <Col>
-          <div>
-            <Editor
-              editorState={editorState}
-              wrapperClassName="rdw-storybook-wrapper"
-              editorClassName="rdw-storybook-editor"
-              toolbarClassName="toolbar-class"
-              onEditorStateChange={onEditorStateChange}
-              onContentStateChange={onContentStateChange}
-              toolbarCustomButtons={[<CustomOption key="togleView" onClick={() => setShowOcrProps(!showOcrProps)} />]}
-            />
-          </div>
+          <Editor editorClassName="rdw-storybook-editor" editorState={editorState} onEditorStateChange={onEditorStateChange} />
+          <div>{selectionState}</div>
         </Col>
       </Row>
     </>
