@@ -12,6 +12,8 @@ type Props = {
   value?: string;
   className?: string;
   activeClassName?: string;
+  selected?: boolean;
+  switch?: boolean;
 };
 
 export const Options: React.FC<Props> = ({

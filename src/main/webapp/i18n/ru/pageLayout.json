@@ -19,7 +19,13 @@
       },
       "id": "ID",
       "mediaId": "Media Id",
-      "pageNumber": "Page Number"
+      "pageNumber": "Page Number",
+      "iterator_level": "Iterator Level",
+      "rect_top": "Rect Top",
+      "rect_left": "Rect Left",
+      "rect_right": "Rect Right",
+      "rect_bottom": "Rect Bottom",
+      "parent_id": "Parent Id"
     }
   }
 }

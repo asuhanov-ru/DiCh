@@ -5,7 +5,7 @@ export const defaultToolbar = {
     prev: { icon: 'arrow-left', className: undefined, title: undefined, component: 'option' },
     next: { icon: 'arrow-right', className: undefined, title: undefined, component: 'option' },
     page: { icon: 'faArrowLeft', className: undefined, title: undefined, component: 'edit' },
-    total: { icon: 'faArrowLeft', className: undefined, title: undefined, component: 'static' },
+    total: { icon: 'faArrowLeft', className: undefined, title: '/ ', component: 'static' },
   },
   panZoom: {
     options: ['panZoomOnOff', 'zoomIn', 'zoomOut', 'zoomPercent', 'transformOrigin', 'resetTransfrom'],
@@ -22,8 +22,8 @@ export const defaultToolbar = {
     resetTransfrom: { icon: 'fa-arrow-up-right-from-square', className: undefined, title: undefined, component: 'option' },
   },
   layoutSelection: {
-    options: ['selectionTollOnOff', 'layoutOptions'],
-    selectionTollOnOff: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+    options: ['selectionToolOnOff', 'layoutOptions'],
+    selectionToolOnOff: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
     layoutOptions: {
       options: ['block', 'paragraph'],
     },

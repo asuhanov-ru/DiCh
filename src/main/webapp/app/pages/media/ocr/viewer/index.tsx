@@ -136,10 +136,10 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
     }
 
     return {
-      top: `${highlight.n_top}px`,
-      left: `${highlight.n_left}px`,
-      width: `${highlight.n_width}px`,
-      height: `${highlight.n_heigth}px`,
+      top: `${highlight.n_top - 2}px`,
+      left: `${highlight.n_left - 2}px`,
+      width: `${highlight.n_width + 2}px`,
+      height: `${highlight.n_heigth + 2}px`,
     };
   }
 

@@ -2,10 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { get } from 'lodash';
-import { Input } from 'reactstrap';
 
 import { Options } from '../../components/Option';
 import { Edit } from '../../components/Edit';
+import { Static } from '../../components/Static';
 
 import './styles.css';
 
@@ -34,6 +34,8 @@ export const ToolGroup: React.FC<Props> = ({ name, config, state, setState }) =>
         );
       case 'edit':
         return <Edit {...props.edit} key={key} />;
+      case 'static':
+        return <Static {...props.static} key={key} />;
       default:
         return undefined;
     }
@@ -53,9 +55,14 @@ export const ToolGroup: React.FC<Props> = ({ name, config, state, setState }) =>
             onClick: handleClick,
             className: classNames(config[style]?.className),
             title: config[style]?.title,
+            switch: config[style]?.property === 'switch',
+            selected: stateValue,
+            active: config[style]?.property === 'switch' && stateValue,
           },
           static: {
             value: stateValue,
+            className: classNames(config[style]?.className),
+            title: config[style]?.title,
           },
           edit: {
             value: stateValue,

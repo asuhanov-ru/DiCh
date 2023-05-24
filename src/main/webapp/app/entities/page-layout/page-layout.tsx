@@ -130,6 +130,24 @@ export const PageLayout = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('pageNumber')}>
                     <Translate contentKey="diChApp.pageLayout.pageNumber">Page Number</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('iterator_level')}>
+                    <Translate contentKey="diChApp.pageLayout.iterator_level">Iterator Level</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('rect_top')}>
+                    <Translate contentKey="diChApp.pageLayout.rect_top">Rect Top</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('rect_left')}>
+                    <Translate contentKey="diChApp.pageLayout.rect_left">Rect Left</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('rect_right')}>
+                    <Translate contentKey="diChApp.pageLayout.rect_right">Rect Right</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('rect_bottom')}>
+                    <Translate contentKey="diChApp.pageLayout.rect_bottom">Rect Bottom</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('parent_id')}>
+                    <Translate contentKey="diChApp.pageLayout.parent_id">Parent Id</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -143,6 +161,12 @@ export const PageLayout = (props: RouteComponentProps<{ url: string }>) => {
                     </td>
                     <td>{pageLayout.mediaId}</td>
                     <td>{pageLayout.pageNumber}</td>
+                    <td>{pageLayout.iterator_level}</td>
+                    <td>{pageLayout.rect_top}</td>
+                    <td>{pageLayout.rect_left}</td>
+                    <td>{pageLayout.rect_right}</td>
+                    <td>{pageLayout.rect_bottom}</td>
+                    <td>{pageLayout.parent_id}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/page-layout/${pageLayout.id}`} color="info" size="sm" data-cy="entityDetailsButton">

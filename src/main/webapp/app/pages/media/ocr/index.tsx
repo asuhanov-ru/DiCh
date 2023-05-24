@@ -12,6 +12,7 @@ type ReactPanZoomProps = {
   currentPage: number;
   totalPages: number;
   setPage: (number) => void;
+  polyTreeJSON: any;
 };
 
 export const Ocr = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage }: ReactPanZoomProps) => {
@@ -22,12 +23,20 @@ export const Ocr = ({ image, alt, ref, highlights = [], currentPage, totalPages,
   const [flip, setFlip] = React.useState(false);
   const [mouseX, setMouseX] = React.useState(0);
   const [mouseY, setMouseY] = React.useState(0);
+  const [selectedOptions, setSelectedOptions] = React.useState(['selectionToolOnOff']);
 
   const [toolbar, setToolbar] = React.useState(defaultToolbar);
+
   const editorState = {
     navigate: {
       page: currentPage,
       total: totalPages,
+    },
+    panZoom: {
+      panZoomOnOff: selectedOptions.includes('panZoomOnOff'),
+    },
+    layoutSelection: {
+      selectionToolOnOff: selectedOptions.includes('selectionToolOnOff'),
     },
   };
 
@@ -89,6 +98,20 @@ export const Ocr = ({ image, alt, ref, highlights = [], currentPage, totalPages,
         break;
       case 'zoomOut':
         zoomOut();
+        break;
+      case 'selectionToolOnOff':
+        if (selectedOptions.includes('selectionToolOnOff')) {
+          setSelectedOptions(selectedOptions.filter(el => el !== 'selectionToolOnOff'));
+        } else {
+          setSelectedOptions(['selectionToolOnOff']);
+        }
+        break;
+      case 'panZoomOnOff':
+        if (selectedOptions.includes('panZoomOnOff')) {
+          setSelectedOptions(selectedOptions.filter(el => el !== 'panZoomOnOff'));
+        } else {
+          setSelectedOptions(['panZoomOnOff']);
+        }
         break;
       default:
         break;

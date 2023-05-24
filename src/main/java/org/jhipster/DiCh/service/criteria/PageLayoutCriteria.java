@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import org.springdoc.api.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
+import tech.jhipster.service.filter.BigDecimalFilter;
 import tech.jhipster.service.filter.BooleanFilter;
 import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
@@ -32,6 +33,18 @@ public class PageLayoutCriteria implements Serializable, Criteria {
 
     private IntegerFilter pageNumber;
 
+    private StringFilter iterator_level;
+
+    private BigDecimalFilter rect_top;
+
+    private BigDecimalFilter rect_left;
+
+    private BigDecimalFilter rect_right;
+
+    private BigDecimalFilter rect_bottom;
+
+    private IntegerFilter parent_id;
+
     private Boolean distinct;
 
     public PageLayoutCriteria() {}
@@ -40,6 +53,12 @@ public class PageLayoutCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
         this.pageNumber = other.pageNumber == null ? null : other.pageNumber.copy();
+        this.iterator_level = other.iterator_level == null ? null : other.iterator_level.copy();
+        this.rect_top = other.rect_top == null ? null : other.rect_top.copy();
+        this.rect_left = other.rect_left == null ? null : other.rect_left.copy();
+        this.rect_right = other.rect_right == null ? null : other.rect_right.copy();
+        this.rect_bottom = other.rect_bottom == null ? null : other.rect_bottom.copy();
+        this.parent_id = other.parent_id == null ? null : other.parent_id.copy();
         this.distinct = other.distinct;
     }
 
@@ -93,6 +112,96 @@ public class PageLayoutCriteria implements Serializable, Criteria {
         this.pageNumber = pageNumber;
     }
 
+    public StringFilter getIterator_level() {
+        return iterator_level;
+    }
+
+    public StringFilter iterator_level() {
+        if (iterator_level == null) {
+            iterator_level = new StringFilter();
+        }
+        return iterator_level;
+    }
+
+    public void setIterator_level(StringFilter iterator_level) {
+        this.iterator_level = iterator_level;
+    }
+
+    public BigDecimalFilter getRect_top() {
+        return rect_top;
+    }
+
+    public BigDecimalFilter rect_top() {
+        if (rect_top == null) {
+            rect_top = new BigDecimalFilter();
+        }
+        return rect_top;
+    }
+
+    public void setRect_top(BigDecimalFilter rect_top) {
+        this.rect_top = rect_top;
+    }
+
+    public BigDecimalFilter getRect_left() {
+        return rect_left;
+    }
+
+    public BigDecimalFilter rect_left() {
+        if (rect_left == null) {
+            rect_left = new BigDecimalFilter();
+        }
+        return rect_left;
+    }
+
+    public void setRect_left(BigDecimalFilter rect_left) {
+        this.rect_left = rect_left;
+    }
+
+    public BigDecimalFilter getRect_right() {
+        return rect_right;
+    }
+
+    public BigDecimalFilter rect_right() {
+        if (rect_right == null) {
+            rect_right = new BigDecimalFilter();
+        }
+        return rect_right;
+    }
+
+    public void setRect_right(BigDecimalFilter rect_right) {
+        this.rect_right = rect_right;
+    }
+
+    public BigDecimalFilter getRect_bottom() {
+        return rect_bottom;
+    }
+
+    public BigDecimalFilter rect_bottom() {
+        if (rect_bottom == null) {
+            rect_bottom = new BigDecimalFilter();
+        }
+        return rect_bottom;
+    }
+
+    public void setRect_bottom(BigDecimalFilter rect_bottom) {
+        this.rect_bottom = rect_bottom;
+    }
+
+    public IntegerFilter getParent_id() {
+        return parent_id;
+    }
+
+    public IntegerFilter parent_id() {
+        if (parent_id == null) {
+            parent_id = new IntegerFilter();
+        }
+        return parent_id;
+    }
+
+    public void setParent_id(IntegerFilter parent_id) {
+        this.parent_id = parent_id;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -114,13 +223,19 @@ public class PageLayoutCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(mediaId, that.mediaId) &&
             Objects.equals(pageNumber, that.pageNumber) &&
+            Objects.equals(iterator_level, that.iterator_level) &&
+            Objects.equals(rect_top, that.rect_top) &&
+            Objects.equals(rect_left, that.rect_left) &&
+            Objects.equals(rect_right, that.rect_right) &&
+            Objects.equals(rect_bottom, that.rect_bottom) &&
+            Objects.equals(parent_id, that.parent_id) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mediaId, pageNumber, distinct);
+        return Objects.hash(id, mediaId, pageNumber, iterator_level, rect_top, rect_left, rect_right, rect_bottom, parent_id, distinct);
     }
 
     // prettier-ignore
@@ -130,6 +245,12 @@ public class PageLayoutCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
             (pageNumber != null ? "pageNumber=" + pageNumber + ", " : "") +
+            (iterator_level != null ? "iterator_level=" + iterator_level + ", " : "") +
+            (rect_top != null ? "rect_top=" + rect_top + ", " : "") +
+            (rect_left != null ? "rect_left=" + rect_left + ", " : "") +
+            (rect_right != null ? "rect_right=" + rect_right + ", " : "") +
+            (rect_bottom != null ? "rect_bottom=" + rect_bottom + ", " : "") +
+            (parent_id != null ? "parent_id=" + parent_id + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

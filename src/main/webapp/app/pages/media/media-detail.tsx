@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Row, Col } from 'reactstrap';
 import { convertFromRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
+import RBush from 'rbush';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles.css';
 
@@ -119,15 +120,27 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     setHighlighted([selectedWord]);
   };
 
+  const polyTree = useMemo(() => {
+    if (ocrEntities && ocrEntities.length > 0) {
+      const tree = new RBush(ocrEntities.length);
+      ocrEntities.map((el, idx) =>
+        tree.insert({ minX: el.n_left, minY: el.n_top, maxX: el.n_left + el.n_width, maxY: el.n_top + el.n_heigth, foo: idx })
+      );
+      return tree;
+    }
+    return null;
+  }, [ocrEntities]);
+
+  const polyTreeJSON = polyTree ? polyTree.toJSON() : undefined;
+
   return (
     <>
       <Row>
-        <Col md="8">
-          <h2 data-cy="mediaDetailsHeading">Media</h2>
-          <span>{mediaEntity.fileName}</span>
-        </Col>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+          <h2 data-cy="mediaDetailsHeading">{mediaEntity.fileName}</h2>
+        </div>
       </Row>
-      &nbsp;
+
       <Row>
         <Col>
           <Ocr
@@ -136,6 +149,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
             currentPage={currentPage}
             totalPages={mediaEntity?.lastPageNumber}
             setPage={handleSetPage}
+            polyTreeJSON={polyTreeJSON}
           />
         </Col>
         <Col>

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export interface IPageWord {
   id?: number;
   s_word?: string | null;
