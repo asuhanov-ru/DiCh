@@ -11,6 +11,8 @@ import PageWord from './page-word';
 import Translation from './translation';
 import OcrTasks from './ocr-tasks';
 import PageLayout from './page-layout';
+import Author from './author';
+import Book from './book';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default ({ match }) => {
@@ -27,6 +29,8 @@ export default ({ match }) => {
         <ErrorBoundaryRoute path={`${match.url}translation`} component={Translation} />
         <ErrorBoundaryRoute path={`${match.url}ocr-tasks`} component={OcrTasks} />
         <ErrorBoundaryRoute path={`${match.url}page-layout`} component={PageLayout} />
+        <ErrorBoundaryRoute path={`${match.url}author`} component={Author} />
+        <ErrorBoundaryRoute path={`${match.url}book`} component={Book} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </Switch>
     </div>

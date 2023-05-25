@@ -16,6 +16,8 @@
         "translation": "Translation",
         "ocrTasks": "Ocr Tasks",
         "pageLayout": "Page Layout",
+        "author": "Author",
+        "book": "Book",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

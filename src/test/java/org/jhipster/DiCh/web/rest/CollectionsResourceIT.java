@@ -12,6 +12,8 @@ import javax.persistence.EntityManager;
 import org.jhipster.dich.IntegrationTest;
 import org.jhipster.dich.domain.Collections;
 import org.jhipster.dich.repository.CollectionsRepository;
+import org.jhipster.dich.service.dto.CollectionsDTO;
+import org.jhipster.dich.service.mapper.CollectionsMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ class CollectionsResourceIT {
 
     @Autowired
     private CollectionsRepository collectionsRepository;
+
+    @Autowired
+    private CollectionsMapper collectionsMapper;
 
     @Autowired
     private EntityManager em;
@@ -84,8 +89,11 @@ class CollectionsResourceIT {
     void createCollections() throws Exception {
         int databaseSizeBeforeCreate = collectionsRepository.findAll().size();
         // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
         restCollectionsMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collections)))
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Collections in the database
@@ -101,12 +109,15 @@ class CollectionsResourceIT {
     void createCollectionsWithExistingId() throws Exception {
         // Create the Collections with an existing ID
         collections.setId(1L);
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
 
         int databaseSizeBeforeCreate = collectionsRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCollectionsMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collections)))
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Collections in the database
@@ -122,9 +133,12 @@ class CollectionsResourceIT {
         collections.setName(null);
 
         // Create the Collections, which fails.
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
 
         restCollectionsMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collections)))
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Collections> collectionsList = collectionsRepository.findAll();
@@ -183,12 +197,13 @@ class CollectionsResourceIT {
         // Disconnect from session so that the updates on updatedCollections are not directly saved in db
         em.detach(updatedCollections);
         updatedCollections.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(updatedCollections);
 
         restCollectionsMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedCollections.getId())
+                put(ENTITY_API_URL_ID, collectionsDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedCollections))
+                    .content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
             )
             .andExpect(status().isOk());
 
@@ -206,12 +221,15 @@ class CollectionsResourceIT {
         int databaseSizeBeforeUpdate = collectionsRepository.findAll().size();
         collections.setId(count.incrementAndGet());
 
+        // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCollectionsMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, collections.getId())
+                put(ENTITY_API_URL_ID, collectionsDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(collections))
+                    .content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -226,12 +244,15 @@ class CollectionsResourceIT {
         int databaseSizeBeforeUpdate = collectionsRepository.findAll().size();
         collections.setId(count.incrementAndGet());
 
+        // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCollectionsMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(collections))
+                    .content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -246,9 +267,12 @@ class CollectionsResourceIT {
         int databaseSizeBeforeUpdate = collectionsRepository.findAll().size();
         collections.setId(count.incrementAndGet());
 
+        // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCollectionsMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collections)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(collectionsDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Collections in the database
@@ -320,12 +344,15 @@ class CollectionsResourceIT {
         int databaseSizeBeforeUpdate = collectionsRepository.findAll().size();
         collections.setId(count.incrementAndGet());
 
+        // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCollectionsMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, collections.getId())
+                patch(ENTITY_API_URL_ID, collectionsDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(collections))
+                    .content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -340,12 +367,15 @@ class CollectionsResourceIT {
         int databaseSizeBeforeUpdate = collectionsRepository.findAll().size();
         collections.setId(count.incrementAndGet());
 
+        // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCollectionsMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(collections))
+                    .content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -360,10 +390,13 @@ class CollectionsResourceIT {
         int databaseSizeBeforeUpdate = collectionsRepository.findAll().size();
         collections.setId(count.incrementAndGet());
 
+        // Create the Collections
+        CollectionsDTO collectionsDTO = collectionsMapper.toDto(collections);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCollectionsMockMvc
             .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(collections))
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(collectionsDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 

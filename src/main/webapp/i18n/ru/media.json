@@ -21,7 +21,8 @@
       "fileName": "File Name",
       "fileType": "File Type",
       "fileDesc": "File Desc",
-      "collections": "Collections"
+      "collections": "Collections",
+      "book": "Book"
     }
   }
 }

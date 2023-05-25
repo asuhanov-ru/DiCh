@@ -2,7 +2,7 @@
   "changelogDate": "20200728093617",
   "clientRootFolder": "",
   "databaseType": "sql",
-  "dto": "no",
+  "dto": "mapstruct",
   "entityTableName": "media",
   "fields": [
     {
@@ -29,11 +29,16 @@
     {
       "otherEntityField": "name",
       "otherEntityName": "collections",
-      "otherEntityRelationshipName": "media",
       "relationshipName": "collections",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "book",
+      "otherEntityRelationshipName": "media",
+      "relationshipName": "book",
+      "relationshipType": "one-to-many"
     }
   ],
   "searchEngine": false,
-  "service": "no"
+  "service": "serviceClass"
 }
