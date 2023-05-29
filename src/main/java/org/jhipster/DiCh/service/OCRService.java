@@ -36,6 +36,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.filter.StringFilter;
 
+/*
+
+    If Tesseract API instance fail to initialize see
+    AppData\Local\Temp\lept4j\win32-x86-64>
+    AppData\Local\Temp\tess4j\win32-x86-64>
+    both must contain same couple of dlls
+
+ */
 @Service
 @Transactional
 public class OCRService {
@@ -101,10 +109,8 @@ public class OCRService {
         TimeVal timeout = new TimeVal();
         timeout.tv_sec = new NativeLong(0L); // time > 0 causes blank output
         monitor.end_time = timeout;
-        //ProgressMonitor pmo = new ProgressMonitor(monitor);
-        //pmo.start();
+
         api.TessBaseAPIRecognize(handle, monitor);
-        //logger.info("Message: " + pmo.getMessage());
 
         TessResultIterator ri = api.TessBaseAPIGetIterator(handle);
         TessPageIterator pi = api.TessResultIteratorGetPageIterator(ri);

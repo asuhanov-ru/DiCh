@@ -106,7 +106,6 @@ public class PageImageResourceV2 {
      */
     @GetMapping("/v2/page-images/{id}")
     public ResponseEntity<PageImageTransferDto> getPageImage(@PathVariable Long id, @RequestParam int pageNumber) throws Exception {
-        log.debug("REST request to get Image of page {} of media {}", pageNumber, id);
         Optional<Media> media = mediaRepository.findOneWithEagerRelationships(id);
 
         Optional<PageImageTransferDto> dto = pdfDocService.getPageImage(media.map(el -> el.getFileName()).orElse(""), pageNumber);

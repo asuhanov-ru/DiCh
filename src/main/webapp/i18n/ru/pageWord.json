@@ -26,7 +26,11 @@
       "n_idx": "N Idx",
       "mediaId": "Media Id",
       "pageNumber": "Page Number",
-      "version": "Version"
+      "version": "Version",
+      "blockId": "Block Id",
+      "lineId": "Line Id",
+      "paragraphId": "Paragraph Id",
+      "ocrLang": "Ocr Lang"
     }
   }
 }

@@ -29,7 +29,6 @@ public class PdfDocService {
     private String SRC;
 
     public void ProcessPdf(String file_name) throws Exception {
-        log.debug("Try to process PDF file: {} at location: {}", file_name, SRC);
         PdfDocument srcDoc = new PdfDocument(new PdfReader(SRC + file_name));
         PdfPage page = srcDoc.getFirstPage();
         PdfResources res = page.getResources();
@@ -47,9 +46,8 @@ public class PdfDocService {
     }
 
     public Optional<PageImageTransferDto> getPageImage(String fileName, int pageNumber) throws Exception {
-        log.debug("Try to get image of page {} of PDF file: {} at location: {}", pageNumber, fileName, SRC);
-
         PageImageTransferDto dto = new PageImageTransferDto();
+
         PdfDocument srcDoc = new PdfDocument(new PdfReader(SRC + fileName));
         PdfPage page = srcDoc.getPage(pageNumber);
         PdfResources resources = page.getResources();

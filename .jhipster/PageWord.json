@@ -37,6 +37,22 @@
     {
       "fieldName": "version",
       "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "blockId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "lineId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "paragraphId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "ocrLang",
+      "fieldType": "String"
     }
   ],
   "jpaMetamodelFiltering": true,

@@ -72,6 +72,21 @@ class PageWordResourceIT {
     private static final ZonedDateTime UPDATED_VERSION = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
     private static final ZonedDateTime SMALLER_VERSION = ZonedDateTime.ofInstant(Instant.ofEpochMilli(-1L), ZoneOffset.UTC);
 
+    private static final Long DEFAULT_BLOCK_ID = 1L;
+    private static final Long UPDATED_BLOCK_ID = 2L;
+    private static final Long SMALLER_BLOCK_ID = 1L - 1L;
+
+    private static final Long DEFAULT_LINE_ID = 1L;
+    private static final Long UPDATED_LINE_ID = 2L;
+    private static final Long SMALLER_LINE_ID = 1L - 1L;
+
+    private static final Long DEFAULT_PARAGRAPH_ID = 1L;
+    private static final Long UPDATED_PARAGRAPH_ID = 2L;
+    private static final Long SMALLER_PARAGRAPH_ID = 1L - 1L;
+
+    private static final String DEFAULT_OCR_LANG = "AAAAAAAAAA";
+    private static final String UPDATED_OCR_LANG = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/page-words";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -108,7 +123,11 @@ class PageWordResourceIT {
             .n_idx(DEFAULT_N_IDX)
             .mediaId(DEFAULT_MEDIA_ID)
             .pageNumber(DEFAULT_PAGE_NUMBER)
-            .version(DEFAULT_VERSION);
+            .version(DEFAULT_VERSION)
+            .blockId(DEFAULT_BLOCK_ID)
+            .lineId(DEFAULT_LINE_ID)
+            .paragraphId(DEFAULT_PARAGRAPH_ID)
+            .ocrLang(DEFAULT_OCR_LANG);
         return pageWord;
     }
 
@@ -128,7 +147,11 @@ class PageWordResourceIT {
             .n_idx(UPDATED_N_IDX)
             .mediaId(UPDATED_MEDIA_ID)
             .pageNumber(UPDATED_PAGE_NUMBER)
-            .version(UPDATED_VERSION);
+            .version(UPDATED_VERSION)
+            .blockId(UPDATED_BLOCK_ID)
+            .lineId(UPDATED_LINE_ID)
+            .paragraphId(UPDATED_PARAGRAPH_ID)
+            .ocrLang(UPDATED_OCR_LANG);
         return pageWord;
     }
 
@@ -160,6 +183,10 @@ class PageWordResourceIT {
         assertThat(testPageWord.getMediaId()).isEqualTo(DEFAULT_MEDIA_ID);
         assertThat(testPageWord.getPageNumber()).isEqualTo(DEFAULT_PAGE_NUMBER);
         assertThat(testPageWord.getVersion()).isEqualTo(DEFAULT_VERSION);
+        assertThat(testPageWord.getBlockId()).isEqualTo(DEFAULT_BLOCK_ID);
+        assertThat(testPageWord.getLineId()).isEqualTo(DEFAULT_LINE_ID);
+        assertThat(testPageWord.getParagraphId()).isEqualTo(DEFAULT_PARAGRAPH_ID);
+        assertThat(testPageWord.getOcrLang()).isEqualTo(DEFAULT_OCR_LANG);
     }
 
     @Test
@@ -201,7 +228,11 @@ class PageWordResourceIT {
             .andExpect(jsonPath("$.[*].n_idx").value(hasItem(DEFAULT_N_IDX.intValue())))
             .andExpect(jsonPath("$.[*].mediaId").value(hasItem(DEFAULT_MEDIA_ID.intValue())))
             .andExpect(jsonPath("$.[*].pageNumber").value(hasItem(DEFAULT_PAGE_NUMBER)))
-            .andExpect(jsonPath("$.[*].version").value(hasItem(sameInstant(DEFAULT_VERSION))));
+            .andExpect(jsonPath("$.[*].version").value(hasItem(sameInstant(DEFAULT_VERSION))))
+            .andExpect(jsonPath("$.[*].blockId").value(hasItem(DEFAULT_BLOCK_ID.intValue())))
+            .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID.intValue())))
+            .andExpect(jsonPath("$.[*].paragraphId").value(hasItem(DEFAULT_PARAGRAPH_ID.intValue())))
+            .andExpect(jsonPath("$.[*].ocrLang").value(hasItem(DEFAULT_OCR_LANG)));
     }
 
     @Test
@@ -224,7 +255,11 @@ class PageWordResourceIT {
             .andExpect(jsonPath("$.n_idx").value(DEFAULT_N_IDX.intValue()))
             .andExpect(jsonPath("$.mediaId").value(DEFAULT_MEDIA_ID.intValue()))
             .andExpect(jsonPath("$.pageNumber").value(DEFAULT_PAGE_NUMBER))
-            .andExpect(jsonPath("$.version").value(sameInstant(DEFAULT_VERSION)));
+            .andExpect(jsonPath("$.version").value(sameInstant(DEFAULT_VERSION)))
+            .andExpect(jsonPath("$.blockId").value(DEFAULT_BLOCK_ID.intValue()))
+            .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID.intValue()))
+            .andExpect(jsonPath("$.paragraphId").value(DEFAULT_PARAGRAPH_ID.intValue()))
+            .andExpect(jsonPath("$.ocrLang").value(DEFAULT_OCR_LANG));
     }
 
     @Test
@@ -1155,6 +1190,396 @@ class PageWordResourceIT {
         defaultPageWordShouldBeFound("version.greaterThan=" + SMALLER_VERSION);
     }
 
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId equals to DEFAULT_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.equals=" + DEFAULT_BLOCK_ID);
+
+        // Get all the pageWordList where blockId equals to UPDATED_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.equals=" + UPDATED_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId not equals to DEFAULT_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.notEquals=" + DEFAULT_BLOCK_ID);
+
+        // Get all the pageWordList where blockId not equals to UPDATED_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.notEquals=" + UPDATED_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId in DEFAULT_BLOCK_ID or UPDATED_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.in=" + DEFAULT_BLOCK_ID + "," + UPDATED_BLOCK_ID);
+
+        // Get all the pageWordList where blockId equals to UPDATED_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.in=" + UPDATED_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId is not null
+        defaultPageWordShouldBeFound("blockId.specified=true");
+
+        // Get all the pageWordList where blockId is null
+        defaultPageWordShouldNotBeFound("blockId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId is greater than or equal to DEFAULT_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.greaterThanOrEqual=" + DEFAULT_BLOCK_ID);
+
+        // Get all the pageWordList where blockId is greater than or equal to UPDATED_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.greaterThanOrEqual=" + UPDATED_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId is less than or equal to DEFAULT_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.lessThanOrEqual=" + DEFAULT_BLOCK_ID);
+
+        // Get all the pageWordList where blockId is less than or equal to SMALLER_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.lessThanOrEqual=" + SMALLER_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsLessThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId is less than DEFAULT_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.lessThan=" + DEFAULT_BLOCK_ID);
+
+        // Get all the pageWordList where blockId is less than UPDATED_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.lessThan=" + UPDATED_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByBlockIdIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where blockId is greater than DEFAULT_BLOCK_ID
+        defaultPageWordShouldNotBeFound("blockId.greaterThan=" + DEFAULT_BLOCK_ID);
+
+        // Get all the pageWordList where blockId is greater than SMALLER_BLOCK_ID
+        defaultPageWordShouldBeFound("blockId.greaterThan=" + SMALLER_BLOCK_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId equals to DEFAULT_LINE_ID
+        defaultPageWordShouldBeFound("lineId.equals=" + DEFAULT_LINE_ID);
+
+        // Get all the pageWordList where lineId equals to UPDATED_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.equals=" + UPDATED_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId not equals to DEFAULT_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.notEquals=" + DEFAULT_LINE_ID);
+
+        // Get all the pageWordList where lineId not equals to UPDATED_LINE_ID
+        defaultPageWordShouldBeFound("lineId.notEquals=" + UPDATED_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId in DEFAULT_LINE_ID or UPDATED_LINE_ID
+        defaultPageWordShouldBeFound("lineId.in=" + DEFAULT_LINE_ID + "," + UPDATED_LINE_ID);
+
+        // Get all the pageWordList where lineId equals to UPDATED_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.in=" + UPDATED_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId is not null
+        defaultPageWordShouldBeFound("lineId.specified=true");
+
+        // Get all the pageWordList where lineId is null
+        defaultPageWordShouldNotBeFound("lineId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId is greater than or equal to DEFAULT_LINE_ID
+        defaultPageWordShouldBeFound("lineId.greaterThanOrEqual=" + DEFAULT_LINE_ID);
+
+        // Get all the pageWordList where lineId is greater than or equal to UPDATED_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.greaterThanOrEqual=" + UPDATED_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId is less than or equal to DEFAULT_LINE_ID
+        defaultPageWordShouldBeFound("lineId.lessThanOrEqual=" + DEFAULT_LINE_ID);
+
+        // Get all the pageWordList where lineId is less than or equal to SMALLER_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.lessThanOrEqual=" + SMALLER_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsLessThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId is less than DEFAULT_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.lessThan=" + DEFAULT_LINE_ID);
+
+        // Get all the pageWordList where lineId is less than UPDATED_LINE_ID
+        defaultPageWordShouldBeFound("lineId.lessThan=" + UPDATED_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByLineIdIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where lineId is greater than DEFAULT_LINE_ID
+        defaultPageWordShouldNotBeFound("lineId.greaterThan=" + DEFAULT_LINE_ID);
+
+        // Get all the pageWordList where lineId is greater than SMALLER_LINE_ID
+        defaultPageWordShouldBeFound("lineId.greaterThan=" + SMALLER_LINE_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId equals to DEFAULT_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.equals=" + DEFAULT_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId equals to UPDATED_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.equals=" + UPDATED_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId not equals to DEFAULT_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.notEquals=" + DEFAULT_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId not equals to UPDATED_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.notEquals=" + UPDATED_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId in DEFAULT_PARAGRAPH_ID or UPDATED_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.in=" + DEFAULT_PARAGRAPH_ID + "," + UPDATED_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId equals to UPDATED_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.in=" + UPDATED_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId is not null
+        defaultPageWordShouldBeFound("paragraphId.specified=true");
+
+        // Get all the pageWordList where paragraphId is null
+        defaultPageWordShouldNotBeFound("paragraphId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId is greater than or equal to DEFAULT_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.greaterThanOrEqual=" + DEFAULT_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId is greater than or equal to UPDATED_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.greaterThanOrEqual=" + UPDATED_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId is less than or equal to DEFAULT_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.lessThanOrEqual=" + DEFAULT_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId is less than or equal to SMALLER_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.lessThanOrEqual=" + SMALLER_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsLessThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId is less than DEFAULT_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.lessThan=" + DEFAULT_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId is less than UPDATED_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.lessThan=" + UPDATED_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByParagraphIdIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where paragraphId is greater than DEFAULT_PARAGRAPH_ID
+        defaultPageWordShouldNotBeFound("paragraphId.greaterThan=" + DEFAULT_PARAGRAPH_ID);
+
+        // Get all the pageWordList where paragraphId is greater than SMALLER_PARAGRAPH_ID
+        defaultPageWordShouldBeFound("paragraphId.greaterThan=" + SMALLER_PARAGRAPH_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByOcrLangIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where ocrLang equals to DEFAULT_OCR_LANG
+        defaultPageWordShouldBeFound("ocrLang.equals=" + DEFAULT_OCR_LANG);
+
+        // Get all the pageWordList where ocrLang equals to UPDATED_OCR_LANG
+        defaultPageWordShouldNotBeFound("ocrLang.equals=" + UPDATED_OCR_LANG);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByOcrLangIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where ocrLang not equals to DEFAULT_OCR_LANG
+        defaultPageWordShouldNotBeFound("ocrLang.notEquals=" + DEFAULT_OCR_LANG);
+
+        // Get all the pageWordList where ocrLang not equals to UPDATED_OCR_LANG
+        defaultPageWordShouldBeFound("ocrLang.notEquals=" + UPDATED_OCR_LANG);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByOcrLangIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where ocrLang in DEFAULT_OCR_LANG or UPDATED_OCR_LANG
+        defaultPageWordShouldBeFound("ocrLang.in=" + DEFAULT_OCR_LANG + "," + UPDATED_OCR_LANG);
+
+        // Get all the pageWordList where ocrLang equals to UPDATED_OCR_LANG
+        defaultPageWordShouldNotBeFound("ocrLang.in=" + UPDATED_OCR_LANG);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByOcrLangIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where ocrLang is not null
+        defaultPageWordShouldBeFound("ocrLang.specified=true");
+
+        // Get all the pageWordList where ocrLang is null
+        defaultPageWordShouldNotBeFound("ocrLang.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByOcrLangContainsSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where ocrLang contains DEFAULT_OCR_LANG
+        defaultPageWordShouldBeFound("ocrLang.contains=" + DEFAULT_OCR_LANG);
+
+        // Get all the pageWordList where ocrLang contains UPDATED_OCR_LANG
+        defaultPageWordShouldNotBeFound("ocrLang.contains=" + UPDATED_OCR_LANG);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageWordsByOcrLangNotContainsSomething() throws Exception {
+        // Initialize the database
+        pageWordRepository.saveAndFlush(pageWord);
+
+        // Get all the pageWordList where ocrLang does not contain DEFAULT_OCR_LANG
+        defaultPageWordShouldNotBeFound("ocrLang.doesNotContain=" + DEFAULT_OCR_LANG);
+
+        // Get all the pageWordList where ocrLang does not contain UPDATED_OCR_LANG
+        defaultPageWordShouldBeFound("ocrLang.doesNotContain=" + UPDATED_OCR_LANG);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -1172,7 +1597,11 @@ class PageWordResourceIT {
             .andExpect(jsonPath("$.[*].n_idx").value(hasItem(DEFAULT_N_IDX.intValue())))
             .andExpect(jsonPath("$.[*].mediaId").value(hasItem(DEFAULT_MEDIA_ID.intValue())))
             .andExpect(jsonPath("$.[*].pageNumber").value(hasItem(DEFAULT_PAGE_NUMBER)))
-            .andExpect(jsonPath("$.[*].version").value(hasItem(sameInstant(DEFAULT_VERSION))));
+            .andExpect(jsonPath("$.[*].version").value(hasItem(sameInstant(DEFAULT_VERSION))))
+            .andExpect(jsonPath("$.[*].blockId").value(hasItem(DEFAULT_BLOCK_ID.intValue())))
+            .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID.intValue())))
+            .andExpect(jsonPath("$.[*].paragraphId").value(hasItem(DEFAULT_PARAGRAPH_ID.intValue())))
+            .andExpect(jsonPath("$.[*].ocrLang").value(hasItem(DEFAULT_OCR_LANG)));
 
         // Check, that the count call also returns 1
         restPageWordMockMvc
@@ -1229,7 +1658,11 @@ class PageWordResourceIT {
             .n_idx(UPDATED_N_IDX)
             .mediaId(UPDATED_MEDIA_ID)
             .pageNumber(UPDATED_PAGE_NUMBER)
-            .version(UPDATED_VERSION);
+            .version(UPDATED_VERSION)
+            .blockId(UPDATED_BLOCK_ID)
+            .lineId(UPDATED_LINE_ID)
+            .paragraphId(UPDATED_PARAGRAPH_ID)
+            .ocrLang(UPDATED_OCR_LANG);
         PageWordDTO pageWordDTO = pageWordMapper.toDto(updatedPageWord);
 
         restPageWordMockMvc
@@ -1253,6 +1686,10 @@ class PageWordResourceIT {
         assertThat(testPageWord.getMediaId()).isEqualTo(UPDATED_MEDIA_ID);
         assertThat(testPageWord.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testPageWord.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testPageWord.getBlockId()).isEqualTo(UPDATED_BLOCK_ID);
+        assertThat(testPageWord.getLineId()).isEqualTo(UPDATED_LINE_ID);
+        assertThat(testPageWord.getParagraphId()).isEqualTo(UPDATED_PARAGRAPH_ID);
+        assertThat(testPageWord.getOcrLang()).isEqualTo(UPDATED_OCR_LANG);
     }
 
     @Test
@@ -1355,6 +1792,10 @@ class PageWordResourceIT {
         assertThat(testPageWord.getMediaId()).isEqualTo(DEFAULT_MEDIA_ID);
         assertThat(testPageWord.getPageNumber()).isEqualTo(DEFAULT_PAGE_NUMBER);
         assertThat(testPageWord.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testPageWord.getBlockId()).isEqualTo(DEFAULT_BLOCK_ID);
+        assertThat(testPageWord.getLineId()).isEqualTo(DEFAULT_LINE_ID);
+        assertThat(testPageWord.getParagraphId()).isEqualTo(DEFAULT_PARAGRAPH_ID);
+        assertThat(testPageWord.getOcrLang()).isEqualTo(DEFAULT_OCR_LANG);
     }
 
     @Test
@@ -1378,7 +1819,11 @@ class PageWordResourceIT {
             .n_idx(UPDATED_N_IDX)
             .mediaId(UPDATED_MEDIA_ID)
             .pageNumber(UPDATED_PAGE_NUMBER)
-            .version(UPDATED_VERSION);
+            .version(UPDATED_VERSION)
+            .blockId(UPDATED_BLOCK_ID)
+            .lineId(UPDATED_LINE_ID)
+            .paragraphId(UPDATED_PARAGRAPH_ID)
+            .ocrLang(UPDATED_OCR_LANG);
 
         restPageWordMockMvc
             .perform(
@@ -1401,6 +1846,10 @@ class PageWordResourceIT {
         assertThat(testPageWord.getMediaId()).isEqualTo(UPDATED_MEDIA_ID);
         assertThat(testPageWord.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testPageWord.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testPageWord.getBlockId()).isEqualTo(UPDATED_BLOCK_ID);
+        assertThat(testPageWord.getLineId()).isEqualTo(UPDATED_LINE_ID);
+        assertThat(testPageWord.getParagraphId()).isEqualTo(UPDATED_PARAGRAPH_ID);
+        assertThat(testPageWord.getOcrLang()).isEqualTo(UPDATED_OCR_LANG);
     }
 
     @Test

@@ -41,6 +41,18 @@
             <column name="version" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
+            <column name="block_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="line_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="paragraph_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="ocr_lang" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="page_word" columnName="version" columnDataType="${datetimeType}"/>
@@ -72,6 +84,10 @@
             <column name="media_id" type="numeric"/>
             <column name="page_number" type="numeric"/>
             <column name="version" type="date"/>
+            <column name="block_id" type="numeric"/>
+            <column name="line_id" type="numeric"/>
+            <column name="paragraph_id" type="numeric"/>
+            <column name="ocr_lang" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

@@ -84,6 +84,30 @@ export const PageWordDetail = (props: RouteComponentProps<{ id: string }>) => {
             </span>
           </dt>
           <dd>{pageWordEntity.version ? <TextFormat value={pageWordEntity.version} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
+          <dt>
+            <span id="blockId">
+              <Translate contentKey="diChApp.pageWord.blockId">Block Id</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.blockId}</dd>
+          <dt>
+            <span id="lineId">
+              <Translate contentKey="diChApp.pageWord.lineId">Line Id</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.lineId}</dd>
+          <dt>
+            <span id="paragraphId">
+              <Translate contentKey="diChApp.pageWord.paragraphId">Paragraph Id</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.paragraphId}</dd>
+          <dt>
+            <span id="ocrLang">
+              <Translate contentKey="diChApp.pageWord.ocrLang">Ocr Lang</Translate>
+            </span>
+          </dt>
+          <dd>{pageWordEntity.ocrLang}</dd>
         </dl>
         <Button tag={Link} to="/page-word" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

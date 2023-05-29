@@ -46,6 +46,18 @@ public class PageWord implements Serializable {
     @Column(name = "version")
     private ZonedDateTime version;
 
+    @Column(name = "block_id")
+    private Long blockId;
+
+    @Column(name = "line_id")
+    private Long lineId;
+
+    @Column(name = "paragraph_id")
+    private Long paragraphId;
+
+    @Column(name = "ocr_lang")
+    private String ocrLang;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -178,6 +190,58 @@ public class PageWord implements Serializable {
         this.version = version;
     }
 
+    public Long getBlockId() {
+        return this.blockId;
+    }
+
+    public PageWord blockId(Long blockId) {
+        this.setBlockId(blockId);
+        return this;
+    }
+
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
+    }
+
+    public Long getLineId() {
+        return this.lineId;
+    }
+
+    public PageWord lineId(Long lineId) {
+        this.setLineId(lineId);
+        return this;
+    }
+
+    public void setLineId(Long lineId) {
+        this.lineId = lineId;
+    }
+
+    public Long getParagraphId() {
+        return this.paragraphId;
+    }
+
+    public PageWord paragraphId(Long paragraphId) {
+        this.setParagraphId(paragraphId);
+        return this;
+    }
+
+    public void setParagraphId(Long paragraphId) {
+        this.paragraphId = paragraphId;
+    }
+
+    public String getOcrLang() {
+        return this.ocrLang;
+    }
+
+    public PageWord ocrLang(String ocrLang) {
+        this.setOcrLang(ocrLang);
+        return this;
+    }
+
+    public void setOcrLang(String ocrLang) {
+        this.ocrLang = ocrLang;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -211,6 +275,10 @@ public class PageWord implements Serializable {
             ", mediaId=" + getMediaId() +
             ", pageNumber=" + getPageNumber() +
             ", version='" + getVersion() + "'" +
+            ", blockId=" + getBlockId() +
+            ", lineId=" + getLineId() +
+            ", paragraphId=" + getParagraphId() +
+            ", ocrLang='" + getOcrLang() + "'" +
             "}";
     }
 }

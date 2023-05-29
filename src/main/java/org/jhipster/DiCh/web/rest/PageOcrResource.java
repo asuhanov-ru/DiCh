@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.jhipster.dich.domain.PageImage;
-import org.jhipster.dich.domain.PageImage_;
 import org.jhipster.dich.domain.PageWord;
 import org.jhipster.dich.repository.PageImageRepository;
 import org.jhipster.dich.repository.PageTextRepository;
 import org.jhipster.dich.repository.PageWordRepository;
-import org.jhipster.dich.service.OCRService;
-import org.jhipster.dich.service.PageTextQueryService;
-import org.jhipster.dich.service.PageTextService;
-import org.jhipster.dich.service.PageWordQueryService;
+import org.jhipster.dich.service.*;
 import org.jhipster.dich.service.criteria.PageImageCriteria;
+import org.jhipster.dich.service.criteria.PageLayoutCriteria;
 import org.jhipster.dich.service.criteria.PageTextCriteria;
 import org.jhipster.dich.service.criteria.PageWordCriteria;
+import org.jhipster.dich.service.dto.PageLayoutDTO;
 import org.jhipster.dich.service.dto.PageTextDTO;
 import org.jhipster.dich.service.dto.PageWordDTO;
 import org.jhipster.dich.web.rest.errors.BadRequestAlertException;
@@ -45,9 +43,11 @@ public class PageOcrResource {
     private final Logger log = LoggerFactory.getLogger(PageOcrResource.class);
 
     private final PageWordQueryService pageWordQueryService;
+    private final PageLayoutQueryService pageLayoutQueryService;
 
-    public PageOcrResource(PageWordQueryService pageWordQueryService) {
+    public PageOcrResource(PageWordQueryService pageWordQueryService, PageLayoutQueryService pageLayoutQueryService) {
         this.pageWordQueryService = pageWordQueryService;
+        this.pageLayoutQueryService = pageLayoutQueryService;
     }
 
     /**
@@ -58,10 +58,15 @@ public class PageOcrResource {
      */
     @GetMapping("/v2/page-ocr")
     public ResponseEntity<List<PageWordDTO>> getPageText(PageWordCriteria criteria) {
-        log.debug("REST request to get ocr by criteria : {}", criteria);
-
         Optional<List<PageWordDTO>> pageWords = Optional.ofNullable(pageWordQueryService.findByCriteria(criteria));
 
         return ResponseUtil.wrapOrNotFound(pageWords);
+    }
+
+    @GetMapping("/v2/page-layout")
+    public ResponseEntity<List<PageLayoutDTO>> getPageLayout(PageLayoutCriteria criteria) {
+        Optional<List<PageLayoutDTO>> pageLayout = Optional.ofNullable(pageLayoutQueryService.findByCriteria(criteria));
+
+        return ResponseUtil.wrapOrNotFound(pageLayout);
     }
 }

@@ -47,6 +47,14 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     private ZonedDateTimeFilter version;
 
+    private LongFilter blockId;
+
+    private LongFilter lineId;
+
+    private LongFilter paragraphId;
+
+    private StringFilter ocrLang;
+
     private Boolean distinct;
 
     public PageWordCriteria() {}
@@ -62,6 +70,10 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
         this.pageNumber = other.pageNumber == null ? null : other.pageNumber.copy();
         this.version = other.version == null ? null : other.version.copy();
+        this.blockId = other.blockId == null ? null : other.blockId.copy();
+        this.lineId = other.lineId == null ? null : other.lineId.copy();
+        this.paragraphId = other.paragraphId == null ? null : other.paragraphId.copy();
+        this.ocrLang = other.ocrLang == null ? null : other.ocrLang.copy();
         this.distinct = other.distinct;
     }
 
@@ -220,6 +232,66 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.version = version;
     }
 
+    public LongFilter getBlockId() {
+        return blockId;
+    }
+
+    public LongFilter blockId() {
+        if (blockId == null) {
+            blockId = new LongFilter();
+        }
+        return blockId;
+    }
+
+    public void setBlockId(LongFilter blockId) {
+        this.blockId = blockId;
+    }
+
+    public LongFilter getLineId() {
+        return lineId;
+    }
+
+    public LongFilter lineId() {
+        if (lineId == null) {
+            lineId = new LongFilter();
+        }
+        return lineId;
+    }
+
+    public void setLineId(LongFilter lineId) {
+        this.lineId = lineId;
+    }
+
+    public LongFilter getParagraphId() {
+        return paragraphId;
+    }
+
+    public LongFilter paragraphId() {
+        if (paragraphId == null) {
+            paragraphId = new LongFilter();
+        }
+        return paragraphId;
+    }
+
+    public void setParagraphId(LongFilter paragraphId) {
+        this.paragraphId = paragraphId;
+    }
+
+    public StringFilter getOcrLang() {
+        return ocrLang;
+    }
+
+    public StringFilter ocrLang() {
+        if (ocrLang == null) {
+            ocrLang = new StringFilter();
+        }
+        return ocrLang;
+    }
+
+    public void setOcrLang(StringFilter ocrLang) {
+        this.ocrLang = ocrLang;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -248,13 +320,33 @@ public class PageWordCriteria implements Serializable, Criteria {
             Objects.equals(mediaId, that.mediaId) &&
             Objects.equals(pageNumber, that.pageNumber) &&
             Objects.equals(version, that.version) &&
+            Objects.equals(blockId, that.blockId) &&
+            Objects.equals(lineId, that.lineId) &&
+            Objects.equals(paragraphId, that.paragraphId) &&
+            Objects.equals(ocrLang, that.ocrLang) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, s_word, n_top, n_left, n_heigth, n_width, n_idx, mediaId, pageNumber, version, distinct);
+        return Objects.hash(
+            id,
+            s_word,
+            n_top,
+            n_left,
+            n_heigth,
+            n_width,
+            n_idx,
+            mediaId,
+            pageNumber,
+            version,
+            blockId,
+            lineId,
+            paragraphId,
+            ocrLang,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -271,6 +363,10 @@ public class PageWordCriteria implements Serializable, Criteria {
             (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
             (pageNumber != null ? "pageNumber=" + pageNumber + ", " : "") +
             (version != null ? "version=" + version + ", " : "") +
+            (blockId != null ? "blockId=" + blockId + ", " : "") +
+            (lineId != null ? "lineId=" + lineId + ", " : "") +
+            (paragraphId != null ? "paragraphId=" + paragraphId + ", " : "") +
+            (ocrLang != null ? "ocrLang=" + ocrLang + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
