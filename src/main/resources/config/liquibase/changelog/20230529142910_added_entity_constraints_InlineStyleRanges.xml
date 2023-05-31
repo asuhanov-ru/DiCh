@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity InlineStyleRanges.
+    -->
+    <changeSet id="20230529142910-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="text_block_id"
+                                 baseTableName="inline_style_ranges"
+                                 constraintName="fk_inline_style_ranges__text_block_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="text_block"/>
+    </changeSet>
+</databaseChangeLog>

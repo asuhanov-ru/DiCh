@@ -13,6 +13,8 @@ import OcrTasks from './ocr-tasks';
 import PageLayout from './page-layout';
 import Author from './author';
 import Book from './book';
+import TextBlock from './text-block';
+import InlineStyleRanges from './inline-style-ranges';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default ({ match }) => {
@@ -31,6 +33,8 @@ export default ({ match }) => {
         <ErrorBoundaryRoute path={`${match.url}page-layout`} component={PageLayout} />
         <ErrorBoundaryRoute path={`${match.url}author`} component={Author} />
         <ErrorBoundaryRoute path={`${match.url}book`} component={Book} />
+        <ErrorBoundaryRoute path={`${match.url}text-block`} component={TextBlock} />
+        <ErrorBoundaryRoute path={`${match.url}inline-style-ranges`} component={InlineStyleRanges} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </Switch>
     </div>

@@ -1,0 +1,27 @@
+{
+  "changelogDate": "20230529123113",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "pageNumber",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "blockIndex",
+      "fieldType": "Integer"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "TextBlock",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "fileName",
+      "otherEntityName": "media",
+      "relationshipName": "media",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

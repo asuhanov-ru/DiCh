@@ -12,6 +12,8 @@ import pageLayout from 'app/entities/page-layout/page-layout.reducer';
 import ocrTransfer from 'app/pages/media/ocr/reducer';
 import author from 'app/entities/author/author.reducer';
 import book from 'app/entities/book/book.reducer';
+import textBlock from 'app/entities/text-block/text-block.reducer';
+import inlineStyleRanges from 'app/entities/inline-style-ranges/inline-style-ranges.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const entitiesReducers = {
@@ -29,6 +31,8 @@ const entitiesReducers = {
   ocrTransfer,
   author,
   book,
+  textBlock,
+  inlineStyleRanges,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
 };
 

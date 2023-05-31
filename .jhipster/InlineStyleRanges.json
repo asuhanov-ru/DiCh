@@ -1,0 +1,27 @@
+{
+  "changelogDate": "20230529142910",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "startPos",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "stopPos",
+      "fieldType": "Integer"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "InlineStyleRanges",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "textBlock",
+      "relationshipName": "textBlock",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}
