@@ -36,6 +36,7 @@ import { faUpDownLeftRight } from '@fortawesome/free-solid-svg-icons/faUpDownLef
 import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 import { faLocationArrow } from '@fortawesome/free-solid-svg-icons/faLocationArrow';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare';
+import { faDivide } from '@fortawesome/free-solid-svg-icons/faDivide';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -78,6 +79,7 @@ export const loadIcons = () => {
     faUpDownLeftRight,
     faMinus,
     faLocationArrow,
-    faArrowUpRightFromSquare
+    faArrowUpRightFromSquare,
+    faDivide
   );
 };

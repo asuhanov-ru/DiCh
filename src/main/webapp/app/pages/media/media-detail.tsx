@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Row, Col } from 'reactstrap';
-import { convertFromRaw, EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import RBush from 'rbush';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -13,6 +13,8 @@ import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
 import { getEntities as getPageOcr } from './ocr/reducer';
 import { Ocr } from './ocr';
+import { editorToolbarExtensions } from './config';
+import { ToolGroup } from './ocr/controls';
 
 type Props = {
   onClick: () => void;
@@ -30,6 +32,8 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const [selectionState, setSelectionState] = useState('');
   const [editorFocus, setEditorFocus] = useState({});
   const [highlighted, setHighlighted] = useState([]);
+  const [currentContent, setCurrentContent] = useState({});
+  const [undoStack, setUndoStack] = useState([]);
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -96,10 +100,11 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   };
 
   const onEditorStateChange = newEditorState => {
-    setEditorState(newEditorState);
+    // setEditorState(newEditorState);
     const selection = newEditorState.getSelection();
     const focusKey = selection.getFocusKey();
     const focusOffset = selection.getFocusOffset();
+    const content = newEditorState.getCurrentContent();
     const wordIndexes = selection
       .getFocusKey()
       .split(',')
@@ -118,6 +123,8 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     setSelectionState(selection.serialize());
     setEditorFocus({ focusKey, focusOffset, wordIndexes, words, selectedWordIndex, selectedWord });
     setHighlighted([selectedWord]);
+    setCurrentContent(convertToRaw(content));
+    setUndoStack(newEditorState.getUndoStack());
   };
 
   const polyTree = useMemo(() => {
@@ -131,7 +138,9 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     return null;
   }, [ocrEntities]);
 
-  const polyTreeJSON = polyTree ? polyTree.toJSON() : undefined;
+  const polyTreeJSON = undefined;
+
+  const handleSetState = (state: any) => {};
 
   return (
     <>
@@ -153,7 +162,14 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
           />
         </Col>
         <Col>
-          <Editor editorClassName="rdw-storybook-editor" editorState={editorState} onEditorStateChange={onEditorStateChange} />
+          <Editor
+            editorClassName="rdw-storybook-editor"
+            editorState={editorState}
+            onEditorStateChange={onEditorStateChange}
+            toolbarCustomButtons={editorToolbarExtensions.options.map((opt, index) => (
+              <ToolGroup key={index} name={opt} config={editorToolbarExtensions[opt]} state={editorState} setState={handleSetState} />
+            ))}
+          />
           <div>{selectionState}</div>
         </Col>
       </Row>

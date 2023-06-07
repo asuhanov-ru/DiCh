@@ -1,5 +1,5 @@
 export const defaultToolbar = {
-  options: ['navigate', 'panZoom', 'layoutSelection', 'ocrTools'],
+  options: ['navigate', 'panZoom', 'layoutSelection', 'ocrTools', 'tab'],
   navigate: {
     options: ['prev', 'next', 'page', 'total'],
     prev: { icon: 'arrow-left', className: undefined, title: undefined, component: 'option' },
@@ -31,5 +31,24 @@ export const defaultToolbar = {
   ocrTools: {
     options: ['ocrSelected'],
     ocrSelected: { icon: 'fa-list', className: undefined, title: undefined, component: 'option' },
+  },
+  tab: {
+    options: ['editor', 'structure', 'outlines', 'book'],
+    editor: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+    structure: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+    outlines: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+    book: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+  },
+};
+
+export const editorToolbarExtensions = {
+  options: ['word'],
+  word: {
+    options: ['split', 'merge', 'delete', 'replace', 'save'],
+    split: { icon: 'fa-divide', className: undefined, title: undefined, component: 'option' },
+    merge: { icon: 'fa-plus', className: undefined, title: undefined, component: 'option' },
+    delete: { icon: 'fa-trash', className: undefined, title: undefined, component: 'option' },
+    replace: { icon: 'fa-pencil-alt', className: undefined, title: undefined, component: 'option' },
+    save: { icon: 'fa-save', className: undefined, title: undefined, component: 'option' },
   },
 };

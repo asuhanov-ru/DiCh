@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { PanViewer } from './viewer';
 
-import { defaultToolbar } from './config';
+import { defaultToolbar } from '../config';
 import { ToolGroup } from './controls';
 
 type ReactPanZoomProps = {
