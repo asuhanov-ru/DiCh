@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Row, Col } from 'reactstrap';
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState, SelectionState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import RBush from 'rbush';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -12,9 +12,9 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
 import { getEntities as getPageOcr } from './ocr/reducer';
-import { Ocr } from './ocr';
+import { MediaPane } from './ocr/media_pane';
 import { editorToolbarExtensions } from './config';
-import { ToolGroup } from './ocr/controls';
+import { ToolGroup } from '../../shared/ui/toolbar/controls';
 
 type Props = {
   onClick: () => void;
@@ -23,17 +23,16 @@ type Props = {
 export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedPageNumber, setSelectedPageNumber] = useState<number>(1);
+
   const isFetching = useAppSelector(state => state.media.loading || state.pageImageTransfer.loading);
   const mediaEntity = useAppSelector(state => state.media.entity);
   const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [selectionState, setSelectionState] = useState('');
-  const [editorFocus, setEditorFocus] = useState({});
+  const [selectionState, setSelectionState] = useState(SelectionState.createEmpty());
+
   const [highlighted, setHighlighted] = useState([]);
-  const [currentContent, setCurrentContent] = useState({});
-  const [undoStack, setUndoStack] = useState([]);
+  const [currentContent, setCurrentContent] = useState(editorState.getCurrentContent());
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -89,8 +88,11 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
         }
       });
     }
-
-    setEditorState(EditorState.createWithContent(convertFromRaw(content)));
+    const newEditorState = EditorState.createWithContent(convertFromRaw(content));
+    setEditorState(newEditorState);
+    setCurrentContent(newEditorState.getCurrentContent());
+    setHighlighted([]);
+    setSelectionState(SelectionState.createEmpty());
   }, [ocrEntities]);
 
   const handleSetPage = page => {
@@ -100,31 +102,39 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   };
 
   const onEditorStateChange = newEditorState => {
-    // setEditorState(newEditorState);
     const selection = newEditorState.getSelection();
-    const focusKey = selection.getFocusKey();
-    const focusOffset = selection.getFocusOffset();
-    const content = newEditorState.getCurrentContent();
-    const wordIndexes = selection
-      .getFocusKey()
-      .split(',')
-      .map(el => Number(el));
-    const words = ocrEntities.filter((_, idx) => wordIndexes.includes(idx)).map(el => ({ ...el, wordLenght: el?.s_word?.length }));
-    let selectedWordIndex = 0;
-    let wordEndPosition = 0;
-    for (let i = 0; i < words.length; i++) {
-      wordEndPosition = wordEndPosition + words[i].wordLenght + 1;
-      if (focusOffset <= wordEndPosition) {
-        selectedWordIndex = i;
-        break;
+    // const newContent = newEditorState.getCurrentContent();
+
+    // if (newContent !== currentContent) return;
+
+    if (selectionState !== selection) {
+      const focusKey = selection.getFocusKey();
+      const anchorKey = selection.getAnchorKey();
+      const focusOffset = selection.getFocusOffset();
+      const anchorOffset = selection.getAnchorOffset();
+
+      if (focusKey === anchorKey) {
+        const wordIndexes = focusKey.split(',').map(el => Number(el));
+        const words = ocrEntities.filter((_, idx) => wordIndexes.includes(idx)).map(el => ({ ...el, wordLenght: el?.s_word?.length }));
+        let selectedWordIndex = 0;
+        let wordEndPosition = 0;
+        for (let i = 0; i < words.length; i++) {
+          wordEndPosition = wordEndPosition + words[i].wordLenght + 1;
+          if (focusOffset <= wordEndPosition) {
+            selectedWordIndex = i;
+            break;
+          }
+        }
+        const selectedWord = words[selectedWordIndex];
+
+        setSelectionState(selection);
+        // setEditorState(newEditorState);
+        setHighlighted([selectedWord]);
+      } else {
+        setSelectionState(SelectionState.createEmpty());
+        setHighlighted([]);
       }
     }
-    const selectedWord = words[selectedWordIndex];
-    setSelectionState(selection.serialize());
-    setEditorFocus({ focusKey, focusOffset, wordIndexes, words, selectedWordIndex, selectedWord });
-    setHighlighted([selectedWord]);
-    setCurrentContent(convertToRaw(content));
-    setUndoStack(newEditorState.getUndoStack());
   };
 
   const polyTree = useMemo(() => {
@@ -152,7 +162,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 
       <Row>
         <Col>
-          <Ocr
+          <MediaPane
             image={`data:image/jpeg;base64,${imageTransfer?.image}`}
             highlights={highlighted}
             currentPage={currentPage}
@@ -170,7 +180,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
               <ToolGroup key={index} name={opt} config={editorToolbarExtensions[opt]} state={editorState} setState={handleSetState} />
             ))}
           />
-          <div>{selectionState}</div>
+          <div>{selectionState.serialize()}</div>
         </Col>
       </Row>
     </>

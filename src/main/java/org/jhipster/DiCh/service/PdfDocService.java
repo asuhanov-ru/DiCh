@@ -63,8 +63,6 @@ public class PdfDocService {
                     PdfStream stream = (PdfStream) obj;
                     PdfImageXObject pimg = new PdfImageXObject(stream);
                     dto.setImage(pimg.getImageBytes());
-
-                    log.debug("Found PdfStream ");
                 }
             });
 

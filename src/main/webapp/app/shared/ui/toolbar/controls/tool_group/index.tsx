@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { get } from 'lodash';
 
-import { Options } from '../../../../../shared/ui/toolbar/components/Option';
-import { Edit } from '../../../../../shared/ui/toolbar/components/Edit';
-import { Static } from '../../../../../shared/ui/toolbar/components/Static';
+import { Options } from '../../components/Option';
+import { Edit } from '../../components/Edit';
+import { Static } from '../../components/Static';
 
 import './styles.css';
 

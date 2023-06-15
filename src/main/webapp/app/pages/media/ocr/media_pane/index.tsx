@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { PanViewer } from './viewer';
 
-import { defaultToolbar } from '../config';
-import { ToolGroup } from './controls';
+import { defaultToolbar } from '../../config';
+import { ToolGroup } from '../../../../shared/ui/toolbar/controls';
 
 type ReactPanZoomProps = {
   image: string;
@@ -15,7 +15,7 @@ type ReactPanZoomProps = {
   polyTreeJSON: any;
 };
 
-export const Ocr = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage }: ReactPanZoomProps) => {
+export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage }: ReactPanZoomProps) => {
   const [dx, setDx] = React.useState(0);
   const [dy, setDy] = React.useState(0);
   const [zoom, setZoom] = React.useState(1);
