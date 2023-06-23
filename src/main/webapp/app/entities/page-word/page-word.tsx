@@ -163,6 +163,12 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('ocrLang')}>
                     <Translate contentKey="diChApp.pageWord.ocrLang">Ocr Lang</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('textLineUUID')}>
+                    <Translate contentKey="diChApp.pageWord.textLineUUID">Text Line UUID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('textBlockUUID')}>
+                    <Translate contentKey="diChApp.pageWord.textBlockUUID">Text Block UUID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -187,6 +193,8 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                     <td>{pageWord.lineId}</td>
                     <td>{pageWord.paragraphId}</td>
                     <td>{pageWord.ocrLang}</td>
+                    <td>{pageWord.textLineUUID}</td>
+                    <td>{pageWord.textBlockUUID}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/page-word/${pageWord.id}`} color="info" size="sm" data-cy="entityDetailsButton">

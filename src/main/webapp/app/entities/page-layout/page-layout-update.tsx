@@ -137,6 +137,20 @@ export const PageLayoutUpdate = (props: RouteComponentProps<{ id: string }>) => 
                 data-cy="parent_id"
                 type="text"
               />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.itemGUID')}
+                id="page-layout-itemGUID"
+                name="itemGUID"
+                data-cy="itemGUID"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.parentGUID')}
+                id="page-layout-parentGUID"
+                name="parentGUID"
+                data-cy="parentGUID"
+                type="text"
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/page-layout" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

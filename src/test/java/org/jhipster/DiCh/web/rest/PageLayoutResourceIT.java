@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.jhipster.dich.IntegrationTest;
@@ -65,6 +66,12 @@ class PageLayoutResourceIT {
     private static final Integer UPDATED_PARENT_ID = 2;
     private static final Integer SMALLER_PARENT_ID = 1 - 1;
 
+    private static final UUID DEFAULT_ITEM_GUID = UUID.randomUUID();
+    private static final UUID UPDATED_ITEM_GUID = UUID.randomUUID();
+
+    private static final UUID DEFAULT_PARENT_GUID = UUID.randomUUID();
+    private static final UUID UPDATED_PARENT_GUID = UUID.randomUUID();
+
     private static final String ENTITY_API_URL = "/api/page-layouts";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -100,7 +107,9 @@ class PageLayoutResourceIT {
             .rect_left(DEFAULT_RECT_LEFT)
             .rect_right(DEFAULT_RECT_RIGHT)
             .rect_bottom(DEFAULT_RECT_BOTTOM)
-            .parent_id(DEFAULT_PARENT_ID);
+            .parent_id(DEFAULT_PARENT_ID)
+            .itemGUID(DEFAULT_ITEM_GUID)
+            .parentGUID(DEFAULT_PARENT_GUID);
         return pageLayout;
     }
 
@@ -119,7 +128,9 @@ class PageLayoutResourceIT {
             .rect_left(UPDATED_RECT_LEFT)
             .rect_right(UPDATED_RECT_RIGHT)
             .rect_bottom(UPDATED_RECT_BOTTOM)
-            .parent_id(UPDATED_PARENT_ID);
+            .parent_id(UPDATED_PARENT_ID)
+            .itemGUID(UPDATED_ITEM_GUID)
+            .parentGUID(UPDATED_PARENT_GUID);
         return pageLayout;
     }
 
@@ -150,6 +161,8 @@ class PageLayoutResourceIT {
         assertThat(testPageLayout.getRect_right()).isEqualByComparingTo(DEFAULT_RECT_RIGHT);
         assertThat(testPageLayout.getRect_bottom()).isEqualByComparingTo(DEFAULT_RECT_BOTTOM);
         assertThat(testPageLayout.getParent_id()).isEqualTo(DEFAULT_PARENT_ID);
+        assertThat(testPageLayout.getItemGUID()).isEqualTo(DEFAULT_ITEM_GUID);
+        assertThat(testPageLayout.getParentGUID()).isEqualTo(DEFAULT_PARENT_GUID);
     }
 
     @Test
@@ -190,7 +203,9 @@ class PageLayoutResourceIT {
             .andExpect(jsonPath("$.[*].rect_left").value(hasItem(sameNumber(DEFAULT_RECT_LEFT))))
             .andExpect(jsonPath("$.[*].rect_right").value(hasItem(sameNumber(DEFAULT_RECT_RIGHT))))
             .andExpect(jsonPath("$.[*].rect_bottom").value(hasItem(sameNumber(DEFAULT_RECT_BOTTOM))))
-            .andExpect(jsonPath("$.[*].parent_id").value(hasItem(DEFAULT_PARENT_ID)));
+            .andExpect(jsonPath("$.[*].parent_id").value(hasItem(DEFAULT_PARENT_ID)))
+            .andExpect(jsonPath("$.[*].itemGUID").value(hasItem(DEFAULT_ITEM_GUID.toString())))
+            .andExpect(jsonPath("$.[*].parentGUID").value(hasItem(DEFAULT_PARENT_GUID.toString())));
     }
 
     @Test
@@ -212,7 +227,9 @@ class PageLayoutResourceIT {
             .andExpect(jsonPath("$.rect_left").value(sameNumber(DEFAULT_RECT_LEFT)))
             .andExpect(jsonPath("$.rect_right").value(sameNumber(DEFAULT_RECT_RIGHT)))
             .andExpect(jsonPath("$.rect_bottom").value(sameNumber(DEFAULT_RECT_BOTTOM)))
-            .andExpect(jsonPath("$.parent_id").value(DEFAULT_PARENT_ID));
+            .andExpect(jsonPath("$.parent_id").value(DEFAULT_PARENT_ID))
+            .andExpect(jsonPath("$.itemGUID").value(DEFAULT_ITEM_GUID.toString()))
+            .andExpect(jsonPath("$.parentGUID").value(DEFAULT_PARENT_GUID.toString()));
     }
 
     @Test
@@ -1039,6 +1056,110 @@ class PageLayoutResourceIT {
         defaultPageLayoutShouldBeFound("parent_id.greaterThan=" + SMALLER_PARENT_ID);
     }
 
+    @Test
+    @Transactional
+    void getAllPageLayoutsByItemGUIDIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where itemGUID equals to DEFAULT_ITEM_GUID
+        defaultPageLayoutShouldBeFound("itemGUID.equals=" + DEFAULT_ITEM_GUID);
+
+        // Get all the pageLayoutList where itemGUID equals to UPDATED_ITEM_GUID
+        defaultPageLayoutShouldNotBeFound("itemGUID.equals=" + UPDATED_ITEM_GUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByItemGUIDIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where itemGUID not equals to DEFAULT_ITEM_GUID
+        defaultPageLayoutShouldNotBeFound("itemGUID.notEquals=" + DEFAULT_ITEM_GUID);
+
+        // Get all the pageLayoutList where itemGUID not equals to UPDATED_ITEM_GUID
+        defaultPageLayoutShouldBeFound("itemGUID.notEquals=" + UPDATED_ITEM_GUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByItemGUIDIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where itemGUID in DEFAULT_ITEM_GUID or UPDATED_ITEM_GUID
+        defaultPageLayoutShouldBeFound("itemGUID.in=" + DEFAULT_ITEM_GUID + "," + UPDATED_ITEM_GUID);
+
+        // Get all the pageLayoutList where itemGUID equals to UPDATED_ITEM_GUID
+        defaultPageLayoutShouldNotBeFound("itemGUID.in=" + UPDATED_ITEM_GUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByItemGUIDIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where itemGUID is not null
+        defaultPageLayoutShouldBeFound("itemGUID.specified=true");
+
+        // Get all the pageLayoutList where itemGUID is null
+        defaultPageLayoutShouldNotBeFound("itemGUID.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByParentGUIDIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where parentGUID equals to DEFAULT_PARENT_GUID
+        defaultPageLayoutShouldBeFound("parentGUID.equals=" + DEFAULT_PARENT_GUID);
+
+        // Get all the pageLayoutList where parentGUID equals to UPDATED_PARENT_GUID
+        defaultPageLayoutShouldNotBeFound("parentGUID.equals=" + UPDATED_PARENT_GUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByParentGUIDIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where parentGUID not equals to DEFAULT_PARENT_GUID
+        defaultPageLayoutShouldNotBeFound("parentGUID.notEquals=" + DEFAULT_PARENT_GUID);
+
+        // Get all the pageLayoutList where parentGUID not equals to UPDATED_PARENT_GUID
+        defaultPageLayoutShouldBeFound("parentGUID.notEquals=" + UPDATED_PARENT_GUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByParentGUIDIsInShouldWork() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where parentGUID in DEFAULT_PARENT_GUID or UPDATED_PARENT_GUID
+        defaultPageLayoutShouldBeFound("parentGUID.in=" + DEFAULT_PARENT_GUID + "," + UPDATED_PARENT_GUID);
+
+        // Get all the pageLayoutList where parentGUID equals to UPDATED_PARENT_GUID
+        defaultPageLayoutShouldNotBeFound("parentGUID.in=" + UPDATED_PARENT_GUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllPageLayoutsByParentGUIDIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pageLayoutRepository.saveAndFlush(pageLayout);
+
+        // Get all the pageLayoutList where parentGUID is not null
+        defaultPageLayoutShouldBeFound("parentGUID.specified=true");
+
+        // Get all the pageLayoutList where parentGUID is null
+        defaultPageLayoutShouldNotBeFound("parentGUID.specified=false");
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -1055,7 +1176,9 @@ class PageLayoutResourceIT {
             .andExpect(jsonPath("$.[*].rect_left").value(hasItem(sameNumber(DEFAULT_RECT_LEFT))))
             .andExpect(jsonPath("$.[*].rect_right").value(hasItem(sameNumber(DEFAULT_RECT_RIGHT))))
             .andExpect(jsonPath("$.[*].rect_bottom").value(hasItem(sameNumber(DEFAULT_RECT_BOTTOM))))
-            .andExpect(jsonPath("$.[*].parent_id").value(hasItem(DEFAULT_PARENT_ID)));
+            .andExpect(jsonPath("$.[*].parent_id").value(hasItem(DEFAULT_PARENT_ID)))
+            .andExpect(jsonPath("$.[*].itemGUID").value(hasItem(DEFAULT_ITEM_GUID.toString())))
+            .andExpect(jsonPath("$.[*].parentGUID").value(hasItem(DEFAULT_PARENT_GUID.toString())));
 
         // Check, that the count call also returns 1
         restPageLayoutMockMvc
@@ -1111,7 +1234,9 @@ class PageLayoutResourceIT {
             .rect_left(UPDATED_RECT_LEFT)
             .rect_right(UPDATED_RECT_RIGHT)
             .rect_bottom(UPDATED_RECT_BOTTOM)
-            .parent_id(UPDATED_PARENT_ID);
+            .parent_id(UPDATED_PARENT_ID)
+            .itemGUID(UPDATED_ITEM_GUID)
+            .parentGUID(UPDATED_PARENT_GUID);
         PageLayoutDTO pageLayoutDTO = pageLayoutMapper.toDto(updatedPageLayout);
 
         restPageLayoutMockMvc
@@ -1134,6 +1259,8 @@ class PageLayoutResourceIT {
         assertThat(testPageLayout.getRect_right()).isEqualByComparingTo(UPDATED_RECT_RIGHT);
         assertThat(testPageLayout.getRect_bottom()).isEqualByComparingTo(UPDATED_RECT_BOTTOM);
         assertThat(testPageLayout.getParent_id()).isEqualTo(UPDATED_PARENT_ID);
+        assertThat(testPageLayout.getItemGUID()).isEqualTo(UPDATED_ITEM_GUID);
+        assertThat(testPageLayout.getParentGUID()).isEqualTo(UPDATED_PARENT_GUID);
     }
 
     @Test
@@ -1213,7 +1340,12 @@ class PageLayoutResourceIT {
         PageLayout partialUpdatedPageLayout = new PageLayout();
         partialUpdatedPageLayout.setId(pageLayout.getId());
 
-        partialUpdatedPageLayout.pageNumber(UPDATED_PAGE_NUMBER).rect_right(UPDATED_RECT_RIGHT).rect_bottom(UPDATED_RECT_BOTTOM);
+        partialUpdatedPageLayout
+            .pageNumber(UPDATED_PAGE_NUMBER)
+            .rect_right(UPDATED_RECT_RIGHT)
+            .rect_bottom(UPDATED_RECT_BOTTOM)
+            .itemGUID(UPDATED_ITEM_GUID)
+            .parentGUID(UPDATED_PARENT_GUID);
 
         restPageLayoutMockMvc
             .perform(
@@ -1235,6 +1367,8 @@ class PageLayoutResourceIT {
         assertThat(testPageLayout.getRect_right()).isEqualByComparingTo(UPDATED_RECT_RIGHT);
         assertThat(testPageLayout.getRect_bottom()).isEqualByComparingTo(UPDATED_RECT_BOTTOM);
         assertThat(testPageLayout.getParent_id()).isEqualTo(DEFAULT_PARENT_ID);
+        assertThat(testPageLayout.getItemGUID()).isEqualTo(UPDATED_ITEM_GUID);
+        assertThat(testPageLayout.getParentGUID()).isEqualTo(UPDATED_PARENT_GUID);
     }
 
     @Test
@@ -1257,7 +1391,9 @@ class PageLayoutResourceIT {
             .rect_left(UPDATED_RECT_LEFT)
             .rect_right(UPDATED_RECT_RIGHT)
             .rect_bottom(UPDATED_RECT_BOTTOM)
-            .parent_id(UPDATED_PARENT_ID);
+            .parent_id(UPDATED_PARENT_ID)
+            .itemGUID(UPDATED_ITEM_GUID)
+            .parentGUID(UPDATED_PARENT_GUID);
 
         restPageLayoutMockMvc
             .perform(
@@ -1279,6 +1415,8 @@ class PageLayoutResourceIT {
         assertThat(testPageLayout.getRect_right()).isEqualByComparingTo(UPDATED_RECT_RIGHT);
         assertThat(testPageLayout.getRect_bottom()).isEqualByComparingTo(UPDATED_RECT_BOTTOM);
         assertThat(testPageLayout.getParent_id()).isEqualTo(UPDATED_PARENT_ID);
+        assertThat(testPageLayout.getItemGUID()).isEqualTo(UPDATED_ITEM_GUID);
+        assertThat(testPageLayout.getParentGUID()).isEqualTo(UPDATED_PARENT_GUID);
     }
 
     @Test

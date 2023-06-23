@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Row, Col } from 'reactstrap';
-import { convertFromRaw, convertToRaw, EditorState, SelectionState } from 'draft-js';
+import { convertFromRaw, EditorState, SelectionState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import RBush from 'rbush';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -11,7 +11,8 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
-import { getEntities as getPageOcr } from './ocr/reducer';
+import { getEntities as getPageOcr } from './ocr/ocr_entity_reducer';
+import { getEntities as getPageLayout } from './ocr/ocr_layout_reducer';
 import { MediaPane } from './ocr/media_pane';
 import { editorToolbarExtensions } from './config';
 import { ToolGroup } from '../../shared/ui/toolbar/controls';
@@ -28,11 +29,13 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const mediaEntity = useAppSelector(state => state.media.entity);
   const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
+  const layoutTransfer = useAppSelector(state => state.ocrLayoutTransfer.entities);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [selectionState, setSelectionState] = useState(SelectionState.createEmpty());
 
   const [highlighted, setHighlighted] = useState([]);
   const [currentContent, setCurrentContent] = useState(editorState.getCurrentContent());
+  const [currentBlock, setCurrentBlock] = useState({});
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -42,37 +45,24 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     if (mediaEntity && mediaEntity.id) {
       dispatch(getImageEntity({ id: mediaEntity.id, pageNumber: currentPage }));
       dispatch(getPageOcr({ id: mediaEntity.id, pageNumber: currentPage }));
+      dispatch(getPageLayout({ id: mediaEntity.id, pageNumber: currentPage }));
     }
   }, [currentPage, mediaEntity]);
 
   useEffect(() => {
-    const content = {
-      entityMap: {},
-      blocks: [
-        {
-          key: 'empty',
-          text: '',
-          type: 'unstyled',
-          depth: 0,
-          inlineStyleRanges: [],
-          entityRanges: [],
-          data: {},
-        },
-      ],
-    };
-    let i = 0;
-    let keys = [];
-    let text = [];
-
     if (ocrEntities && ocrEntities?.length) {
-      content.blocks = [];
+      const content = {
+        entityMap: {},
+        blocks: [],
+      };
+      let i = 0;
+      let keys = [];
+      let text = [];
+      let textLineUUID = ocrEntities[0].textLineUUID;
 
-      ocrEntities.forEach((ocr_entity, idx) => {
-        keys.push(idx);
-        text.push(`${ocr_entity.s_word}`);
-        i++;
-        if (i > 10) {
-          i = 0;
+      for (i = 0; i < ocrEntities.length; i++) {
+        if (textLineUUID !== ocrEntities[i].textLineUUID) {
+          textLineUUID = ocrEntities[i].textLineUUID;
           const block = {
             key: keys.join(','),
             text: text.join(' '),
@@ -86,11 +76,26 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
           keys = [];
           text = [];
         }
-      });
+        keys.push(i);
+        text.push(`${ocrEntities[i].s_word}`);
+      }
+      if (keys.length > 0) {
+        const block = {
+          key: keys.join(','),
+          text: text.join(' '),
+          depth: 0,
+          inlineStyleRanges: [],
+          type: 'unstyled',
+          entityRanges: [],
+          data: {},
+        };
+        content.blocks.push(block);
+      }
+      setEditorState(EditorState.createWithContent(convertFromRaw(content)));
+    } else {
+      setEditorState(EditorState.createEmpty());
     }
-    const newEditorState = EditorState.createWithContent(convertFromRaw(content));
-    setEditorState(newEditorState);
-    setCurrentContent(newEditorState.getCurrentContent());
+
     setHighlighted([]);
     setSelectionState(SelectionState.createEmpty());
   }, [ocrEntities]);
@@ -103,17 +108,16 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 
   const onEditorStateChange = newEditorState => {
     const selection = newEditorState.getSelection();
-    // const newContent = newEditorState.getCurrentContent();
-
-    // if (newContent !== currentContent) return;
+    const content = newEditorState.getCurrentContent();
 
     if (selectionState !== selection) {
       const focusKey = selection.getFocusKey();
       const anchorKey = selection.getAnchorKey();
       const focusOffset = selection.getFocusOffset();
       const anchorOffset = selection.getAnchorOffset();
+      const block = content.getBlockForKey(focusKey);
 
-      if (focusKey === anchorKey) {
+      if (focusKey === anchorKey && focusOffset === anchorOffset) {
         const wordIndexes = focusKey.split(',').map(el => Number(el));
         const words = ocrEntities.filter((_, idx) => wordIndexes.includes(idx)).map(el => ({ ...el, wordLenght: el?.s_word?.length }));
         let selectedWordIndex = 0;
@@ -126,15 +130,16 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
           }
         }
         const selectedWord = words[selectedWordIndex];
-
-        setSelectionState(selection);
-        // setEditorState(newEditorState);
-        setHighlighted([selectedWord]);
+        const selectedWordParent = layoutTransfer.find(el => el.itemGUID === selectedWord?.textLineUUID);
+        setHighlighted([{ ...selectedWord, selectedWordParent }]);
+        setCurrentBlock(block);
       } else {
-        setSelectionState(SelectionState.createEmpty());
         setHighlighted([]);
+        setCurrentBlock({});
       }
     }
+    setSelectionState(selection);
+    setEditorState(newEditorState);
   };
 
   const polyTree = useMemo(() => {

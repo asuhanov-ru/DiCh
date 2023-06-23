@@ -11,6 +11,7 @@ import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.UUIDFilter;
 import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
@@ -55,6 +56,10 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     private StringFilter ocrLang;
 
+    private UUIDFilter textLineUUID;
+
+    private UUIDFilter textBlockUUID;
+
     private Boolean distinct;
 
     public PageWordCriteria() {}
@@ -74,6 +79,8 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.lineId = other.lineId == null ? null : other.lineId.copy();
         this.paragraphId = other.paragraphId == null ? null : other.paragraphId.copy();
         this.ocrLang = other.ocrLang == null ? null : other.ocrLang.copy();
+        this.textLineUUID = other.textLineUUID == null ? null : other.textLineUUID.copy();
+        this.textBlockUUID = other.textBlockUUID == null ? null : other.textBlockUUID.copy();
         this.distinct = other.distinct;
     }
 
@@ -292,6 +299,36 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.ocrLang = ocrLang;
     }
 
+    public UUIDFilter getTextLineUUID() {
+        return textLineUUID;
+    }
+
+    public UUIDFilter textLineUUID() {
+        if (textLineUUID == null) {
+            textLineUUID = new UUIDFilter();
+        }
+        return textLineUUID;
+    }
+
+    public void setTextLineUUID(UUIDFilter textLineUUID) {
+        this.textLineUUID = textLineUUID;
+    }
+
+    public UUIDFilter getTextBlockUUID() {
+        return textBlockUUID;
+    }
+
+    public UUIDFilter textBlockUUID() {
+        if (textBlockUUID == null) {
+            textBlockUUID = new UUIDFilter();
+        }
+        return textBlockUUID;
+    }
+
+    public void setTextBlockUUID(UUIDFilter textBlockUUID) {
+        this.textBlockUUID = textBlockUUID;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -324,6 +361,8 @@ public class PageWordCriteria implements Serializable, Criteria {
             Objects.equals(lineId, that.lineId) &&
             Objects.equals(paragraphId, that.paragraphId) &&
             Objects.equals(ocrLang, that.ocrLang) &&
+            Objects.equals(textLineUUID, that.textLineUUID) &&
+            Objects.equals(textBlockUUID, that.textBlockUUID) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -345,6 +384,8 @@ public class PageWordCriteria implements Serializable, Criteria {
             lineId,
             paragraphId,
             ocrLang,
+            textLineUUID,
+            textBlockUUID,
             distinct
         );
     }
@@ -367,6 +408,8 @@ public class PageWordCriteria implements Serializable, Criteria {
             (lineId != null ? "lineId=" + lineId + ", " : "") +
             (paragraphId != null ? "paragraphId=" + paragraphId + ", " : "") +
             (ocrLang != null ? "ocrLang=" + ocrLang + ", " : "") +
+            (textLineUUID != null ? "textLineUUID=" + textLineUUID + ", " : "") +
+            (textBlockUUID != null ? "textBlockUUID=" + textBlockUUID + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

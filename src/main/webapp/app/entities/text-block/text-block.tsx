@@ -130,6 +130,9 @@ export const TextBlock = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('blockIndex')}>
                     <Translate contentKey="diChApp.textBlock.blockIndex">Block Index</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('blockUUID')}>
+                    <Translate contentKey="diChApp.textBlock.blockUUID">Block UUID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th>
                     <Translate contentKey="diChApp.textBlock.media">Media</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -146,6 +149,7 @@ export const TextBlock = (props: RouteComponentProps<{ url: string }>) => {
                     </td>
                     <td>{textBlock.pageNumber}</td>
                     <td>{textBlock.blockIndex}</td>
+                    <td>{textBlock.blockUUID}</td>
                     <td>{textBlock.media ? <Link to={`/media/${textBlock.media.id}`}>{textBlock.media.fileName}</Link> : ''}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">

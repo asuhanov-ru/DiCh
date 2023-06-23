@@ -2,6 +2,7 @@ package org.jhipster.dich.domain;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import javax.persistence.*;
 
 /**
@@ -57,6 +58,12 @@ public class PageWord implements Serializable {
 
     @Column(name = "ocr_lang")
     private String ocrLang;
+
+    @Column(name = "text_line_uuid")
+    private UUID textLineUUID;
+
+    @Column(name = "text_block_uuid")
+    private UUID textBlockUUID;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -242,6 +249,32 @@ public class PageWord implements Serializable {
         this.ocrLang = ocrLang;
     }
 
+    public UUID getTextLineUUID() {
+        return this.textLineUUID;
+    }
+
+    public PageWord textLineUUID(UUID textLineUUID) {
+        this.setTextLineUUID(textLineUUID);
+        return this;
+    }
+
+    public void setTextLineUUID(UUID textLineUUID) {
+        this.textLineUUID = textLineUUID;
+    }
+
+    public UUID getTextBlockUUID() {
+        return this.textBlockUUID;
+    }
+
+    public PageWord textBlockUUID(UUID textBlockUUID) {
+        this.setTextBlockUUID(textBlockUUID);
+        return this;
+    }
+
+    public void setTextBlockUUID(UUID textBlockUUID) {
+        this.textBlockUUID = textBlockUUID;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -279,6 +312,8 @@ public class PageWord implements Serializable {
             ", lineId=" + getLineId() +
             ", paragraphId=" + getParagraphId() +
             ", ocrLang='" + getOcrLang() + "'" +
+            ", textLineUUID='" + getTextLineUUID() + "'" +
+            ", textBlockUUID='" + getTextBlockUUID() + "'" +
             "}";
     }
 }

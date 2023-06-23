@@ -2,6 +2,7 @@ package org.jhipster.dich.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.UUID;
 import javax.persistence.*;
 
 /**
@@ -42,6 +43,12 @@ public class PageLayout implements Serializable {
 
     @Column(name = "parent_id")
     private Integer parent_id;
+
+    @Column(name = "item_guid")
+    private UUID itemGUID;
+
+    @Column(name = "parent_guid")
+    private UUID parentGUID;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -162,6 +169,32 @@ public class PageLayout implements Serializable {
         this.parent_id = parent_id;
     }
 
+    public UUID getItemGUID() {
+        return this.itemGUID;
+    }
+
+    public PageLayout itemGUID(UUID itemGUID) {
+        this.setItemGUID(itemGUID);
+        return this;
+    }
+
+    public void setItemGUID(UUID itemGUID) {
+        this.itemGUID = itemGUID;
+    }
+
+    public UUID getParentGUID() {
+        return this.parentGUID;
+    }
+
+    public PageLayout parentGUID(UUID parentGUID) {
+        this.setParentGUID(parentGUID);
+        return this;
+    }
+
+    public void setParentGUID(UUID parentGUID) {
+        this.parentGUID = parentGUID;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -194,6 +227,8 @@ public class PageLayout implements Serializable {
             ", rect_right=" + getRect_right() +
             ", rect_bottom=" + getRect_bottom() +
             ", parent_id=" + getParent_id() +
+            ", itemGUID='" + getItemGUID() + "'" +
+            ", parentGUID='" + getParentGUID() + "'" +
             "}";
     }
 }

@@ -20,6 +20,7 @@
       "id": "ID",
       "pageNumber": "Page Number",
       "blockIndex": "Block Index",
+      "blockUUID": "Block UUID",
       "media": "Media"
     }
   }

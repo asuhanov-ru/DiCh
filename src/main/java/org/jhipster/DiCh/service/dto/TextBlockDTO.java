@@ -2,6 +2,7 @@ package org.jhipster.dich.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link org.jhipster.dich.domain.TextBlock} entity.
@@ -13,6 +14,8 @@ public class TextBlockDTO implements Serializable {
     private Integer pageNumber;
 
     private Integer blockIndex;
+
+    private UUID blockUUID;
 
     private MediaDTO media;
 
@@ -38,6 +41,14 @@ public class TextBlockDTO implements Serializable {
 
     public void setBlockIndex(Integer blockIndex) {
         this.blockIndex = blockIndex;
+    }
+
+    public UUID getBlockUUID() {
+        return blockUUID;
+    }
+
+    public void setBlockUUID(UUID blockUUID) {
+        this.blockUUID = blockUUID;
     }
 
     public MediaDTO getMedia() {
@@ -76,6 +87,7 @@ public class TextBlockDTO implements Serializable {
             "id=" + getId() +
             ", pageNumber=" + getPageNumber() +
             ", blockIndex=" + getBlockIndex() +
+            ", blockUUID='" + getBlockUUID() + "'" +
             ", media=" + getMedia() +
             "}";
     }

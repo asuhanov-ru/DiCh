@@ -25,7 +25,9 @@
       "rect_left": "Rect Left",
       "rect_right": "Rect Right",
       "rect_bottom": "Rect Bottom",
-      "parent_id": "Parent Id"
+      "parent_id": "Parent Id",
+      "itemGUID": "Item GUID",
+      "parentGUID": "Parent GUID"
     }
   }
 }

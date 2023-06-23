@@ -4,6 +4,7 @@ export interface ITextBlock {
   id?: number;
   pageNumber?: number | null;
   blockIndex?: number | null;
+  blockUUID?: string | null;
   media?: IMedia | null;
 }
 

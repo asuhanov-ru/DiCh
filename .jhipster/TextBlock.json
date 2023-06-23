@@ -9,6 +9,10 @@
     {
       "fieldName": "blockIndex",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "blockUUID",
+      "fieldType": "UUID"
     }
   ],
   "jpaMetamodelFiltering": true,

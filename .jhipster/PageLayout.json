@@ -33,6 +33,15 @@
     {
       "fieldName": "parent_id",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "itemGUID",
+      "fieldType": "UUID",
+      "fieldValidateRules": []
+    },
+    {
+      "fieldName": "parentGUID",
+      "fieldType": "UUID"
     }
   ],
   "jpaMetamodelFiltering": true,

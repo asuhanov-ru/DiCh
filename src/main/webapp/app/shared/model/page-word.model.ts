@@ -15,6 +15,8 @@ export interface IPageWord {
   lineId?: number | null;
   paragraphId?: number | null;
   ocrLang?: string | null;
+  textLineUUID?: string | null;
+  textBlockUUID?: string | null;
 }
 
 export const defaultValue: Readonly<IPageWord> = {};

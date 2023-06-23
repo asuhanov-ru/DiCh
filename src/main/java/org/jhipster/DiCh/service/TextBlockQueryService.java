@@ -96,6 +96,9 @@ public class TextBlockQueryService extends QueryService<TextBlock> {
             if (criteria.getBlockIndex() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBlockIndex(), TextBlock_.blockIndex));
             }
+            if (criteria.getBlockUUID() != null) {
+                specification = specification.and(buildSpecification(criteria.getBlockUUID(), TextBlock_.blockUUID));
+            }
             if (criteria.getMediaId() != null) {
                 specification =
                     specification.and(

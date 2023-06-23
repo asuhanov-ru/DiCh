@@ -3,6 +3,7 @@ package org.jhipster.dich.service.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link org.jhipster.dich.domain.PageLayout} entity.
@@ -26,6 +27,10 @@ public class PageLayoutDTO implements Serializable {
     private BigDecimal rect_bottom;
 
     private Integer parent_id;
+
+    private UUID itemGUID;
+
+    private UUID parentGUID;
 
     public Long getId() {
         return id;
@@ -99,6 +104,22 @@ public class PageLayoutDTO implements Serializable {
         this.parent_id = parent_id;
     }
 
+    public UUID getItemGUID() {
+        return itemGUID;
+    }
+
+    public void setItemGUID(UUID itemGUID) {
+        this.itemGUID = itemGUID;
+    }
+
+    public UUID getParentGUID() {
+        return parentGUID;
+    }
+
+    public void setParentGUID(UUID parentGUID) {
+        this.parentGUID = parentGUID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -133,6 +154,8 @@ public class PageLayoutDTO implements Serializable {
             ", rect_right=" + getRect_right() +
             ", rect_bottom=" + getRect_bottom() +
             ", parent_id=" + getParent_id() +
+            ", itemGUID='" + getItemGUID() + "'" +
+            ", parentGUID='" + getParentGUID() + "'" +
             "}";
     }
 }

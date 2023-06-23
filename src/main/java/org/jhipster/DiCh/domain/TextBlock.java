@@ -2,6 +2,7 @@ package org.jhipster.dich.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.UUID;
 import javax.persistence.*;
 
 /**
@@ -24,6 +25,9 @@ public class TextBlock implements Serializable {
 
     @Column(name = "block_index")
     private Integer blockIndex;
+
+    @Column(name = "block_uuid")
+    private UUID blockUUID;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "collections", "books" }, allowSetters = true)
@@ -70,6 +74,19 @@ public class TextBlock implements Serializable {
         this.blockIndex = blockIndex;
     }
 
+    public UUID getBlockUUID() {
+        return this.blockUUID;
+    }
+
+    public TextBlock blockUUID(UUID blockUUID) {
+        this.setBlockUUID(blockUUID);
+        return this;
+    }
+
+    public void setBlockUUID(UUID blockUUID) {
+        this.blockUUID = blockUUID;
+    }
+
     public Media getMedia() {
         return this.media;
     }
@@ -109,6 +126,7 @@ public class TextBlock implements Serializable {
             "id=" + getId() +
             ", pageNumber=" + getPageNumber() +
             ", blockIndex=" + getBlockIndex() +
+            ", blockUUID='" + getBlockUUID() + "'" +
             "}";
     }
 }

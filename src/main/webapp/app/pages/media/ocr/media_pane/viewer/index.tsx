@@ -1,4 +1,5 @@
 import React from 'react';
+import { get } from 'lodash';
 
 import '../../../styles.css';
 
@@ -143,11 +144,30 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
     };
   }
 
+  getHighlightParentStyle(highlight) {
+    if (!highlight) {
+      return undefined;
+    }
+
+    return {
+      top: `${highlight.rect_top - 2}px`,
+      left: `${highlight.rect_left - 2}px`,
+      width: `${highlight.rect_right - highlight.rect_left + 2}px`,
+      height: `${highlight.rect_bottom - highlight.rect_top + 2}px`,
+    };
+  }
+
   createHighlights() {
     const { highlights } = this.props;
     if (!highlights || highlights.length < 1) return undefined;
     const style = this.getHighlightStyle(highlights[0]);
-    return <div style={style} className="rdw-highlight"></div>;
+    const parentStyle = this.getHighlightParentStyle(get(highlights[0], 'selectedWordParent'));
+    return (
+      <>
+        <div style={style} className="rdw-highlight"></div>
+        <div style={parentStyle} className="rdw-text-line-highlight"></div>
+      </>
+    );
   }
 
   // tslint:disable-next-line: member-ordering

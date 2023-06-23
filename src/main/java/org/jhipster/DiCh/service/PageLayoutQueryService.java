@@ -114,6 +114,12 @@ public class PageLayoutQueryService extends QueryService<PageLayout> {
             if (criteria.getParent_id() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getParent_id(), PageLayout_.parent_id));
             }
+            if (criteria.getItemGUID() != null) {
+                specification = specification.and(buildSpecification(criteria.getItemGUID(), PageLayout_.itemGUID));
+            }
+            if (criteria.getParentGUID() != null) {
+                specification = specification.and(buildSpecification(criteria.getParentGUID(), PageLayout_.parentGUID));
+            }
         }
         return specification;
     }

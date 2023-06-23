@@ -38,6 +38,12 @@
             <column name="parent_id" type="integer">
                 <constraints nullable="true" />
             </column>
+            <column name="item_guid" type="${uuidType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="parent_guid" type="${uuidType}">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
@@ -67,6 +73,8 @@
             <column name="rect_right" type="numeric"/>
             <column name="rect_bottom" type="numeric"/>
             <column name="parent_id" type="numeric"/>
+            <column name="item_guid" type="${uuidType}"/>
+            <column name="parent_guid" type="${uuidType}"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

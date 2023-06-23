@@ -148,6 +148,12 @@ export const PageLayout = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('parent_id')}>
                     <Translate contentKey="diChApp.pageLayout.parent_id">Parent Id</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('itemGUID')}>
+                    <Translate contentKey="diChApp.pageLayout.itemGUID">Item GUID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('parentGUID')}>
+                    <Translate contentKey="diChApp.pageLayout.parentGUID">Parent GUID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -167,6 +173,8 @@ export const PageLayout = (props: RouteComponentProps<{ url: string }>) => {
                     <td>{pageLayout.rect_right}</td>
                     <td>{pageLayout.rect_bottom}</td>
                     <td>{pageLayout.parent_id}</td>
+                    <td>{pageLayout.itemGUID}</td>
+                    <td>{pageLayout.parentGUID}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/page-layout/${pageLayout.id}`} color="info" size="sm" data-cy="entityDetailsButton">

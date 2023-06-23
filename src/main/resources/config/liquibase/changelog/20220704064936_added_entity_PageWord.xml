@@ -53,6 +53,12 @@
             <column name="ocr_lang" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="text_line_uuid" type="${uuidType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="text_block_uuid" type="${uuidType}">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="page_word" columnName="version" columnDataType="${datetimeType}"/>
@@ -88,6 +94,8 @@
             <column name="line_id" type="numeric"/>
             <column name="paragraph_id" type="numeric"/>
             <column name="ocr_lang" type="string"/>
+            <column name="text_line_uuid" type="${uuidType}"/>
+            <column name="text_block_uuid" type="${uuidType}"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

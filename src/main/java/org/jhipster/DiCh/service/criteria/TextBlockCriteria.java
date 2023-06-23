@@ -11,6 +11,7 @@ import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.UUIDFilter;
 
 /**
  * Criteria class for the {@link org.jhipster.dich.domain.TextBlock} entity. This class is used
@@ -32,6 +33,8 @@ public class TextBlockCriteria implements Serializable, Criteria {
 
     private IntegerFilter blockIndex;
 
+    private UUIDFilter blockUUID;
+
     private LongFilter mediaId;
 
     private Boolean distinct;
@@ -42,6 +45,7 @@ public class TextBlockCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.pageNumber = other.pageNumber == null ? null : other.pageNumber.copy();
         this.blockIndex = other.blockIndex == null ? null : other.blockIndex.copy();
+        this.blockUUID = other.blockUUID == null ? null : other.blockUUID.copy();
         this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
         this.distinct = other.distinct;
     }
@@ -96,6 +100,21 @@ public class TextBlockCriteria implements Serializable, Criteria {
         this.blockIndex = blockIndex;
     }
 
+    public UUIDFilter getBlockUUID() {
+        return blockUUID;
+    }
+
+    public UUIDFilter blockUUID() {
+        if (blockUUID == null) {
+            blockUUID = new UUIDFilter();
+        }
+        return blockUUID;
+    }
+
+    public void setBlockUUID(UUIDFilter blockUUID) {
+        this.blockUUID = blockUUID;
+    }
+
     public LongFilter getMediaId() {
         return mediaId;
     }
@@ -132,6 +151,7 @@ public class TextBlockCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(pageNumber, that.pageNumber) &&
             Objects.equals(blockIndex, that.blockIndex) &&
+            Objects.equals(blockUUID, that.blockUUID) &&
             Objects.equals(mediaId, that.mediaId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -139,7 +159,7 @@ public class TextBlockCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pageNumber, blockIndex, mediaId, distinct);
+        return Objects.hash(id, pageNumber, blockIndex, blockUUID, mediaId, distinct);
     }
 
     // prettier-ignore
@@ -149,6 +169,7 @@ public class TextBlockCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (pageNumber != null ? "pageNumber=" + pageNumber + ", " : "") +
             (blockIndex != null ? "blockIndex=" + blockIndex + ", " : "") +
+            (blockUUID != null ? "blockUUID=" + blockUUID + ", " : "") +
             (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";

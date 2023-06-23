@@ -30,7 +30,9 @@
       "blockId": "Block Id",
       "lineId": "Line Id",
       "paragraphId": "Paragraph Id",
-      "ocrLang": "Ocr Lang"
+      "ocrLang": "Ocr Lang",
+      "textLineUUID": "Text Line UUID",
+      "textBlockUUID": "Text Block UUID"
     }
   }
 }

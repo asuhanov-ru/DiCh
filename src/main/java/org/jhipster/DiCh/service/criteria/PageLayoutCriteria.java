@@ -12,6 +12,7 @@ import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.UUIDFilter;
 
 /**
  * Criteria class for the {@link org.jhipster.dich.domain.PageLayout} entity. This class is used
@@ -45,6 +46,10 @@ public class PageLayoutCriteria implements Serializable, Criteria {
 
     private IntegerFilter parent_id;
 
+    private UUIDFilter itemGUID;
+
+    private UUIDFilter parentGUID;
+
     private Boolean distinct;
 
     public PageLayoutCriteria() {}
@@ -59,6 +64,8 @@ public class PageLayoutCriteria implements Serializable, Criteria {
         this.rect_right = other.rect_right == null ? null : other.rect_right.copy();
         this.rect_bottom = other.rect_bottom == null ? null : other.rect_bottom.copy();
         this.parent_id = other.parent_id == null ? null : other.parent_id.copy();
+        this.itemGUID = other.itemGUID == null ? null : other.itemGUID.copy();
+        this.parentGUID = other.parentGUID == null ? null : other.parentGUID.copy();
         this.distinct = other.distinct;
     }
 
@@ -202,6 +209,36 @@ public class PageLayoutCriteria implements Serializable, Criteria {
         this.parent_id = parent_id;
     }
 
+    public UUIDFilter getItemGUID() {
+        return itemGUID;
+    }
+
+    public UUIDFilter itemGUID() {
+        if (itemGUID == null) {
+            itemGUID = new UUIDFilter();
+        }
+        return itemGUID;
+    }
+
+    public void setItemGUID(UUIDFilter itemGUID) {
+        this.itemGUID = itemGUID;
+    }
+
+    public UUIDFilter getParentGUID() {
+        return parentGUID;
+    }
+
+    public UUIDFilter parentGUID() {
+        if (parentGUID == null) {
+            parentGUID = new UUIDFilter();
+        }
+        return parentGUID;
+    }
+
+    public void setParentGUID(UUIDFilter parentGUID) {
+        this.parentGUID = parentGUID;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -229,13 +266,28 @@ public class PageLayoutCriteria implements Serializable, Criteria {
             Objects.equals(rect_right, that.rect_right) &&
             Objects.equals(rect_bottom, that.rect_bottom) &&
             Objects.equals(parent_id, that.parent_id) &&
+            Objects.equals(itemGUID, that.itemGUID) &&
+            Objects.equals(parentGUID, that.parentGUID) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mediaId, pageNumber, iterator_level, rect_top, rect_left, rect_right, rect_bottom, parent_id, distinct);
+        return Objects.hash(
+            id,
+            mediaId,
+            pageNumber,
+            iterator_level,
+            rect_top,
+            rect_left,
+            rect_right,
+            rect_bottom,
+            parent_id,
+            itemGUID,
+            parentGUID,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -251,6 +303,8 @@ public class PageLayoutCriteria implements Serializable, Criteria {
             (rect_right != null ? "rect_right=" + rect_right + ", " : "") +
             (rect_bottom != null ? "rect_bottom=" + rect_bottom + ", " : "") +
             (parent_id != null ? "parent_id=" + parent_id + ", " : "") +
+            (itemGUID != null ? "itemGUID=" + itemGUID + ", " : "") +
+            (parentGUID != null ? "parentGUID=" + parentGUID + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

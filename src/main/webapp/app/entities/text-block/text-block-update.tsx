@@ -102,6 +102,13 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="blockIndex"
                 type="text"
               />
+              <ValidatedField
+                label={translate('diChApp.textBlock.blockUUID')}
+                id="text-block-blockUUID"
+                name="blockUUID"
+                data-cy="blockUUID"
+                type="text"
+              />
               <ValidatedField id="text-block-media" name="media" data-cy="media" label={translate('diChApp.textBlock.media')} type="select">
                 <option value="" key="0" />
                 {media

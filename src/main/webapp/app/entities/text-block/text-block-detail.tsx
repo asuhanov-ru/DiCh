@@ -43,6 +43,12 @@ export const TextBlockDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{textBlockEntity.blockIndex}</dd>
           <dt>
+            <span id="blockUUID">
+              <Translate contentKey="diChApp.textBlock.blockUUID">Block UUID</Translate>
+            </span>
+          </dt>
+          <dd>{textBlockEntity.blockUUID}</dd>
+          <dt>
             <Translate contentKey="diChApp.textBlock.media">Media</Translate>
           </dt>
           <dd>{textBlockEntity.media ? textBlockEntity.media.fileName : ''}</dd>

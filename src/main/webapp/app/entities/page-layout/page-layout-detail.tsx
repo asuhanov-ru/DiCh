@@ -78,6 +78,18 @@ export const PageLayoutDetail = (props: RouteComponentProps<{ id: string }>) => 
             </span>
           </dt>
           <dd>{pageLayoutEntity.parent_id}</dd>
+          <dt>
+            <span id="itemGUID">
+              <Translate contentKey="diChApp.pageLayout.itemGUID">Item GUID</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.itemGUID}</dd>
+          <dt>
+            <span id="parentGUID">
+              <Translate contentKey="diChApp.pageLayout.parentGUID">Parent GUID</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.parentGUID}</dd>
         </dl>
         <Button tag={Link} to="/page-layout" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

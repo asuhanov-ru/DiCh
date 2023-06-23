@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.jhipster.dich.IntegrationTest;
@@ -50,6 +51,9 @@ class TextBlockResourceIT {
     private static final Integer UPDATED_BLOCK_INDEX = 2;
     private static final Integer SMALLER_BLOCK_INDEX = 1 - 1;
 
+    private static final UUID DEFAULT_BLOCK_UUID = UUID.randomUUID();
+    private static final UUID UPDATED_BLOCK_UUID = UUID.randomUUID();
+
     private static final String ENTITY_API_URL = "/api/text-blocks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -83,7 +87,7 @@ class TextBlockResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TextBlock createEntity(EntityManager em) {
-        TextBlock textBlock = new TextBlock().pageNumber(DEFAULT_PAGE_NUMBER).blockIndex(DEFAULT_BLOCK_INDEX);
+        TextBlock textBlock = new TextBlock().pageNumber(DEFAULT_PAGE_NUMBER).blockIndex(DEFAULT_BLOCK_INDEX).blockUUID(DEFAULT_BLOCK_UUID);
         return textBlock;
     }
 
@@ -94,7 +98,7 @@ class TextBlockResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TextBlock createUpdatedEntity(EntityManager em) {
-        TextBlock textBlock = new TextBlock().pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX);
+        TextBlock textBlock = new TextBlock().pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX).blockUUID(UPDATED_BLOCK_UUID);
         return textBlock;
     }
 
@@ -119,6 +123,7 @@ class TextBlockResourceIT {
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(DEFAULT_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(DEFAULT_BLOCK_INDEX);
+        assertThat(testTextBlock.getBlockUUID()).isEqualTo(DEFAULT_BLOCK_UUID);
     }
 
     @Test
@@ -153,7 +158,8 @@ class TextBlockResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(textBlock.getId().intValue())))
             .andExpect(jsonPath("$.[*].pageNumber").value(hasItem(DEFAULT_PAGE_NUMBER)))
-            .andExpect(jsonPath("$.[*].blockIndex").value(hasItem(DEFAULT_BLOCK_INDEX)));
+            .andExpect(jsonPath("$.[*].blockIndex").value(hasItem(DEFAULT_BLOCK_INDEX)))
+            .andExpect(jsonPath("$.[*].blockUUID").value(hasItem(DEFAULT_BLOCK_UUID.toString())));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -187,7 +193,8 @@ class TextBlockResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(textBlock.getId().intValue()))
             .andExpect(jsonPath("$.pageNumber").value(DEFAULT_PAGE_NUMBER))
-            .andExpect(jsonPath("$.blockIndex").value(DEFAULT_BLOCK_INDEX));
+            .andExpect(jsonPath("$.blockIndex").value(DEFAULT_BLOCK_INDEX))
+            .andExpect(jsonPath("$.blockUUID").value(DEFAULT_BLOCK_UUID.toString()));
     }
 
     @Test
@@ -418,6 +425,58 @@ class TextBlockResourceIT {
 
     @Test
     @Transactional
+    void getAllTextBlocksByBlockUUIDIsEqualToSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where blockUUID equals to DEFAULT_BLOCK_UUID
+        defaultTextBlockShouldBeFound("blockUUID.equals=" + DEFAULT_BLOCK_UUID);
+
+        // Get all the textBlockList where blockUUID equals to UPDATED_BLOCK_UUID
+        defaultTextBlockShouldNotBeFound("blockUUID.equals=" + UPDATED_BLOCK_UUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByBlockUUIDIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where blockUUID not equals to DEFAULT_BLOCK_UUID
+        defaultTextBlockShouldNotBeFound("blockUUID.notEquals=" + DEFAULT_BLOCK_UUID);
+
+        // Get all the textBlockList where blockUUID not equals to UPDATED_BLOCK_UUID
+        defaultTextBlockShouldBeFound("blockUUID.notEquals=" + UPDATED_BLOCK_UUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByBlockUUIDIsInShouldWork() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where blockUUID in DEFAULT_BLOCK_UUID or UPDATED_BLOCK_UUID
+        defaultTextBlockShouldBeFound("blockUUID.in=" + DEFAULT_BLOCK_UUID + "," + UPDATED_BLOCK_UUID);
+
+        // Get all the textBlockList where blockUUID equals to UPDATED_BLOCK_UUID
+        defaultTextBlockShouldNotBeFound("blockUUID.in=" + UPDATED_BLOCK_UUID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByBlockUUIDIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where blockUUID is not null
+        defaultTextBlockShouldBeFound("blockUUID.specified=true");
+
+        // Get all the textBlockList where blockUUID is null
+        defaultTextBlockShouldNotBeFound("blockUUID.specified=false");
+    }
+
+    @Test
+    @Transactional
     void getAllTextBlocksByMediaIsEqualToSomething() throws Exception {
         // Initialize the database
         textBlockRepository.saveAndFlush(textBlock);
@@ -452,7 +511,8 @@ class TextBlockResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(textBlock.getId().intValue())))
             .andExpect(jsonPath("$.[*].pageNumber").value(hasItem(DEFAULT_PAGE_NUMBER)))
-            .andExpect(jsonPath("$.[*].blockIndex").value(hasItem(DEFAULT_BLOCK_INDEX)));
+            .andExpect(jsonPath("$.[*].blockIndex").value(hasItem(DEFAULT_BLOCK_INDEX)))
+            .andExpect(jsonPath("$.[*].blockUUID").value(hasItem(DEFAULT_BLOCK_UUID.toString())));
 
         // Check, that the count call also returns 1
         restTextBlockMockMvc
@@ -500,7 +560,7 @@ class TextBlockResourceIT {
         TextBlock updatedTextBlock = textBlockRepository.findById(textBlock.getId()).get();
         // Disconnect from session so that the updates on updatedTextBlock are not directly saved in db
         em.detach(updatedTextBlock);
-        updatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX);
+        updatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX).blockUUID(UPDATED_BLOCK_UUID);
         TextBlockDTO textBlockDTO = textBlockMapper.toDto(updatedTextBlock);
 
         restTextBlockMockMvc
@@ -517,6 +577,7 @@ class TextBlockResourceIT {
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(UPDATED_BLOCK_INDEX);
+        assertThat(testTextBlock.getBlockUUID()).isEqualTo(UPDATED_BLOCK_UUID);
     }
 
     @Test
@@ -612,6 +673,7 @@ class TextBlockResourceIT {
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(UPDATED_BLOCK_INDEX);
+        assertThat(testTextBlock.getBlockUUID()).isEqualTo(DEFAULT_BLOCK_UUID);
     }
 
     @Test
@@ -626,7 +688,7 @@ class TextBlockResourceIT {
         TextBlock partialUpdatedTextBlock = new TextBlock();
         partialUpdatedTextBlock.setId(textBlock.getId());
 
-        partialUpdatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX);
+        partialUpdatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX).blockUUID(UPDATED_BLOCK_UUID);
 
         restTextBlockMockMvc
             .perform(
@@ -642,6 +704,7 @@ class TextBlockResourceIT {
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(UPDATED_BLOCK_INDEX);
+        assertThat(testTextBlock.getBlockUUID()).isEqualTo(UPDATED_BLOCK_UUID);
     }
 
     @Test
