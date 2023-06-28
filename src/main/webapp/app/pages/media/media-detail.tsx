@@ -13,6 +13,7 @@ import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
 import { getEntities as getPageOcr } from './ocr/ocr_entity_reducer';
 import { getEntities as getPageLayout } from './ocr/ocr_layout_reducer';
+import { getEntities as getPageTextBlocks } from './ocr/text_block_reducer';
 import { MediaPane } from './ocr/media_pane';
 import { editorToolbarExtensions } from './config';
 import { ToolGroup } from '../../shared/ui/toolbar/controls';
@@ -30,6 +31,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
   const layoutTransfer = useAppSelector(state => state.ocrLayoutTransfer.entities);
+  const pageTextBlocksTransfer = useAppSelector(state => state.textBlockTransfer.entities);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [selectionState, setSelectionState] = useState(SelectionState.createEmpty());
 
@@ -46,6 +48,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
       dispatch(getImageEntity({ id: mediaEntity.id, pageNumber: currentPage }));
       dispatch(getPageOcr({ id: mediaEntity.id, pageNumber: currentPage }));
       dispatch(getPageLayout({ id: mediaEntity.id, pageNumber: currentPage }));
+      dispatch(getPageTextBlocks({ id: mediaEntity.id, pageNumber: currentPage }));
     }
   }, [currentPage, mediaEntity]);
 
@@ -109,6 +112,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const onEditorStateChange = newEditorState => {
     const selection = newEditorState.getSelection();
     const content = newEditorState.getCurrentContent();
+    setCurrentContent(content);
 
     if (selectionState !== selection) {
       const focusKey = selection.getFocusKey();
