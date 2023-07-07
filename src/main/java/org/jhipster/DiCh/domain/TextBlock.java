@@ -1,6 +1,5 @@
 package org.jhipster.dich.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.*;
@@ -20,6 +19,9 @@ public class TextBlock implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "media_id")
+    private Long mediaId;
+
     @Column(name = "page_number")
     private Integer pageNumber;
 
@@ -28,10 +30,6 @@ public class TextBlock implements Serializable {
 
     @Column(name = "block_uuid")
     private UUID blockUUID;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "collections", "books" }, allowSetters = true)
-    private Media media;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -46,6 +44,19 @@ public class TextBlock implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getMediaId() {
+        return this.mediaId;
+    }
+
+    public TextBlock mediaId(Long mediaId) {
+        this.setMediaId(mediaId);
+        return this;
+    }
+
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
     }
 
     public Integer getPageNumber() {
@@ -87,19 +98,6 @@ public class TextBlock implements Serializable {
         this.blockUUID = blockUUID;
     }
 
-    public Media getMedia() {
-        return this.media;
-    }
-
-    public void setMedia(Media media) {
-        this.media = media;
-    }
-
-    public TextBlock media(Media media) {
-        this.setMedia(media);
-        return this;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -124,6 +122,7 @@ public class TextBlock implements Serializable {
     public String toString() {
         return "TextBlock{" +
             "id=" + getId() +
+            ", mediaId=" + getMediaId() +
             ", pageNumber=" + getPageNumber() +
             ", blockIndex=" + getBlockIndex() +
             ", blockUUID='" + getBlockUUID() + "'" +

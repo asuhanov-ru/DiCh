@@ -1,2 +1,1 @@
-id;s_word;n_top;n_left;n_heigth;n_width;n_idx;media_id;page_number;version;block_id;line_id;paragraph_id;ocr_lang;text_line_uuid;text_block_uuid
-
+id;s_word;n_top;n_left;n_heigth;n_width;n_idx;media_id;page_number;version;ocr_lang;text_line_uuid;text_block_uuid

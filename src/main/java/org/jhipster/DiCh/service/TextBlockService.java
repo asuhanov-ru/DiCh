@@ -89,15 +89,6 @@ public class TextBlockService {
     }
 
     /**
-     * Get all the textBlocks with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<TextBlockDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return textBlockRepository.findAllWithEagerRelationships(pageable).map(textBlockMapper::toDto);
-    }
-
-    /**
      * Get one textBlock by id.
      *
      * @param id the id of the entity.
@@ -106,7 +97,7 @@ public class TextBlockService {
     @Transactional(readOnly = true)
     public Optional<TextBlockDTO> findOne(Long id) {
         log.debug("Request to get TextBlock : {}", id);
-        return textBlockRepository.findOneWithEagerRelationships(id).map(textBlockMapper::toDto);
+        return textBlockRepository.findById(id).map(textBlockMapper::toDto);
     }
 
     /**

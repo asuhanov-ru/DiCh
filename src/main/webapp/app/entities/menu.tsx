@@ -46,6 +46,9 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/inline-style-ranges">
         <Translate contentKey="global.menu.entities.inlineStyleRanges" />
       </MenuItem>
+      <MenuItem icon="asterisk" to="/book-mark">
+        <Translate contentKey="global.menu.entities.bookMark" />
+      </MenuItem>
       {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
     </>
   );

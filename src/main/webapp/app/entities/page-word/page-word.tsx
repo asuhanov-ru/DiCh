@@ -151,15 +151,6 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('version')}>
                     <Translate contentKey="diChApp.pageWord.version">Version</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('blockId')}>
-                    <Translate contentKey="diChApp.pageWord.blockId">Block Id</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
-                  <th className="hand" onClick={sort('lineId')}>
-                    <Translate contentKey="diChApp.pageWord.lineId">Line Id</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
-                  <th className="hand" onClick={sort('paragraphId')}>
-                    <Translate contentKey="diChApp.pageWord.paragraphId">Paragraph Id</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
                   <th className="hand" onClick={sort('ocrLang')}>
                     <Translate contentKey="diChApp.pageWord.ocrLang">Ocr Lang</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -189,9 +180,6 @@ export const PageWord = (props: RouteComponentProps<{ url: string }>) => {
                     <td>{pageWord.mediaId}</td>
                     <td>{pageWord.pageNumber}</td>
                     <td>{pageWord.version ? <TextFormat type="date" value={pageWord.version} format={APP_DATE_FORMAT} /> : null}</td>
-                    <td>{pageWord.blockId}</td>
-                    <td>{pageWord.lineId}</td>
-                    <td>{pageWord.paragraphId}</td>
                     <td>{pageWord.ocrLang}</td>
                     <td>{pageWord.textLineUUID}</td>
                     <td>{pageWord.textBlockUUID}</td>

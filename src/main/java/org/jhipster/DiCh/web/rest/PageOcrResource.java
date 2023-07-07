@@ -88,12 +88,14 @@ public class PageOcrResource {
     }
 
     @GetMapping("/v2/page-text-block")
-    public ResponseEntity<Map<UUID, TextBlockDTO>> getPageTextBlocksList(TextBlockCriteria criteria) {
-        Optional<Map<UUID, TextBlockDTO>> textBlocks = Optional.ofNullable(
+    public ResponseEntity<List<TextBlockDTO>> getPageTextBlocksList(TextBlockCriteria criteria) {
+        // TO-DO replace it with ordered query
+        Optional<List<TextBlockDTO>> textBlocks = Optional.ofNullable(
             textBlockQueryService
                 .findByCriteria(criteria)
                 .stream()
-                .collect(Collectors.toMap(TextBlockDTO::getBlockUUID, Function.identity()))
+                .sorted(Comparator.comparing(TextBlockDTO::getBlockIndex))
+                .collect(Collectors.toList())
         );
         return ResponseUtil.wrapOrNotFound(textBlocks);
     }

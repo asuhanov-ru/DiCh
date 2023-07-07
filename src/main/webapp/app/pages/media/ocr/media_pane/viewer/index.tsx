@@ -34,7 +34,9 @@ export interface IReactPanZoomProps {
   style?: any;
   children?: React.ReactNode;
   setPointerPosition: (x: number, y: number) => void;
+  setClickPosition: (x: number, y: number) => void;
   highlights?: object[];
+  selectedTool?: string[];
 }
 export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   // In strict null checking setting default props doesn't seem to work. Hence the non-null assertion.
@@ -110,25 +112,16 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
       return;
     }
 
-    if (this.props.onClick) {
-      this.props.onClick(e);
+    const { setClickPosition } = this.props;
+
+    if (this.panContainer) {
+      const { x, y } = this.panContainer.getBoundingClientRect();
+      const { matrixData } = this.state;
+      const scaleX = matrixData[0] || 1;
+      const scaleY = matrixData[0] || 1;
+
+      setClickPosition(Math.round((e.clientX - x) / scaleX), Math.round((e.clientY - y) / scaleY));
     }
-  };
-
-  // tslint:disable-next-line: member-ordering
-  public onTouchStart = (e: React.TouchEvent<EventTarget>) => {
-    const { pageX, pageY } = e.touches[0];
-    this.panStart(pageX, pageY, e);
-  };
-
-  // tslint:disable-next-line: member-ordering
-  public onTouchEnd = () => {
-    this.onMouseUp();
-  };
-
-  // tslint:disable-next-line: member-ordering
-  public onTouchMove = (e: React.TouchEvent<EventTarget>) => {
-    this.updateMousePosition(e.touches[0].pageX, e.touches[0].pageY);
   };
 
   getHighlightStyle(highlight) {
@@ -179,9 +172,6 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
         className={`pan-container ${this.props.className || ''}`}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}
-        onTouchStart={this.onTouchStart}
-        onTouchMove={this.onTouchMove}
-        onTouchEnd={this.onTouchEnd}
         onMouseMove={this.onMouseMove}
         onWheel={this.onWheel}
         onMouseEnter={this.onMouseEnter}
@@ -214,7 +204,13 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   }
 
   private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
-    this.panStart(e.pageX, e.pageY, e);
+    const { selectedTool } = this.props;
+
+    if (!selectedTool) return;
+    if (selectedTool.includes('panZoom')) {
+      this.panStart(e.pageX, e.pageY, e);
+      return;
+    }
   };
 
   private panStart = (pageX: number, pageY: number, event: React.MouseEvent<EventTarget> | React.TouchEvent<EventTarget>) => {
@@ -290,13 +286,6 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   };
 
   private updateMousePosition = (pageX: number, pageY: number) => {
-    const { setPointerPosition } = this.props;
-
-    if (this.panContainer) {
-      const { x, y, width, height } = this.panContainer.getBoundingClientRect();
-      setPointerPosition(pageX - x, pageY - y);
-    }
-
     if (!this.state.mouseDown) return;
 
     const matrixData = this.getNewMatrixData(pageX, pageY);

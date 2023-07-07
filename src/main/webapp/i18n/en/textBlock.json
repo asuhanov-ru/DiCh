@@ -18,10 +18,10 @@
         "title": "Text Block"
       },
       "id": "ID",
+      "mediaId": "Media Id",
       "pageNumber": "Page Number",
       "blockIndex": "Block Index",
-      "blockUUID": "Block UUID",
-      "media": "Media"
+      "blockUUID": "Block UUID"
     }
   }
 }

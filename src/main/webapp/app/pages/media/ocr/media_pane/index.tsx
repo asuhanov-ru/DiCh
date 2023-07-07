@@ -12,18 +12,20 @@ type ReactPanZoomProps = {
   currentPage: number;
   totalPages: number;
   setPage: (number) => void;
-  polyTreeJSON: any;
+  polyTreeJSON?: any;
+  onClick: ({ x, y }) => void;
 };
 
-export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage }: ReactPanZoomProps) => {
+export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage, onClick }: ReactPanZoomProps) => {
   const [dx, setDx] = React.useState(0);
   const [dy, setDy] = React.useState(0);
   const [zoom, setZoom] = React.useState(1);
-  const [rotation, setRotation] = React.useState(0);
+
   const [flip, setFlip] = React.useState(false);
   const [mouseX, setMouseX] = React.useState(0);
   const [mouseY, setMouseY] = React.useState(0);
-  const [selectedOptions, setSelectedOptions] = React.useState(['selectionToolOnOff']);
+  const [selectedOptions, setSelectedOptions] = React.useState(['selection']);
+  const [clickPosition, setClickPosition] = React.useState({ x: 0, y: 0 });
 
   const [toolbar, setToolbar] = React.useState(defaultToolbar);
 
@@ -33,10 +35,10 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
       total: totalPages,
     },
     panZoom: {
-      panZoomOnOff: selectedOptions.includes('panZoomOnOff'),
+      panZoomOnOff: selectedOptions.includes('panZoom'),
     },
     layoutSelection: {
-      selectionToolOnOff: selectedOptions.includes('selectionToolOnOff'),
+      selectionToolOnOff: selectedOptions.includes('selection'),
     },
   };
 
@@ -44,9 +46,9 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
     setDx(0);
     setDy(0);
     setZoom(1);
-    setRotation(0);
     setFlip(false);
   };
+
   const zoomIn = () => {
     setZoom(zoom + 0.2);
   };
@@ -55,18 +57,6 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
     if (zoom >= 1) {
       setZoom(zoom - 0.2);
     }
-  };
-
-  const rotateLeft = () => {
-    if (rotation === -3) {
-      setRotation(0);
-    } else {
-      setRotation(rotation - 1);
-    }
-  };
-
-  const flipImage = () => {
-    setFlip(!flip);
   };
 
   const onPan = (paramDx: number, paramDy: number) => {
@@ -100,22 +90,31 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
         zoomOut();
         break;
       case 'selectionToolOnOff':
-        if (selectedOptions.includes('selectionToolOnOff')) {
-          setSelectedOptions(selectedOptions.filter(el => el !== 'selectionToolOnOff'));
+        if (selectedOptions.includes('selection')) {
+          setSelectedOptions(selectedOptions.filter(el => el !== 'selection'));
         } else {
-          setSelectedOptions(['selectionToolOnOff']);
+          setSelectedOptions(['selection']);
         }
         break;
       case 'panZoomOnOff':
-        if (selectedOptions.includes('panZoomOnOff')) {
-          setSelectedOptions(selectedOptions.filter(el => el !== 'panZoomOnOff'));
+        if (selectedOptions.includes('panZoom')) {
+          setSelectedOptions(selectedOptions.filter(el => el !== 'panZoom'));
         } else {
-          setSelectedOptions(['panZoomOnOff']);
+          setSelectedOptions(['panZoom']);
         }
         break;
       default:
         break;
     }
+  };
+
+  const onMediaPaneClick = (e: React.MouseEvent<any>) => {
+    setClickPosition({ x: e.pageX, y: e.pageY });
+  };
+
+  const handleSetClickPosition = (x, y) => {
+    setClickPosition({ x, y });
+    if (onClick) onClick({ x, y });
   };
 
   return (
@@ -139,6 +138,7 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
       >
         <PanViewer
           setPointerPosition={setPointerPosition}
+          setClickPosition={handleSetClickPosition}
           style={{
             width: '100%',
             height: '100%',
@@ -152,9 +152,9 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
           pandx={dx}
           pandy={dy}
           onPan={onPan}
-          rotation={rotation}
           key={dx}
           highlights={highlights}
+          selectedTool={selectedOptions}
         >
           <img src={image} alt={alt} ref={ref} />
         </PanViewer>

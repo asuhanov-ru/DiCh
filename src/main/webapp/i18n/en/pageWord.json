@@ -27,9 +27,6 @@
       "mediaId": "Media Id",
       "pageNumber": "Page Number",
       "version": "Version",
-      "blockId": "Block Id",
-      "lineId": "Line Id",
-      "paragraphId": "Paragraph Id",
       "ocrLang": "Ocr Lang",
       "textLineUUID": "Text Line UUID",
       "textBlockUUID": "Text Block UUID"

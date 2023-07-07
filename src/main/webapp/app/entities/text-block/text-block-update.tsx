@@ -8,8 +8,6 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { IMedia } from 'app/shared/model/media.model';
-import { getEntities as getMedia } from 'app/entities/media/media.reducer';
 import { ITextBlock } from 'app/shared/model/text-block.model';
 import { getEntity, updateEntity, createEntity, reset } from './text-block.reducer';
 
@@ -18,7 +16,6 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const media = useAppSelector(state => state.media.entities);
   const textBlockEntity = useAppSelector(state => state.textBlock.entity);
   const loading = useAppSelector(state => state.textBlock.loading);
   const updating = useAppSelector(state => state.textBlock.updating);
@@ -31,8 +28,6 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
     if (!isNew) {
       dispatch(getEntity(props.match.params.id));
     }
-
-    dispatch(getMedia({}));
   }, []);
 
   useEffect(() => {
@@ -45,7 +40,6 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
     const entity = {
       ...textBlockEntity,
       ...values,
-      media: media.find(it => it.id.toString() === values.media.toString()),
     };
 
     if (isNew) {
@@ -60,7 +54,6 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
       ? {}
       : {
           ...textBlockEntity,
-          media: textBlockEntity?.media?.id,
         };
 
   return (
@@ -89,6 +82,13 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 />
               ) : null}
               <ValidatedField
+                label={translate('diChApp.textBlock.mediaId')}
+                id="text-block-mediaId"
+                name="mediaId"
+                data-cy="mediaId"
+                type="text"
+              />
+              <ValidatedField
                 label={translate('diChApp.textBlock.pageNumber')}
                 id="text-block-pageNumber"
                 name="pageNumber"
@@ -109,16 +109,6 @@ export const TextBlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="blockUUID"
                 type="text"
               />
-              <ValidatedField id="text-block-media" name="media" data-cy="media" label={translate('diChApp.textBlock.media')} type="select">
-                <option value="" key="0" />
-                {media
-                  ? media.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.fileName}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/text-block" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

@@ -1,6 +1,5 @@
 package org.jhipster.dich.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -26,7 +25,6 @@ public class InlineStyleRanges implements Serializable {
     private Integer stopPos;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "media" }, allowSetters = true)
     private TextBlock textBlock;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

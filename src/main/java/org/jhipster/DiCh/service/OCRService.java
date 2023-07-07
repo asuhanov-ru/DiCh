@@ -169,6 +169,7 @@ public class OCRService {
                 pageLayoutDTO.setPageNumber(ocrTask.getPageNumber());
                 pageLayoutDTO.setIterator_level("RIL_PARA");
                 pageLayoutDTO.setItemGUID(currentParaUUID);
+                pageLayoutDTO.setParentGUID(currentBlockUUID);
 
                 api.TessPageIteratorBoundingBox(pi, TessPageIteratorLevel.RIL_PARA, leftB, topB, rightB, bottomB);
                 int left = leftB.get(0);
@@ -180,7 +181,6 @@ public class OCRService {
                 pageLayoutDTO.setRect_bottom(BigDecimal.valueOf(bottom));
                 pageLayoutDTO.setRect_left(BigDecimal.valueOf(left));
                 pageLayoutDTO.setRect_right(BigDecimal.valueOf(right));
-                pageLayoutDTO.setParentGUID(currentBlockUUID);
 
                 pageLayouts.add(pageLayoutDTO);
             }
@@ -211,9 +211,10 @@ public class OCRService {
                 pageLayoutDTO.setRect_right(BigDecimal.valueOf(right));
                 pageLayouts.add(pageLayoutDTO);
 
-                textBlock.setMedia(media.get());
+                textBlock.setMediaId(ocrTask.getMediaId());
                 textBlock.setPageNumber(ocrTask.getPageNumber());
                 textBlock.setBlockUUID(currentTextBlockUUID);
+                textBlock.setBlockIndex(textBlocks.size());
                 textBlocks.add(textBlock);
             }
 

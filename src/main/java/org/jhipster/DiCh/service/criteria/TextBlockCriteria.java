@@ -29,13 +29,13 @@ public class TextBlockCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
+    private LongFilter mediaId;
+
     private IntegerFilter pageNumber;
 
     private IntegerFilter blockIndex;
 
     private UUIDFilter blockUUID;
-
-    private LongFilter mediaId;
 
     private Boolean distinct;
 
@@ -43,10 +43,10 @@ public class TextBlockCriteria implements Serializable, Criteria {
 
     public TextBlockCriteria(TextBlockCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
+        this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
         this.pageNumber = other.pageNumber == null ? null : other.pageNumber.copy();
         this.blockIndex = other.blockIndex == null ? null : other.blockIndex.copy();
         this.blockUUID = other.blockUUID == null ? null : other.blockUUID.copy();
-        this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
         this.distinct = other.distinct;
     }
 
@@ -68,6 +68,21 @@ public class TextBlockCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
+    }
+
+    public LongFilter getMediaId() {
+        return mediaId;
+    }
+
+    public LongFilter mediaId() {
+        if (mediaId == null) {
+            mediaId = new LongFilter();
+        }
+        return mediaId;
+    }
+
+    public void setMediaId(LongFilter mediaId) {
+        this.mediaId = mediaId;
     }
 
     public IntegerFilter getPageNumber() {
@@ -115,21 +130,6 @@ public class TextBlockCriteria implements Serializable, Criteria {
         this.blockUUID = blockUUID;
     }
 
-    public LongFilter getMediaId() {
-        return mediaId;
-    }
-
-    public LongFilter mediaId() {
-        if (mediaId == null) {
-            mediaId = new LongFilter();
-        }
-        return mediaId;
-    }
-
-    public void setMediaId(LongFilter mediaId) {
-        this.mediaId = mediaId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -149,17 +149,17 @@ public class TextBlockCriteria implements Serializable, Criteria {
         final TextBlockCriteria that = (TextBlockCriteria) o;
         return (
             Objects.equals(id, that.id) &&
+            Objects.equals(mediaId, that.mediaId) &&
             Objects.equals(pageNumber, that.pageNumber) &&
             Objects.equals(blockIndex, that.blockIndex) &&
             Objects.equals(blockUUID, that.blockUUID) &&
-            Objects.equals(mediaId, that.mediaId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pageNumber, blockIndex, blockUUID, mediaId, distinct);
+        return Objects.hash(id, mediaId, pageNumber, blockIndex, blockUUID, distinct);
     }
 
     // prettier-ignore
@@ -167,10 +167,10 @@ public class TextBlockCriteria implements Serializable, Criteria {
     public String toString() {
         return "TextBlockCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
+            (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
             (pageNumber != null ? "pageNumber=" + pageNumber + ", " : "") +
             (blockIndex != null ? "blockIndex=" + blockIndex + ", " : "") +
             (blockUUID != null ? "blockUUID=" + blockUUID + ", " : "") +
-            (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

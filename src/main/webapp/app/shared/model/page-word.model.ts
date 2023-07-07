@@ -11,9 +11,6 @@ export interface IPageWord {
   mediaId?: number | null;
   pageNumber?: number | null;
   version?: string | null;
-  blockId?: number | null;
-  lineId?: number | null;
-  paragraphId?: number | null;
   ocrLang?: string | null;
   textLineUUID?: string | null;
   textBlockUUID?: string | null;

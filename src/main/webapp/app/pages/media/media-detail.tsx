@@ -24,20 +24,22 @@ type Props = {
 
 export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
+  // TO-DO Add spiner while data is fetching
   const isFetching = useAppSelector(state => state.media.loading || state.pageImageTransfer.loading);
   const mediaEntity = useAppSelector(state => state.media.entity);
   const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
   const layoutTransfer = useAppSelector(state => state.ocrLayoutTransfer.entities);
-  const pageTextBlocksTransfer = useAppSelector(state => state.textBlockTransfer.entities);
+  const pageTextBlocks = useAppSelector(state => state.textBlockTransfer.entities);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [selectionState, setSelectionState] = useState(SelectionState.createEmpty());
-
   const [highlighted, setHighlighted] = useState([]);
-  const [currentContent, setCurrentContent] = useState(editorState.getCurrentContent());
-  const [currentBlock, setCurrentBlock] = useState({});
+
+  const [selectedPolys, setSelectedPolys] = useState([]);
+
+  const [isContentChanged, setIsContentChanged] = useState(false);
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -53,46 +55,27 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   }, [currentPage, mediaEntity]);
 
   useEffect(() => {
-    if (ocrEntities && ocrEntities?.length) {
+    if (ocrEntities && ocrEntities.length > 0 && pageTextBlocks && pageTextBlocks.length > 0) {
       const content = {
         entityMap: {},
         blocks: [],
       };
-      let i = 0;
-      let keys = [];
-      let text = [];
-      let textLineUUID = ocrEntities[0].textLineUUID;
 
-      for (i = 0; i < ocrEntities.length; i++) {
-        if (textLineUUID !== ocrEntities[i].textLineUUID) {
-          textLineUUID = ocrEntities[i].textLineUUID;
-          const block = {
-            key: keys.join(','),
-            text: text.join(' '),
-            depth: 0,
-            inlineStyleRanges: [],
-            type: 'unstyled',
-            entityRanges: [],
-            data: {},
-          };
-          content.blocks.push(block);
-          keys = [];
-          text = [];
-        }
-        keys.push(i);
-        text.push(`${ocrEntities[i].s_word}`);
-      }
-      if (keys.length > 0) {
-        const block = {
-          key: keys.join(','),
-          text: text.join(' '),
+      for (let i = 0; i < pageTextBlocks.length; i++) {
+        const { blockUUID } = pageTextBlocks[i];
+        content.blocks.push({
+          key: blockUUID,
+          text: ocrEntities
+            .filter(({ textBlockUUID }) => textBlockUUID === blockUUID)
+            .map(({ s_word }) => s_word)
+            .join(' '),
+          // TO-DO add persisted styles
           depth: 0,
           inlineStyleRanges: [],
           type: 'unstyled',
           entityRanges: [],
           data: {},
-        };
-        content.blocks.push(block);
+        });
       }
       setEditorState(EditorState.createWithContent(convertFromRaw(content)));
     } else {
@@ -101,7 +84,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 
     setHighlighted([]);
     setSelectionState(SelectionState.createEmpty());
-  }, [ocrEntities]);
+  }, [ocrEntities, pageTextBlocks]);
 
   const handleSetPage = page => {
     if (page > 0 && page < mediaEntity?.lastPageNumber) {
@@ -111,19 +94,19 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 
   const onEditorStateChange = newEditorState => {
     const selection = newEditorState.getSelection();
-    const content = newEditorState.getCurrentContent();
-    setCurrentContent(content);
 
     if (selectionState !== selection) {
       const focusKey = selection.getFocusKey();
       const anchorKey = selection.getAnchorKey();
       const focusOffset = selection.getFocusOffset();
       const anchorOffset = selection.getAnchorOffset();
-      const block = content.getBlockForKey(focusKey);
 
       if (focusKey === anchorKey && focusOffset === anchorOffset) {
-        const wordIndexes = focusKey.split(',').map(el => Number(el));
-        const words = ocrEntities.filter((_, idx) => wordIndexes.includes(idx)).map(el => ({ ...el, wordLenght: el?.s_word?.length }));
+        const block = newEditorState.getCurrentContent().getBlockForKey(focusKey);
+        const words = ocrEntities
+          .filter(({ textBlockUUID }) => focusKey === textBlockUUID)
+          .map(el => ({ ...el, wordLenght: el?.s_word?.length }));
+
         let selectedWordIndex = 0;
         let wordEndPosition = 0;
         for (let i = 0; i < words.length; i++) {
@@ -136,10 +119,8 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
         const selectedWord = words[selectedWordIndex];
         const selectedWordParent = layoutTransfer.find(el => el.itemGUID === selectedWord?.textLineUUID);
         setHighlighted([{ ...selectedWord, selectedWordParent }]);
-        setCurrentBlock(block);
       } else {
         setHighlighted([]);
-        setCurrentBlock({});
       }
     }
     setSelectionState(selection);
@@ -157,9 +138,21 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     return null;
   }, [ocrEntities]);
 
-  const polyTreeJSON = undefined;
-
   const handleSetState = (state: any) => {};
+
+  const handleMediaPaneClick = ({ x, y }) => {
+    if (polyTree) {
+      const selectedItems = polyTree.search({
+        minX: x,
+        minY: y,
+        maxX: x,
+        maxY: y,
+      });
+      setSelectedPolys(selectedItems);
+      return;
+    }
+    setSelectedPolys([]);
+  };
 
   return (
     <>
@@ -177,7 +170,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
             currentPage={currentPage}
             totalPages={mediaEntity?.lastPageNumber}
             setPage={handleSetPage}
-            polyTreeJSON={polyTreeJSON}
+            onClick={handleMediaPaneClick}
           />
         </Col>
         <Col>

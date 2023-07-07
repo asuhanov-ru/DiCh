@@ -41,15 +41,6 @@
             <column name="version" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="block_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            <column name="line_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            <column name="paragraph_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
             <column name="ocr_lang" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -90,9 +81,6 @@
             <column name="media_id" type="numeric"/>
             <column name="page_number" type="numeric"/>
             <column name="version" type="date"/>
-            <column name="block_id" type="numeric"/>
-            <column name="line_id" type="numeric"/>
-            <column name="paragraph_id" type="numeric"/>
             <column name="ocr_lang" type="string"/>
             <column name="text_line_uuid" type="${uuidType}"/>
             <column name="text_block_uuid" type="${uuidType}"/>

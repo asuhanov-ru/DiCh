@@ -139,27 +139,6 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 placeholder="YYYY-MM-DD HH:mm"
               />
               <ValidatedField
-                label={translate('diChApp.pageWord.blockId')}
-                id="page-word-blockId"
-                name="blockId"
-                data-cy="blockId"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('diChApp.pageWord.lineId')}
-                id="page-word-lineId"
-                name="lineId"
-                data-cy="lineId"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('diChApp.pageWord.paragraphId')}
-                id="page-word-paragraphId"
-                name="paragraphId"
-                data-cy="paragraphId"
-                type="text"
-              />
-              <ValidatedField
                 label={translate('diChApp.pageWord.ocrLang')}
                 id="page-word-ocrLang"
                 name="ocrLang"

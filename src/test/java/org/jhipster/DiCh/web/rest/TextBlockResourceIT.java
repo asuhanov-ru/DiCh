@@ -2,33 +2,24 @@ package org.jhipster.dich.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.jhipster.dich.IntegrationTest;
-import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.domain.TextBlock;
 import org.jhipster.dich.repository.TextBlockRepository;
-import org.jhipster.dich.service.TextBlockService;
 import org.jhipster.dich.service.criteria.TextBlockCriteria;
 import org.jhipster.dich.service.dto.TextBlockDTO;
 import org.jhipster.dich.service.mapper.TextBlockMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,10 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link TextBlockResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class TextBlockResourceIT {
+
+    private static final Long DEFAULT_MEDIA_ID = 1L;
+    private static final Long UPDATED_MEDIA_ID = 2L;
+    private static final Long SMALLER_MEDIA_ID = 1L - 1L;
 
     private static final Integer DEFAULT_PAGE_NUMBER = 1;
     private static final Integer UPDATED_PAGE_NUMBER = 2;
@@ -63,14 +57,8 @@ class TextBlockResourceIT {
     @Autowired
     private TextBlockRepository textBlockRepository;
 
-    @Mock
-    private TextBlockRepository textBlockRepositoryMock;
-
     @Autowired
     private TextBlockMapper textBlockMapper;
-
-    @Mock
-    private TextBlockService textBlockServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -87,7 +75,11 @@ class TextBlockResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TextBlock createEntity(EntityManager em) {
-        TextBlock textBlock = new TextBlock().pageNumber(DEFAULT_PAGE_NUMBER).blockIndex(DEFAULT_BLOCK_INDEX).blockUUID(DEFAULT_BLOCK_UUID);
+        TextBlock textBlock = new TextBlock()
+            .mediaId(DEFAULT_MEDIA_ID)
+            .pageNumber(DEFAULT_PAGE_NUMBER)
+            .blockIndex(DEFAULT_BLOCK_INDEX)
+            .blockUUID(DEFAULT_BLOCK_UUID);
         return textBlock;
     }
 
@@ -98,7 +90,11 @@ class TextBlockResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TextBlock createUpdatedEntity(EntityManager em) {
-        TextBlock textBlock = new TextBlock().pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX).blockUUID(UPDATED_BLOCK_UUID);
+        TextBlock textBlock = new TextBlock()
+            .mediaId(UPDATED_MEDIA_ID)
+            .pageNumber(UPDATED_PAGE_NUMBER)
+            .blockIndex(UPDATED_BLOCK_INDEX)
+            .blockUUID(UPDATED_BLOCK_UUID);
         return textBlock;
     }
 
@@ -121,6 +117,7 @@ class TextBlockResourceIT {
         List<TextBlock> textBlockList = textBlockRepository.findAll();
         assertThat(textBlockList).hasSize(databaseSizeBeforeCreate + 1);
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
+        assertThat(testTextBlock.getMediaId()).isEqualTo(DEFAULT_MEDIA_ID);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(DEFAULT_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(DEFAULT_BLOCK_INDEX);
         assertThat(testTextBlock.getBlockUUID()).isEqualTo(DEFAULT_BLOCK_UUID);
@@ -157,27 +154,10 @@ class TextBlockResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(textBlock.getId().intValue())))
+            .andExpect(jsonPath("$.[*].mediaId").value(hasItem(DEFAULT_MEDIA_ID.intValue())))
             .andExpect(jsonPath("$.[*].pageNumber").value(hasItem(DEFAULT_PAGE_NUMBER)))
             .andExpect(jsonPath("$.[*].blockIndex").value(hasItem(DEFAULT_BLOCK_INDEX)))
             .andExpect(jsonPath("$.[*].blockUUID").value(hasItem(DEFAULT_BLOCK_UUID.toString())));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllTextBlocksWithEagerRelationshipsIsEnabled() throws Exception {
-        when(textBlockServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restTextBlockMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(textBlockServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllTextBlocksWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(textBlockServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restTextBlockMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(textBlockServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -192,6 +172,7 @@ class TextBlockResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(textBlock.getId().intValue()))
+            .andExpect(jsonPath("$.mediaId").value(DEFAULT_MEDIA_ID.intValue()))
             .andExpect(jsonPath("$.pageNumber").value(DEFAULT_PAGE_NUMBER))
             .andExpect(jsonPath("$.blockIndex").value(DEFAULT_BLOCK_INDEX))
             .andExpect(jsonPath("$.blockUUID").value(DEFAULT_BLOCK_UUID.toString()));
@@ -213,6 +194,110 @@ class TextBlockResourceIT {
 
         defaultTextBlockShouldBeFound("id.lessThanOrEqual=" + id);
         defaultTextBlockShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId equals to DEFAULT_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.equals=" + DEFAULT_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId equals to UPDATED_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.equals=" + UPDATED_MEDIA_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId not equals to DEFAULT_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.notEquals=" + DEFAULT_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId not equals to UPDATED_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.notEquals=" + UPDATED_MEDIA_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId in DEFAULT_MEDIA_ID or UPDATED_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.in=" + DEFAULT_MEDIA_ID + "," + UPDATED_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId equals to UPDATED_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.in=" + UPDATED_MEDIA_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId is not null
+        defaultTextBlockShouldBeFound("mediaId.specified=true");
+
+        // Get all the textBlockList where mediaId is null
+        defaultTextBlockShouldNotBeFound("mediaId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId is greater than or equal to DEFAULT_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.greaterThanOrEqual=" + DEFAULT_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId is greater than or equal to UPDATED_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.greaterThanOrEqual=" + UPDATED_MEDIA_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId is less than or equal to DEFAULT_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.lessThanOrEqual=" + DEFAULT_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId is less than or equal to SMALLER_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.lessThanOrEqual=" + SMALLER_MEDIA_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsLessThanSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId is less than DEFAULT_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.lessThan=" + DEFAULT_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId is less than UPDATED_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.lessThan=" + UPDATED_MEDIA_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllTextBlocksByMediaIdIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        textBlockRepository.saveAndFlush(textBlock);
+
+        // Get all the textBlockList where mediaId is greater than DEFAULT_MEDIA_ID
+        defaultTextBlockShouldNotBeFound("mediaId.greaterThan=" + DEFAULT_MEDIA_ID);
+
+        // Get all the textBlockList where mediaId is greater than SMALLER_MEDIA_ID
+        defaultTextBlockShouldBeFound("mediaId.greaterThan=" + SMALLER_MEDIA_ID);
     }
 
     @Test
@@ -475,32 +560,6 @@ class TextBlockResourceIT {
         defaultTextBlockShouldNotBeFound("blockUUID.specified=false");
     }
 
-    @Test
-    @Transactional
-    void getAllTextBlocksByMediaIsEqualToSomething() throws Exception {
-        // Initialize the database
-        textBlockRepository.saveAndFlush(textBlock);
-        Media media;
-        if (TestUtil.findAll(em, Media.class).isEmpty()) {
-            media = MediaResourceIT.createEntity(em);
-            em.persist(media);
-            em.flush();
-        } else {
-            media = TestUtil.findAll(em, Media.class).get(0);
-        }
-        em.persist(media);
-        em.flush();
-        textBlock.setMedia(media);
-        textBlockRepository.saveAndFlush(textBlock);
-        Long mediaId = media.getId();
-
-        // Get all the textBlockList where media equals to mediaId
-        defaultTextBlockShouldBeFound("mediaId.equals=" + mediaId);
-
-        // Get all the textBlockList where media equals to (mediaId + 1)
-        defaultTextBlockShouldNotBeFound("mediaId.equals=" + (mediaId + 1));
-    }
-
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -510,6 +569,7 @@ class TextBlockResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(textBlock.getId().intValue())))
+            .andExpect(jsonPath("$.[*].mediaId").value(hasItem(DEFAULT_MEDIA_ID.intValue())))
             .andExpect(jsonPath("$.[*].pageNumber").value(hasItem(DEFAULT_PAGE_NUMBER)))
             .andExpect(jsonPath("$.[*].blockIndex").value(hasItem(DEFAULT_BLOCK_INDEX)))
             .andExpect(jsonPath("$.[*].blockUUID").value(hasItem(DEFAULT_BLOCK_UUID.toString())));
@@ -560,7 +620,11 @@ class TextBlockResourceIT {
         TextBlock updatedTextBlock = textBlockRepository.findById(textBlock.getId()).get();
         // Disconnect from session so that the updates on updatedTextBlock are not directly saved in db
         em.detach(updatedTextBlock);
-        updatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX).blockUUID(UPDATED_BLOCK_UUID);
+        updatedTextBlock
+            .mediaId(UPDATED_MEDIA_ID)
+            .pageNumber(UPDATED_PAGE_NUMBER)
+            .blockIndex(UPDATED_BLOCK_INDEX)
+            .blockUUID(UPDATED_BLOCK_UUID);
         TextBlockDTO textBlockDTO = textBlockMapper.toDto(updatedTextBlock);
 
         restTextBlockMockMvc
@@ -575,6 +639,7 @@ class TextBlockResourceIT {
         List<TextBlock> textBlockList = textBlockRepository.findAll();
         assertThat(textBlockList).hasSize(databaseSizeBeforeUpdate);
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
+        assertThat(testTextBlock.getMediaId()).isEqualTo(UPDATED_MEDIA_ID);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(UPDATED_BLOCK_INDEX);
         assertThat(testTextBlock.getBlockUUID()).isEqualTo(UPDATED_BLOCK_UUID);
@@ -657,7 +722,7 @@ class TextBlockResourceIT {
         TextBlock partialUpdatedTextBlock = new TextBlock();
         partialUpdatedTextBlock.setId(textBlock.getId());
 
-        partialUpdatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX);
+        partialUpdatedTextBlock.mediaId(UPDATED_MEDIA_ID).pageNumber(UPDATED_PAGE_NUMBER).blockUUID(UPDATED_BLOCK_UUID);
 
         restTextBlockMockMvc
             .perform(
@@ -671,9 +736,10 @@ class TextBlockResourceIT {
         List<TextBlock> textBlockList = textBlockRepository.findAll();
         assertThat(textBlockList).hasSize(databaseSizeBeforeUpdate);
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
+        assertThat(testTextBlock.getMediaId()).isEqualTo(UPDATED_MEDIA_ID);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
-        assertThat(testTextBlock.getBlockIndex()).isEqualTo(UPDATED_BLOCK_INDEX);
-        assertThat(testTextBlock.getBlockUUID()).isEqualTo(DEFAULT_BLOCK_UUID);
+        assertThat(testTextBlock.getBlockIndex()).isEqualTo(DEFAULT_BLOCK_INDEX);
+        assertThat(testTextBlock.getBlockUUID()).isEqualTo(UPDATED_BLOCK_UUID);
     }
 
     @Test
@@ -688,7 +754,11 @@ class TextBlockResourceIT {
         TextBlock partialUpdatedTextBlock = new TextBlock();
         partialUpdatedTextBlock.setId(textBlock.getId());
 
-        partialUpdatedTextBlock.pageNumber(UPDATED_PAGE_NUMBER).blockIndex(UPDATED_BLOCK_INDEX).blockUUID(UPDATED_BLOCK_UUID);
+        partialUpdatedTextBlock
+            .mediaId(UPDATED_MEDIA_ID)
+            .pageNumber(UPDATED_PAGE_NUMBER)
+            .blockIndex(UPDATED_BLOCK_INDEX)
+            .blockUUID(UPDATED_BLOCK_UUID);
 
         restTextBlockMockMvc
             .perform(
@@ -702,6 +772,7 @@ class TextBlockResourceIT {
         List<TextBlock> textBlockList = textBlockRepository.findAll();
         assertThat(textBlockList).hasSize(databaseSizeBeforeUpdate);
         TextBlock testTextBlock = textBlockList.get(textBlockList.size() - 1);
+        assertThat(testTextBlock.getMediaId()).isEqualTo(UPDATED_MEDIA_ID);
         assertThat(testTextBlock.getPageNumber()).isEqualTo(UPDATED_PAGE_NUMBER);
         assertThat(testTextBlock.getBlockIndex()).isEqualTo(UPDATED_BLOCK_INDEX);
         assertThat(testTextBlock.getBlockUUID()).isEqualTo(UPDATED_BLOCK_UUID);

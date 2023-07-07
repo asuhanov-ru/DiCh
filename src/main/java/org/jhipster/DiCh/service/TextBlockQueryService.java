@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class TextBlockQueryService extends QueryService<TextBlock> {
     public List<TextBlockDTO> findByCriteria(TextBlockCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<TextBlock> specification = createSpecification(criteria);
-        return textBlockMapper.toDto(textBlockRepository.findAll(specification));
+        return textBlockMapper.toDto(textBlockRepository.findAll(specification, Sort.by(Sort.Direction.ASC, "blockIndex")));
     }
 
     /**
@@ -90,6 +91,9 @@ public class TextBlockQueryService extends QueryService<TextBlock> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), TextBlock_.id));
             }
+            if (criteria.getMediaId() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getMediaId(), TextBlock_.mediaId));
+            }
             if (criteria.getPageNumber() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPageNumber(), TextBlock_.pageNumber));
             }
@@ -98,12 +102,6 @@ public class TextBlockQueryService extends QueryService<TextBlock> {
             }
             if (criteria.getBlockUUID() != null) {
                 specification = specification.and(buildSpecification(criteria.getBlockUUID(), TextBlock_.blockUUID));
-            }
-            if (criteria.getMediaId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getMediaId(), root -> root.join(TextBlock_.media, JoinType.LEFT).get(Media_.id))
-                    );
             }
         }
         return specification;

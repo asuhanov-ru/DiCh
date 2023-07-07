@@ -11,13 +11,13 @@ public class TextBlockDTO implements Serializable {
 
     private Long id;
 
+    private Long mediaId;
+
     private Integer pageNumber;
 
     private Integer blockIndex;
 
     private UUID blockUUID;
-
-    private MediaDTO media;
 
     public Long getId() {
         return id;
@@ -25,6 +25,14 @@ public class TextBlockDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
     }
 
     public Integer getPageNumber() {
@@ -49,14 +57,6 @@ public class TextBlockDTO implements Serializable {
 
     public void setBlockUUID(UUID blockUUID) {
         this.blockUUID = blockUUID;
-    }
-
-    public MediaDTO getMedia() {
-        return media;
-    }
-
-    public void setMedia(MediaDTO media) {
-        this.media = media;
     }
 
     @Override
@@ -85,10 +85,10 @@ public class TextBlockDTO implements Serializable {
     public String toString() {
         return "TextBlockDTO{" +
             "id=" + getId() +
+            ", mediaId=" + getMediaId() +
             ", pageNumber=" + getPageNumber() +
             ", blockIndex=" + getBlockIndex() +
             ", blockUUID='" + getBlockUUID() + "'" +
-            ", media=" + getMedia() +
             "}";
     }
 }

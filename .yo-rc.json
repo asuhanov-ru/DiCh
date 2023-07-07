@@ -33,14 +33,15 @@
       "Author",
       "Book",
       "TextBlock",
-      "InlineStyleRanges"
+      "InlineStyleRanges",
+      "BookMark"
     ],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.8.1",
     "jwtSecretKey": "MzVlYjNhYzM0N2YyZDIwNWYyNzg3ZTNiNjQ3ODdmNmNjOGI0NGZmMzcwYzRjOGE2NmZjYzEwNTdhODQzMWU2MDIyOWExNmQ4ZjlkOWIxOTc4NWYxZTc0NGEyMzZiZTYyMDQ4Nzc0ZTU1NGM2NDE1NDY2ZjRhMjNmNjMyNmQ0OTM=",
     "languages": ["en", "ru"],
-    "lastLiquibaseTimestamp": 1685370550000,
+    "lastLiquibaseTimestamp": 1688642862000,
     "messageBroker": false,
     "nativeLanguage": "en",
     "otherModules": [],

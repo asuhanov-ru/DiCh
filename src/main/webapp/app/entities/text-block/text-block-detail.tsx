@@ -31,6 +31,12 @@ export const TextBlockDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{textBlockEntity.id}</dd>
           <dt>
+            <span id="mediaId">
+              <Translate contentKey="diChApp.textBlock.mediaId">Media Id</Translate>
+            </span>
+          </dt>
+          <dd>{textBlockEntity.mediaId}</dd>
+          <dt>
             <span id="pageNumber">
               <Translate contentKey="diChApp.textBlock.pageNumber">Page Number</Translate>
             </span>
@@ -48,10 +54,6 @@ export const TextBlockDetail = (props: RouteComponentProps<{ id: string }>) => {
             </span>
           </dt>
           <dd>{textBlockEntity.blockUUID}</dd>
-          <dt>
-            <Translate contentKey="diChApp.textBlock.media">Media</Translate>
-          </dt>
-          <dd>{textBlockEntity.media ? textBlockEntity.media.fileName : ''}</dd>
         </dl>
         <Button tag={Link} to="/text-block" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

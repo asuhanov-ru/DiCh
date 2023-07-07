@@ -16,6 +16,7 @@ import book from 'app/entities/book/book.reducer';
 import textBlock from 'app/entities/text-block/text-block.reducer';
 import inlineStyleRanges from 'app/entities/inline-style-ranges/inline-style-ranges.reducer';
 import textBlockTransfer from 'app/pages/media/ocr/text_block_reducer';
+import bookMark from 'app/entities/book-mark/book-mark.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const entitiesReducers = {
@@ -37,6 +38,7 @@ const entitiesReducers = {
   textBlock,
   inlineStyleRanges,
   textBlockTransfer,
+  bookMark,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
 };
 

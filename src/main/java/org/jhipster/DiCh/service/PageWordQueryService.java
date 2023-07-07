@@ -117,15 +117,6 @@ public class PageWordQueryService extends QueryService<PageWord> {
             if (criteria.getVersion() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getVersion(), PageWord_.version));
             }
-            if (criteria.getBlockId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBlockId(), PageWord_.blockId));
-            }
-            if (criteria.getLineId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLineId(), PageWord_.lineId));
-            }
-            if (criteria.getParagraphId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getParagraphId(), PageWord_.paragraphId));
-            }
             if (criteria.getOcrLang() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getOcrLang(), PageWord_.ocrLang));
             }

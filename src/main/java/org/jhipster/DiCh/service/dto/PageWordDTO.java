@@ -30,12 +30,6 @@ public class PageWordDTO implements Serializable {
 
     private ZonedDateTime version;
 
-    private Long blockId;
-
-    private Long lineId;
-
-    private Long paragraphId;
-
     private String ocrLang;
 
     private UUID textLineUUID;
@@ -122,30 +116,6 @@ public class PageWordDTO implements Serializable {
         this.version = version;
     }
 
-    public Long getBlockId() {
-        return blockId;
-    }
-
-    public void setBlockId(Long blockId) {
-        this.blockId = blockId;
-    }
-
-    public Long getLineId() {
-        return lineId;
-    }
-
-    public void setLineId(Long lineId) {
-        this.lineId = lineId;
-    }
-
-    public Long getParagraphId() {
-        return paragraphId;
-    }
-
-    public void setParagraphId(Long paragraphId) {
-        this.paragraphId = paragraphId;
-    }
-
     public String getOcrLang() {
         return ocrLang;
     }
@@ -205,9 +175,6 @@ public class PageWordDTO implements Serializable {
             ", mediaId=" + getMediaId() +
             ", pageNumber=" + getPageNumber() +
             ", version='" + getVersion() + "'" +
-            ", blockId=" + getBlockId() +
-            ", lineId=" + getLineId() +
-            ", paragraphId=" + getParagraphId() +
             ", ocrLang='" + getOcrLang() + "'" +
             ", textLineUUID='" + getTextLineUUID() + "'" +
             ", textBlockUUID='" + getTextBlockUUID() + "'" +

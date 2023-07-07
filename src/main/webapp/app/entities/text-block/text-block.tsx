@@ -124,6 +124,9 @@ export const TextBlock = (props: RouteComponentProps<{ url: string }>) => {
                   <th className="hand" onClick={sort('id')}>
                     <Translate contentKey="diChApp.textBlock.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('mediaId')}>
+                    <Translate contentKey="diChApp.textBlock.mediaId">Media Id</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th className="hand" onClick={sort('pageNumber')}>
                     <Translate contentKey="diChApp.textBlock.pageNumber">Page Number</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -132,9 +135,6 @@ export const TextBlock = (props: RouteComponentProps<{ url: string }>) => {
                   </th>
                   <th className="hand" onClick={sort('blockUUID')}>
                     <Translate contentKey="diChApp.textBlock.blockUUID">Block UUID</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
-                  <th>
-                    <Translate contentKey="diChApp.textBlock.media">Media</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th />
                 </tr>
@@ -147,10 +147,10 @@ export const TextBlock = (props: RouteComponentProps<{ url: string }>) => {
                         {textBlock.id}
                       </Button>
                     </td>
+                    <td>{textBlock.mediaId}</td>
                     <td>{textBlock.pageNumber}</td>
                     <td>{textBlock.blockIndex}</td>
                     <td>{textBlock.blockUUID}</td>
-                    <td>{textBlock.media ? <Link to={`/media/${textBlock.media.id}`}>{textBlock.media.fileName}</Link> : ''}</td>
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/text-block/${textBlock.id}`} color="info" size="sm" data-cy="entityDetailsButton">

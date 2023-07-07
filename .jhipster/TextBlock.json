@@ -3,6 +3,10 @@
   "dto": "mapstruct",
   "fields": [
     {
+      "fieldName": "mediaId",
+      "fieldType": "Long"
+    },
+    {
       "fieldName": "pageNumber",
       "fieldType": "Integer"
     },
@@ -19,13 +23,6 @@
   "name": "TextBlock",
   "pagination": "infinite-scroll",
   "readOnly": false,
-  "relationships": [
-    {
-      "otherEntityField": "fileName",
-      "otherEntityName": "media",
-      "relationshipName": "media",
-      "relationshipType": "many-to-one"
-    }
-  ],
+  "relationships": [],
   "service": "serviceClass"
 }

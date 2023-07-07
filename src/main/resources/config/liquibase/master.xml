@@ -28,6 +28,7 @@
     <include file="config/liquibase/changelog/20230524133844_added_entity_Book.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20230529123113_added_entity_TextBlock.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20230529142910_added_entity_InlineStyleRanges.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20230706112742_added_entity_BookMark.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20200728093617_added_entity_constraints_Media.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200728095713_added_entity_constraints_MediaStructure.xml" relativeToChangelogFile="false"/>
