@@ -37,6 +37,12 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 import { faLocationArrow } from '@fortawesome/free-solid-svg-icons/faLocationArrow';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare';
 import { faDivide } from '@fortawesome/free-solid-svg-icons/faDivide';
+import { faMousePointer } from '@fortawesome/free-solid-svg-icons/faMousePointer';
+import { faTree } from '@fortawesome/free-solid-svg-icons/faTree';
+import { faCodeBranch } from '@fortawesome/free-solid-svg-icons/faCodeBranch';
+import { faTable } from '@fortawesome/free-solid-svg-icons/faTable';
+import { faBookBookmark } from '@fortawesome/free-solid-svg-icons/faBookBookmark';
+// import { faBookBookmark } from '@fortawesome/free-solid-svg-icons/faAdd';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -80,6 +86,11 @@ export const loadIcons = () => {
     faMinus,
     faLocationArrow,
     faArrowUpRightFromSquare,
-    faDivide
+    faDivide,
+    faMousePointer,
+    faTree,
+    faCodeBranch,
+    faTable,
+    faBookBookmark
   );
 };

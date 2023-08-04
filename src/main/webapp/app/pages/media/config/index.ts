@@ -23,7 +23,7 @@ export const defaultToolbar = {
   },
   layoutSelection: {
     options: ['selectionToolOnOff', 'layoutOptions'],
-    selectionToolOnOff: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+    selectionToolOnOff: { icon: 'mouse-pointer', className: undefined, title: undefined, component: 'option', property: 'switch' },
     layoutOptions: {
       options: ['block', 'paragraph'],
     },
@@ -34,10 +34,10 @@ export const defaultToolbar = {
   },
   tab: {
     options: ['editor', 'structure', 'outlines', 'book'],
-    editor: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
-    structure: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
-    outlines: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
-    book: { icon: 'location-arrow', className: undefined, title: undefined, component: 'option', property: 'switch' },
+    editor: { icon: 'book-bookmark', className: undefined, title: 'Bookmarks', component: 'option', property: 'switch' },
+    structure: { icon: 'table', className: undefined, title: 'Glossary', component: 'option', property: 'switch' },
+    outlines: { icon: 'code-branch', className: undefined, title: 'Outlines', component: 'option', property: 'switch' },
+    book: { icon: 'book', className: undefined, title: 'Books', component: 'option', property: 'switch' },
   },
 };
 

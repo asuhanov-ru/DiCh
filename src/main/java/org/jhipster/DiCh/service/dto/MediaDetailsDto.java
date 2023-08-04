@@ -5,17 +5,19 @@ import java.util.Objects;
 
 public class MediaDetailsDto implements Serializable {
 
-    private String id;
+    private Long id;
     private String fileName;
     private String fileType;
     private String fileDesc;
     private int lastPageNumber;
 
-    public String getId() {
+    private PdfOutlineTreeNodeDto outlines;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,5 +84,17 @@ public class MediaDetailsDto implements Serializable {
             ", fileDesc='" + getFileDesc() + "'" +
             ", lastPageNumber=" + getLastPageNumber() +
             "}";
+    }
+
+    public void setLastPageNumber(int lastPageNumber) {
+        this.lastPageNumber = lastPageNumber;
+    }
+
+    public PdfOutlineTreeNodeDto getOutlines() {
+        return outlines;
+    }
+
+    public void setOutlines(PdfOutlineTreeNodeDto outlines) {
+        this.outlines = outlines;
     }
 }

@@ -4,6 +4,8 @@ import { Row, Col } from 'reactstrap';
 import { convertFromRaw, EditorState, SelectionState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import RBush from 'rbush';
+import { Tree, NodeRendererProps } from 'react-arborist';
+
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles.css';
 
@@ -17,10 +19,7 @@ import { getEntities as getPageTextBlocks } from './ocr/text_block_reducer';
 import { MediaPane } from './ocr/media_pane';
 import { editorToolbarExtensions } from './config';
 import { ToolGroup } from '../../shared/ui/toolbar/controls';
-
-type Props = {
-  onClick: () => void;
-};
+import { TreeNode } from '../../shared/ui/treeview/components/treenode';
 
 export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
@@ -31,6 +30,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
   const layoutTransfer = useAppSelector(state => state.ocrLayoutTransfer.entities);
   const pageTextBlocks = useAppSelector(state => state.textBlockTransfer.entities);
+  const outlines = useAppSelector(state => state.media.entity.outlines);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -40,6 +40,11 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const [selectedPolys, setSelectedPolys] = useState([]);
 
   const [isContentChanged, setIsContentChanged] = useState(false);
+
+  const [isEditorShown, setIsEditorShown] = useState(true);
+
+  const [selectedNode, setSelectedNode] = useState<{ id?: string; name?: string; pageNumber?: number }>({});
+  const [selectedNodeObject, setSelectedNodeObject] = useState({});
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -154,6 +159,37 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     setSelectedPolys([]);
   };
 
+  const data = [
+    { id: '1', name: 'Unread' },
+    { id: '2', name: 'Threads' },
+    {
+      id: '3',
+      name: 'Chat Rooms',
+      children: [
+        { id: 'c1', name: 'General' },
+        { id: 'c2', name: 'Random' },
+        { id: 'c3', name: 'Open Source Projects' },
+      ],
+    },
+    {
+      id: '4',
+      name: 'Direct Messages',
+      children: [
+        { id: 'd1', name: 'Alice' },
+        { id: 'd2', name: 'Bob' },
+        { id: 'd3', name: 'Charlie' },
+      ],
+    },
+  ];
+
+  const handleTreeNodeSelect = nodes => {
+    if (nodes && nodes.length > 0) {
+      const { id, name, pageNumber } = nodes[0].data;
+      setSelectedNode({ id, name, pageNumber });
+      setSelectedNodeObject(nodes[0]);
+    } else setSelectedNode({});
+  };
+
   return (
     <>
       <Row>
@@ -174,15 +210,31 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
           />
         </Col>
         <Col>
-          <Editor
-            editorClassName="rdw-storybook-editor"
-            editorState={editorState}
-            onEditorStateChange={onEditorStateChange}
-            toolbarCustomButtons={editorToolbarExtensions.options.map((opt, index) => (
-              <ToolGroup key={index} name={opt} config={editorToolbarExtensions[opt]} state={editorState} setState={handleSetState} />
-            ))}
-          />
-          <div>{selectionState.serialize()}</div>
+          {isEditorShown && (
+            <Editor
+              editorClassName="rdw-storybook-editor"
+              editorState={editorState}
+              onEditorStateChange={onEditorStateChange}
+              toolbarCustomButtons={editorToolbarExtensions.options.map((opt, index) => (
+                <ToolGroup key={index} name={opt} config={editorToolbarExtensions[opt]} state={editorState} setState={handleSetState} />
+              ))}
+            />
+          )}
+          <Tree
+            data={outlines?.children ? outlines.children : []}
+            onSelect={handleTreeNodeSelect}
+            selection={selectedNode?.id}
+            openByDefault={false}
+            disableDrag
+            indent={16}
+            padding={8}
+            width={600}
+            height={500}
+          >
+            {TreeNode}
+          </Tree>
+
+          <div>{selectedNode ? JSON.stringify(selectedNode) : ''}</div>
         </Col>
       </Row>
     </>
@@ -190,3 +242,14 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
 };
 
 export default MediaDetail;
+
+/*              <Tree
+                data={outlines?.children ? outlines.children : []}
+                openByDefault={false}
+                disableDrag
+                indent={16}
+                rowHeight={28}
+                padding={8}
+              >
+                {TreeNode}
+              </Tree> */

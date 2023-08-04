@@ -12,10 +12,7 @@ import org.jhipster.dich.repository.PageTextRepository;
 import org.jhipster.dich.repository.PageWordRepository;
 import org.jhipster.dich.service.*;
 import org.jhipster.dich.service.criteria.*;
-import org.jhipster.dich.service.dto.PageLayoutDTO;
-import org.jhipster.dich.service.dto.PageTextDTO;
-import org.jhipster.dich.service.dto.PageWordDTO;
-import org.jhipster.dich.service.dto.TextBlockDTO;
+import org.jhipster.dich.service.dto.*;
 import org.jhipster.dich.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +42,18 @@ public class PageOcrResource {
 
     private final TextBlockQueryService textBlockQueryService;
 
+    private final PdfDocService pdfDocService;
+
     public PageOcrResource(
         PageWordQueryService pageWordQueryService,
         PageLayoutQueryService pageLayoutQueryService,
-        TextBlockQueryService textBlockQueryService
+        TextBlockQueryService textBlockQueryService,
+        PdfDocService pdfDocService
     ) {
         this.pageWordQueryService = pageWordQueryService;
         this.pageLayoutQueryService = pageLayoutQueryService;
         this.textBlockQueryService = textBlockQueryService;
+        this.pdfDocService = pdfDocService;
     }
 
     /**
@@ -98,5 +99,17 @@ public class PageOcrResource {
                 .collect(Collectors.toList())
         );
         return ResponseUtil.wrapOrNotFound(textBlocks);
+    }
+
+    @GetMapping("/v2/pdf-outline/{mediaId}")
+    public ResponseEntity<PdfOutlineTreeNodeDto> getPdfOutline(@PathVariable Long mediaId) {
+        Optional<PdfOutlineTreeNodeDto> outlines = Optional.empty();
+
+        try {
+            outlines = Optional.of(pdfDocService.getOutline(mediaId));
+        } catch (Exception e) {
+            log.debug("Error {}", e);
+        }
+        return ResponseUtil.wrapOrNotFound(outlines);
     }
 }

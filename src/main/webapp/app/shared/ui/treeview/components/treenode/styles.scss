@@ -1,0 +1,38 @@
+.dich-tree-node-wrapper {
+  padding: 0 10px;
+  cursor: default;
+  display: inline-block;
+  white-space: nowrap; /*keep text on one line */
+  overflow: hidden; /*prevent text from being shown outside the border */
+  text-overflow: ellipsis; /*cut off text with an ellipsis*/
+  height: 100%;
+  width: 98%;
+}
+
+.dich-tree-node-bg {
+  user-select: none;
+  border-radius: 6px;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 6px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+  &.deleted {
+    cursor: not-allowed;
+  }
+}
+
+.dich-tree-node-text {
+  font-weight: 500;
+  padding: 0 12px;
+  .anonymous &,
+  .modified &,
+  .deleted & {
+    opacity: 0.65;
+    font-weight: 400;
+  }
+}
