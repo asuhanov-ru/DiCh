@@ -7,6 +7,7 @@ import { Options } from '../../components/Option';
 import { Edit } from '../../components/Edit';
 import { Static } from '../../components/Static';
 
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles.css';
 
 type Props = {

@@ -14,9 +14,22 @@ type ReactPanZoomProps = {
   setPage: (number) => void;
   polyTreeJSON?: any;
   onClick: ({ x, y }) => void;
+  currentEditorState?: any;
+  setEditorState?: (newState: any) => void;
 };
 
-export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, totalPages, setPage, onClick }: ReactPanZoomProps) => {
+export const MediaPane = ({
+  image,
+  alt,
+  ref,
+  highlights = [],
+  currentPage,
+  totalPages,
+  setPage,
+  onClick,
+  currentEditorState,
+  setEditorState,
+}: ReactPanZoomProps) => {
   const [dx, setDx] = React.useState(0);
   const [dy, setDy] = React.useState(0);
   const [zoom, setZoom] = React.useState(1);
@@ -25,6 +38,7 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
   const [mouseX, setMouseX] = React.useState(0);
   const [mouseY, setMouseY] = React.useState(0);
   const [selectedOptions, setSelectedOptions] = React.useState(['selection']);
+
   const [clickPosition, setClickPosition] = React.useState({ x: 0, y: 0 });
 
   const [toolbar, setToolbar] = React.useState(defaultToolbar);
@@ -95,6 +109,13 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
         } else {
           setSelectedOptions(['selection']);
         }
+        if (!currentEditorState?.layoutSelection?.selectionToolOnOff) {
+          setEditorState({
+            ...currentEditorState,
+            layoutSelection: { selectionToolOnOff: true },
+            panZoom: { ...currentEditorState.panZoom, panZoomOnOff: false },
+          });
+        }
         break;
       case 'panZoomOnOff':
         if (selectedOptions.includes('panZoom')) {
@@ -102,9 +123,19 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
         } else {
           setSelectedOptions(['panZoom']);
         }
+        if (!currentEditorState?.panZoom?.panZoomOnOff) {
+          setEditorState({
+            ...currentEditorState,
+            layoutSelection: { selectionToolOnOff: false },
+            panZoom: { ...currentEditorState.panZoom, panZoomOnOff: true },
+          });
+        }
         break;
       default:
         break;
+    }
+    if (Object.keys(toolbar.tab).includes(command)) {
+      setEditorState({ ...currentEditorState, tab: { ...currentEditorState.tab, [command]: !currentEditorState?.tab[command] } });
     }
   };
 
@@ -122,7 +153,7 @@ export const MediaPane = ({ image, alt, ref, highlights = [], currentPage, total
       <div className="rdw-editor-toolbar">
         {toolbar.options.map((opt, index) => {
           const config = toolbar[opt];
-          const state = editorState[opt];
+          const state = currentEditorState[opt];
           return <ToolGroup key={index} name={opt} config={config} state={state} setState={handleSetState} />;
         })}
       </div>

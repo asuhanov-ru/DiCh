@@ -2,10 +2,10 @@ export const defaultToolbar = {
   options: ['navigate', 'panZoom', 'layoutSelection', 'ocrTools', 'tab'],
   navigate: {
     options: ['prev', 'next', 'page', 'total'],
-    prev: { icon: 'arrow-left', className: undefined, title: undefined, component: 'option' },
-    next: { icon: 'arrow-right', className: undefined, title: undefined, component: 'option' },
-    page: { icon: 'faArrowLeft', className: undefined, title: undefined, component: 'edit' },
-    total: { icon: 'faArrowLeft', className: undefined, title: '/ ', component: 'static' },
+    prev: { icon: 'arrow-left', className: undefined, title: 'Prev page', component: 'option' },
+    next: { icon: 'arrow-right', className: undefined, title: 'Next page', component: 'option' },
+    page: { icon: '', className: undefined, title: undefined, component: 'edit' },
+    total: { icon: '', className: undefined, title: '/ ', component: 'static' },
   },
   panZoom: {
     options: ['panZoomOnOff', 'zoomIn', 'zoomOut', 'zoomPercent', 'transformOrigin', 'resetTransfrom'],
@@ -19,7 +19,7 @@ export const defaultToolbar = {
       topLeft: {},
       center: {},
     },
-    resetTransfrom: { icon: 'fa-arrow-up-right-from-square', className: undefined, title: undefined, component: 'option' },
+    resetTransfrom: { icon: 'fa-arrow-up-right-from-square', className: undefined, title: 'Reset transform', component: 'option' },
   },
   layoutSelection: {
     options: ['selectionToolOnOff', 'layoutOptions'],
@@ -33,9 +33,10 @@ export const defaultToolbar = {
     ocrSelected: { icon: 'fa-list', className: undefined, title: undefined, component: 'option' },
   },
   tab: {
-    options: ['editor', 'structure', 'outlines', 'book'],
-    editor: { icon: 'book-bookmark', className: undefined, title: 'Bookmarks', component: 'option', property: 'switch' },
-    structure: { icon: 'table', className: undefined, title: 'Glossary', component: 'option', property: 'switch' },
+    options: ['editor', 'bookMark', 'glossary', 'outlines', 'book'],
+    editor: { icon: 'edit', className: undefined, title: 'Editor', component: 'option', property: 'switch' },
+    bookMark: { icon: 'book-bookmark', className: undefined, title: 'Bookmarks', component: 'option', property: 'switch' },
+    glossary: { icon: 'table', className: undefined, title: 'Glossary', component: 'option', property: 'switch' },
     outlines: { icon: 'code-branch', className: undefined, title: 'Outlines', component: 'option', property: 'switch' },
     book: { icon: 'book', className: undefined, title: 'Books', component: 'option', property: 'switch' },
   },
@@ -50,5 +51,31 @@ export const editorToolbarExtensions = {
     delete: { icon: 'fa-trash', className: undefined, title: undefined, component: 'option' },
     replace: { icon: 'fa-pencil-alt', className: undefined, title: undefined, component: 'option' },
     save: { icon: 'fa-save', className: undefined, title: undefined, component: 'option' },
+  },
+};
+
+export const mediaPaneDefaultState = {
+  navigate: {
+    page: 1,
+  },
+  panZoom: {
+    panZoomOnOff: true,
+  },
+  layoutSelection: {
+    selectionToolOnOff: false,
+  },
+  tab: {
+    editor: true,
+    glossary: false,
+    outlines: false,
+    book: false,
+  },
+};
+
+export const outlinesPaneToolbar = {
+  options: ['word'],
+  word: {
+    options: ['gotoPage'],
+    gotoPage: { icon: 'fa-walking', className: undefined, title: 'Goto page', component: 'option' },
   },
 };

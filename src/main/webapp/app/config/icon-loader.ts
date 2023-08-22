@@ -42,6 +42,8 @@ import { faTree } from '@fortawesome/free-solid-svg-icons/faTree';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons/faCodeBranch';
 import { faTable } from '@fortawesome/free-solid-svg-icons/faTable';
 import { faBookBookmark } from '@fortawesome/free-solid-svg-icons/faBookBookmark';
+import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
+import { faWalking } from '@fortawesome/free-solid-svg-icons/faWalking';
 // import { faBookBookmark } from '@fortawesome/free-solid-svg-icons/faAdd';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -91,6 +93,8 @@ export const loadIcons = () => {
     faTree,
     faCodeBranch,
     faTable,
-    faBookBookmark
+    faBookBookmark,
+    faEdit,
+    faWalking
   );
 };
