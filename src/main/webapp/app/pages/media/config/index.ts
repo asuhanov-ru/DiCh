@@ -30,7 +30,7 @@ export const defaultToolbar = {
   },
   ocrTools: {
     options: ['ocrSelected'],
-    ocrSelected: { icon: 'fa-list', className: undefined, title: undefined, component: 'option' },
+    ocrSelected: { icon: 'fa-list', className: undefined, title: 'Do Ocr', component: 'option' },
   },
   tab: {
     options: ['editor', 'bookMark', 'glossary', 'outlines', 'book'],

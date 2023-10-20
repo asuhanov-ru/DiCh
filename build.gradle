@@ -1,12 +1,13 @@
 buildscript {
     repositories {
 
-        // mavenLocal()
-        // mavenCentral()
+        mavenLocal()
+        mavenCentral()
         // gradlePluginPortal()
-        google()
-        maven { url "https://repo.spring.io/plugins-release" }
-        gradlePluginPortal()
+        // google()
+        // maven { url "https://repo.spring.io/plugins-release" }
+        maven { url "https://sys-urds.ofc.ru/nexus/repository/maven-public/" }
+        // gradlePluginPortal()
     }
     dependencies {
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here

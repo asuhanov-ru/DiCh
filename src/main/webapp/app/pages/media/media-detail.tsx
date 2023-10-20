@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
-import { getEntities as getPageOcr } from './ocr/ocr_entity_reducer';
+import { getEntities as getPageOcr, doOcr } from './ocr/ocr_entity_reducer';
 import { getEntities as getPageLayout } from './ocr/ocr_layout_reducer';
 import { getEntities as getPageTextBlocks } from './ocr/text_block_reducer';
 import { MediaPane } from './ocr/media_pane';
@@ -46,6 +46,10 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     }
   }, [currentPage, mediaEntity]);
 
+  const handleDoOcr = () => {
+    dispatch(doOcr({ id: mediaEntity.id, pageNumber: currentPage }));
+  };
+
   const handleSetPage = page => {
     if (page > 0 && page < mediaEntity?.lastPageNumber) {
       setCurrentPage(page);
@@ -79,6 +83,16 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     setSelectedPolys([]);
   };
 
+  const handleDispatchCommand = ({ command, value }) => {
+    switch (command) {
+      case 'ocrSelected':
+        handleDoOcr();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <Row>
@@ -98,6 +112,7 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
             onClick={handleMediaPaneClick}
             currentEditorState={mediaPaneState}
             setEditorState={setMediaPaneState}
+            dispatchCommand={handleDispatchCommand}
           />
         </Col>
         <Col>

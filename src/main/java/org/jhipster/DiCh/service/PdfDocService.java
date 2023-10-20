@@ -1,7 +1,6 @@
 package org.jhipster.dich.service;
 
 import com.itextpdf.commons.utils.MessageFormatUtil;
-import com.itextpdf.io.logs.IoLogMessageConstant;
 import com.itextpdf.kernel.exceptions.KernelExceptionMessageConstant;
 import com.itextpdf.kernel.exceptions.PdfException;
 import com.itextpdf.kernel.pdf.*;
@@ -9,10 +8,7 @@ import com.itextpdf.kernel.pdf.PdfObject;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.navigation.PdfDestination;
 import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
-import com.itextpdf.kernel.xmp.impl.Base64;
-import java.io.File;
 import java.util.*;
-import org.apache.commons.io.FileUtils;
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
 import org.jhipster.dich.service.dto.PageImageTransferDto;
