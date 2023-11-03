@@ -51,6 +51,15 @@ export const createEntity = createAsyncThunk(
   { serializeError: serializeAxiosError }
 );
 
+export const doOcr = createAsyncThunk(
+  'textBlockTransfer/do_ocr',
+  async ({ id, pageNumber }: IPageWordsQueryParams) => {
+    const requestUrl = `${apiUrl}?pageNumber.equals=${pageNumber}&mediaId.equals=${id}`;
+    return await axios.post<IPageWordsQueryParams>(requestUrl);
+  },
+  { serializeError: serializeAxiosError }
+);
+
 // slice
 
 export const OcrTransferSlice = createEntitySlice({
@@ -61,6 +70,11 @@ export const OcrTransferSlice = createEntitySlice({
       .addCase(getEntity.fulfilled, (state, action) => {
         state.loading = false;
         state.entity = action.payload.data;
+      })
+      .addCase(doOcr.fulfilled, state => {
+        state.updating = false;
+        state.updateSuccess = true;
+        state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
         const { data, headers } = action.payload;
@@ -76,6 +90,11 @@ export const OcrTransferSlice = createEntitySlice({
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
+      })
+      .addMatcher(isPending(createEntity, doOcr), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.updating = true;
       });
   },
 });

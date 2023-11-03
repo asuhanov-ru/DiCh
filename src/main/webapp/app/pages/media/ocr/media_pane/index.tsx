@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { PanViewer } from './viewer';
 
 import { defaultToolbar } from '../../config';
@@ -16,6 +16,7 @@ type ReactPanZoomProps = {
   onClick: ({ x, y }) => void;
   currentEditorState?: any;
   setEditorState?: (newState: any) => void;
+  dispatchCommand?: ({ command: string, value: any }) => void;
 };
 
 export const MediaPane = ({
@@ -29,6 +30,7 @@ export const MediaPane = ({
   onClick,
   currentEditorState,
   setEditorState,
+  dispatchCommand,
 }: ReactPanZoomProps) => {
   const [dx, setDx] = React.useState(0);
   const [dy, setDy] = React.useState(0);
@@ -132,6 +134,7 @@ export const MediaPane = ({
         }
         break;
       default:
+        dispatchCommand({ command, value });
         break;
     }
     if (Object.keys(toolbar.tab).includes(command)) {

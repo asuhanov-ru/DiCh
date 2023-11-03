@@ -111,7 +111,7 @@ jhipster:
 
 # application:
 collections:
-  location: 'C:\Users\suhanov_av\Documents\My\Химия\'
+  location: ${DICH_MEDIA_DIR}
 
 tessdata:
-  location: 'C:\Users\suhanov_av\Documents\Projects\tessdata_best'
+  location: ${DICH_TESSDATA_DIR}

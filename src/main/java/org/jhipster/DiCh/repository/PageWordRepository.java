@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface PageWordRepository extends JpaRepository<PageWord, Long>, JpaSpecificationExecutor<PageWord> {}
+public interface PageWordRepository extends JpaRepository<PageWord, Long>, JpaSpecificationExecutor<PageWord> {
+    int deleteByMediaIdAndPageNumber(Long mediaId, int pageNumber);
+}

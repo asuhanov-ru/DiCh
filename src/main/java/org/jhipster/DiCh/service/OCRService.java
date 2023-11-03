@@ -239,6 +239,9 @@ public class OCRService {
             pageWords.add(pageWord);
         } while (api.TessPageIteratorNext(pi, level) == 1);
 
+        // Delete existing OCR
+        pageWordRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
+        // Insert new OCR
         pageWordRepository.saveAll(pageWords);
         pageLayoutRepository.saveAll(pageLayouts);
         textBlockRepository.saveAll(textBlocks);

@@ -72,7 +72,7 @@ export const ToolGroup: React.FC<Props> = ({ name, config, state, setState }) =>
             onChange: handleChange,
           },
         };
-        return <>{renderOption(config[style]?.component, controlProps, index)}</>;
+        return renderOption(config[style]?.component, controlProps, index);
       })}
     </div>
   );
