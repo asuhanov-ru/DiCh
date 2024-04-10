@@ -241,6 +241,8 @@ public class OCRService {
 
         // Delete existing OCR
         pageWordRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
+        pageLayoutRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
+        textBlockRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
         // Insert new OCR
         pageWordRepository.saveAll(pageWords);
         pageLayoutRepository.saveAll(pageLayouts);
