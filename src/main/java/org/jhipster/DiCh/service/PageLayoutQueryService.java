@@ -96,6 +96,30 @@ public class PageLayoutQueryService extends QueryService<PageLayout> {
             if (criteria.getPageNumber() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPageNumber(), PageLayout_.pageNumber));
             }
+            if (criteria.getIterator_level() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getIterator_level(), PageLayout_.iterator_level));
+            }
+            if (criteria.getRect_top() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRect_top(), PageLayout_.rect_top));
+            }
+            if (criteria.getRect_left() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRect_left(), PageLayout_.rect_left));
+            }
+            if (criteria.getRect_right() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRect_right(), PageLayout_.rect_right));
+            }
+            if (criteria.getRect_bottom() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRect_bottom(), PageLayout_.rect_bottom));
+            }
+            if (criteria.getParent_id() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getParent_id(), PageLayout_.parent_id));
+            }
+            if (criteria.getItemGUID() != null) {
+                specification = specification.and(buildSpecification(criteria.getItemGUID(), PageLayout_.itemGUID));
+            }
+            if (criteria.getParentGUID() != null) {
+                specification = specification.and(buildSpecification(criteria.getParentGUID(), PageLayout_.parentGUID));
+            }
         }
         return specification;
     }

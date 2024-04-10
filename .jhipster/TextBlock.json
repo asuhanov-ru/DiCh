@@ -1,0 +1,28 @@
+{
+  "changelogDate": "20230529123113",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "mediaId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "pageNumber",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "blockIndex",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "blockUUID",
+      "fieldType": "UUID"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "TextBlock",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

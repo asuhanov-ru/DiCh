@@ -95,6 +95,62 @@ export const PageLayoutUpdate = (props: RouteComponentProps<{ id: string }>) => 
                 data-cy="pageNumber"
                 type="text"
               />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.iterator_level')}
+                id="page-layout-iterator_level"
+                name="iterator_level"
+                data-cy="iterator_level"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.rect_top')}
+                id="page-layout-rect_top"
+                name="rect_top"
+                data-cy="rect_top"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.rect_left')}
+                id="page-layout-rect_left"
+                name="rect_left"
+                data-cy="rect_left"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.rect_right')}
+                id="page-layout-rect_right"
+                name="rect_right"
+                data-cy="rect_right"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.rect_bottom')}
+                id="page-layout-rect_bottom"
+                name="rect_bottom"
+                data-cy="rect_bottom"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.parent_id')}
+                id="page-layout-parent_id"
+                name="parent_id"
+                data-cy="parent_id"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.itemGUID')}
+                id="page-layout-itemGUID"
+                name="itemGUID"
+                data-cy="itemGUID"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageLayout.parentGUID')}
+                id="page-layout-parentGUID"
+                name="parentGUID"
+                data-cy="parentGUID"
+                type="text"
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/page-layout" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

@@ -22,7 +22,7 @@ const apiUrl = 'api/page-words';
 // Actions
 
 export const getEntities = createAsyncThunk('pageWord/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}${sort ? `?id.equals=1&page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<IPageWord[]>(requestUrl);
 });
 

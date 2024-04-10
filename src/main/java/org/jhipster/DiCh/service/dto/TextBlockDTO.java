@@ -1,0 +1,94 @@
+package org.jhipster.dich.service.dto;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.UUID;
+
+/**
+ * A DTO for the {@link org.jhipster.dich.domain.TextBlock} entity.
+ */
+public class TextBlockDTO implements Serializable {
+
+    private Long id;
+
+    private Long mediaId;
+
+    private Integer pageNumber;
+
+    private Integer blockIndex;
+
+    private UUID blockUUID;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public Integer getBlockIndex() {
+        return blockIndex;
+    }
+
+    public void setBlockIndex(Integer blockIndex) {
+        this.blockIndex = blockIndex;
+    }
+
+    public UUID getBlockUUID() {
+        return blockUUID;
+    }
+
+    public void setBlockUUID(UUID blockUUID) {
+        this.blockUUID = blockUUID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TextBlockDTO)) {
+            return false;
+        }
+
+        TextBlockDTO textBlockDTO = (TextBlockDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, textBlockDTO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+        return "TextBlockDTO{" +
+            "id=" + getId() +
+            ", mediaId=" + getMediaId() +
+            ", pageNumber=" + getPageNumber() +
+            ", blockIndex=" + getBlockIndex() +
+            ", blockUUID='" + getBlockUUID() + "'" +
+            "}";
+    }
+}

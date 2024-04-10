@@ -1,4 +1,7 @@
 import React from 'react';
+import { get } from 'lodash';
+
+import '../../../styles.css';
 
 export interface IDragData {
   x: number;
@@ -30,6 +33,10 @@ export interface IReactPanZoomProps {
   onClick?: (e: React.MouseEvent<any>) => void;
   style?: any;
   children?: React.ReactNode;
+  setPointerPosition: (x: number, y: number) => void;
+  setClickPosition: (x: number, y: number) => void;
+  highlights?: object[];
+  selectedTool?: string[];
 }
 export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   // In strict null checking setting default props doesn't seem to work. Hence the non-null assertion.
@@ -47,7 +54,7 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
 
   private panWrapper: any;
 
-  private panContainer: any;
+  public panContainer: any;
 
   public state;
 
@@ -74,6 +81,8 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
         pandy, // [zoom, skew, skew, zoom, dx, dy]
       ],
       mouseDown: false,
+      mouseX: 0,
+      mouseY: 0,
     };
   }
 
@@ -103,37 +112,66 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
       return;
     }
 
-    if (this.props.onClick) {
-      this.props.onClick(e);
+    const { setClickPosition } = this.props;
+
+    if (this.panContainer) {
+      const { x, y } = this.panContainer.getBoundingClientRect();
+      const { matrixData } = this.state;
+      const scaleX = matrixData[0] || 1;
+      const scaleY = matrixData[0] || 1;
+
+      setClickPosition(Math.round((e.clientX - x) / scaleX), Math.round((e.clientY - y) / scaleY));
     }
   };
 
-  // tslint:disable-next-line: member-ordering
-  public onTouchStart = (e: React.TouchEvent<EventTarget>) => {
-    const { pageX, pageY } = e.touches[0];
-    this.panStart(pageX, pageY, e);
-  };
+  getHighlightStyle(highlight) {
+    if (!highlight) {
+      return undefined;
+    }
 
-  // tslint:disable-next-line: member-ordering
-  public onTouchEnd = () => {
-    this.onMouseUp();
-  };
+    return {
+      top: `${highlight.n_top - 2}px`,
+      left: `${highlight.n_left - 2}px`,
+      width: `${highlight.n_width + 2}px`,
+      height: `${highlight.n_heigth + 2}px`,
+    };
+  }
 
-  // tslint:disable-next-line: member-ordering
-  public onTouchMove = (e: React.TouchEvent<EventTarget>) => {
-    this.updateMousePosition(e.touches[0].pageX, e.touches[0].pageY);
-  };
+  getHighlightParentStyle(highlight) {
+    if (!highlight) {
+      return undefined;
+    }
+
+    return {
+      top: `${highlight.rect_top - 2}px`,
+      left: `${highlight.rect_left - 2}px`,
+      width: `${highlight.rect_right - highlight.rect_left + 2}px`,
+      height: `${highlight.rect_bottom - highlight.rect_top + 2}px`,
+    };
+  }
+
+  createHighlights() {
+    const { highlights } = this.props;
+    if (!highlights || highlights.length < 1) return undefined;
+    const style = this.getHighlightStyle(highlights[0]);
+    const parentStyle = this.getHighlightParentStyle(get(highlights[0], 'selectedWordParent'));
+    return (
+      <>
+        <div style={style} className="rdw-highlight"></div>
+        <div style={parentStyle} className="rdw-text-line-highlight"></div>
+      </>
+    );
+  }
 
   // tslint:disable-next-line: member-ordering
   public render() {
+    const { highlights } = this.props;
+    const highlighted = highlights ? this.createHighlights() : null;
     return (
       <div
         className={`pan-container ${this.props.className || ''}`}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}
-        onTouchStart={this.onTouchStart}
-        onTouchMove={this.onTouchMove}
-        onTouchEnd={this.onTouchEnd}
         onMouseMove={this.onMouseMove}
         onWheel={this.onWheel}
         onMouseEnter={this.onMouseEnter}
@@ -141,25 +179,38 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
         onClick={this.onClick}
         style={{
           height: this.props.height,
-          userSelect: 'none',
           width: this.props.width,
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
         ref={ref => (this.panWrapper = ref)}
       >
         <div
           ref={ref => (ref ? (this.panContainer = ref) : null)}
           style={{
+            transformOrigin: 'top left',
             transform: `matrix(${this.state.matrixData.toString()})`,
+            display: 'flex',
+            alignSelf: 'flex-start',
           }}
         >
           {this.props.children}
+          {highlighted}
         </div>
       </div>
     );
   }
 
   private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
-    this.panStart(e.pageX, e.pageY, e);
+    const { selectedTool } = this.props;
+
+    if (!selectedTool) return;
+    if (selectedTool.includes('panZoom')) {
+      this.panStart(e.pageX, e.pageY, e);
+      return;
+    }
   };
 
   private panStart = (pageX: number, pageY: number, event: React.MouseEvent<EventTarget> | React.TouchEvent<EventTarget>) => {
@@ -215,7 +266,7 @@ export class PanViewer extends React.PureComponent<IReactPanZoomProps> {
   }
 
   private onMouseMove = (e: React.MouseEvent<EventTarget>) => {
-    this.updateMousePosition(e.pageX, e.pageY);
+    this.updateMousePosition(e.clientX, e.clientY);
   };
 
   private onWheel = (e: React.WheelEvent<EventTarget>) => {

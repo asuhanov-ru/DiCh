@@ -1,12 +1,13 @@
 buildscript {
     repositories {
 
-        // mavenLocal()
-        // mavenCentral()
+        mavenLocal()
+        mavenCentral()
         // gradlePluginPortal()
-        google()
-        maven { url "https://repo.spring.io/plugins-release" }
-        gradlePluginPortal()
+        // google()
+        // maven { url "https://repo.spring.io/plugins-release" }
+        maven { url "https://sys-urds.ofc.ru/nexus/repository/maven-public/" }
+        // gradlePluginPortal()
     }
     dependencies {
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
@@ -277,12 +278,12 @@ dependencies {
     liquibaseRuntime "com.h2database:h2"
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
-    implementation "com.itextpdf:itext7-core:7.2.2"
+    implementation "com.itextpdf:itext7-core:8.0.1"
     implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '5.4.0'
     implementation group: 'net.sourceforge.lept4j', name: 'lept4j', version: '1.16.2'
     //code generators
-    compileOnly("org.projectlombok:lombok:${lombok}")
-    annotationProcessor("org.projectlombok:lombok:${lombok}")
+    //compileOnly("org.projectlombok:lombok:${lombok}")
+    //annotationProcessor("org.projectlombok:lombok:${lombok}")
 
 }
 

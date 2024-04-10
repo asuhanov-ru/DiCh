@@ -2,7 +2,7 @@
   "changelogDate": "20200727142307",
   "clientRootFolder": "",
   "databaseType": "sql",
-  "dto": "no",
+  "dto": "mapstruct",
   "entityTableName": "collections",
   "fields": [
     {
@@ -29,5 +29,5 @@
     }
   ],
   "searchEngine": false,
-  "service": "no"
+  "service": "serviceClass"
 }

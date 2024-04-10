@@ -1,0 +1,42 @@
+{
+  "changelogDate": "20230524133844",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "mediaStartPage",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "mediaEndPage",
+      "fieldType": "Integer"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Book",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "author",
+      "relationshipName": "author",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "fileName",
+      "otherEntityName": "media",
+      "relationshipName": "media",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export interface IPageWord {
   id?: number;
   s_word?: string | null;
@@ -9,6 +11,9 @@ export interface IPageWord {
   mediaId?: number | null;
   pageNumber?: number | null;
   version?: string | null;
+  ocrLang?: string | null;
+  textLineUUID?: string | null;
+  textBlockUUID?: string | null;
 }
 
 export const defaultValue: Readonly<IPageWord> = {};

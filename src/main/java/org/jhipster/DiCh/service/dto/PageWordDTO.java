@@ -3,6 +3,7 @@ package org.jhipster.dich.service.dto;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link org.jhipster.dich.domain.PageWord} entity.
@@ -28,6 +29,12 @@ public class PageWordDTO implements Serializable {
     private Integer pageNumber;
 
     private ZonedDateTime version;
+
+    private String ocrLang;
+
+    private UUID textLineUUID;
+
+    private UUID textBlockUUID;
 
     public Long getId() {
         return id;
@@ -109,6 +116,30 @@ public class PageWordDTO implements Serializable {
         this.version = version;
     }
 
+    public String getOcrLang() {
+        return ocrLang;
+    }
+
+    public void setOcrLang(String ocrLang) {
+        this.ocrLang = ocrLang;
+    }
+
+    public UUID getTextLineUUID() {
+        return textLineUUID;
+    }
+
+    public void setTextLineUUID(UUID textLineUUID) {
+        this.textLineUUID = textLineUUID;
+    }
+
+    public UUID getTextBlockUUID() {
+        return textBlockUUID;
+    }
+
+    public void setTextBlockUUID(UUID textBlockUUID) {
+        this.textBlockUUID = textBlockUUID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -144,6 +175,9 @@ public class PageWordDTO implements Serializable {
             ", mediaId=" + getMediaId() +
             ", pageNumber=" + getPageNumber() +
             ", version='" + getVersion() + "'" +
+            ", ocrLang='" + getOcrLang() + "'" +
+            ", textLineUUID='" + getTextLineUUID() + "'" +
+            ", textBlockUUID='" + getTextBlockUUID() + "'" +
             "}";
     }
 }

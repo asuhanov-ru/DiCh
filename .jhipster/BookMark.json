@@ -1,0 +1,36 @@
+{
+  "changelogDate": "20230706112742",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "bookMarkUUID",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "mediaId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "pageNumber",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "textBlockUUID",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "anchor",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "label",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "BookMark",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

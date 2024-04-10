@@ -4,27 +4,26 @@ import com.ochafik.lang.jnaerator.runtime.NativeSize;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import net.sourceforge.lept4j.Leptonica;
 import net.sourceforge.lept4j.Pix;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.ITessAPI.*;
 import net.sourceforge.tess4j.TessAPI;
 import org.jetbrains.annotations.NotNull;
-import org.jhipster.dich.domain.Media;
-import org.jhipster.dich.domain.PageImage;
-import org.jhipster.dich.domain.PageWord;
-import org.jhipster.dich.repository.MediaRepository;
-import org.jhipster.dich.repository.PageImageRepository;
-import org.jhipster.dich.repository.PageWordRepository;
+import org.jhipster.dich.domain.*;
+import org.jhipster.dich.repository.*;
 import org.jhipster.dich.service.criteria.OcrTasksCriteria;
 import org.jhipster.dich.service.dto.OcrTasksDTO;
 import org.jhipster.dich.service.dto.PageImageTransferDto;
+import org.jhipster.dich.service.dto.PageLayoutDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +31,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.filter.StringFilter;
 
+/*
+
+    If Tesseract API instance fail to initialize see
+    AppData\Local\Temp\lept4j\win32-x86-64>
+    AppData\Local\Temp\tess4j\win32-x86-64>
+    both must contain same couple of dlls
+
+ */
 @Service
 @Transactional
 public class OCRService {
@@ -50,13 +57,19 @@ public class OCRService {
 
     private final PageWordRepository pageWordRepository;
 
+    private final PageLayoutRepository pageLayoutRepository;
+
+    private final TextBlockRepository textBlockRepository;
+
     public OCRService(
         PageImageRepository pageImageRepository,
         OcrTasksQueryService ocrTasksQueryService,
         OcrTasksService ocrTasksService,
         PdfDocService pdfDocService,
         MediaRepository mediaRepository,
-        PageWordRepository pageWordRepository
+        PageWordRepository pageWordRepository,
+        PageLayoutRepository pageLayoutRepository,
+        TextBlockRepository textBlockRepository
     ) {
         this.pageImageRepository = pageImageRepository;
         this.ocrTasksQueryService = ocrTasksQueryService;
@@ -64,6 +77,8 @@ public class OCRService {
         this.pdfDocService = pdfDocService;
         this.mediaRepository = mediaRepository;
         this.pageWordRepository = pageWordRepository;
+        this.pageLayoutRepository = pageLayoutRepository;
+        this.textBlockRepository = textBlockRepository;
     }
 
     @Value("${collections.location}")
@@ -93,18 +108,28 @@ public class OCRService {
         TimeVal timeout = new TimeVal();
         timeout.tv_sec = new NativeLong(0L); // time > 0 causes blank output
         monitor.end_time = timeout;
-        //ProgressMonitor pmo = new ProgressMonitor(monitor);
-        //pmo.start();
+
         api.TessBaseAPIRecognize(handle, monitor);
-        //logger.info("Message: " + pmo.getMessage());
 
         TessResultIterator ri = api.TessBaseAPIGetIterator(handle);
         TessPageIterator pi = api.TessResultIteratorGetPageIterator(ri);
         api.TessPageIteratorBegin(pi);
-        log.debug("Bounding boxes:\nchar(s) left top right bottom confidence font-attributes");
+
         int level = TessPageIteratorLevel.RIL_WORD;
         List<PageWord> pageWords = new ArrayList<>();
+        List<PageLayout> pageLayouts = new ArrayList<>();
+        List<TextBlock> textBlocks = new ArrayList<>();
         long idx = 0;
+
+        IntBuffer leftB = IntBuffer.allocate(1);
+        IntBuffer topB = IntBuffer.allocate(1);
+        IntBuffer rightB = IntBuffer.allocate(1);
+        IntBuffer bottomB = IntBuffer.allocate(1);
+
+        UUID currentTextLineUUID = null;
+        UUID currentBlockUUID = null;
+        UUID currentParaUUID = null;
+        UUID currentTextBlockUUID = null;
 
         // int height = image.getHeight();
         do {
@@ -112,17 +137,93 @@ public class OCRService {
             Pointer ptr = api.TessResultIteratorGetUTF8Text(ri, level);
             String word = ptr.getString(0);
             api.TessDeleteText(ptr);
-            float confidence = api.TessResultIteratorConfidence(ri, level);
-            IntBuffer leftB = IntBuffer.allocate(1);
-            IntBuffer topB = IntBuffer.allocate(1);
-            IntBuffer rightB = IntBuffer.allocate(1);
-            IntBuffer bottomB = IntBuffer.allocate(1);
+
+            if (api.TessPageIteratorIsAtBeginningOf(pi, TessPageIteratorLevel.RIL_BLOCK) == 1) {
+                PageLayout pageLayoutDTO = new PageLayout();
+
+                currentBlockUUID = UUID.randomUUID();
+
+                pageLayoutDTO.setMediaId(ocrTask.getMediaId());
+                pageLayoutDTO.setPageNumber(ocrTask.getPageNumber());
+                pageLayoutDTO.setIterator_level("RIL_BLOCK");
+                pageLayoutDTO.setItemGUID(currentBlockUUID);
+
+                api.TessPageIteratorBoundingBox(pi, TessPageIteratorLevel.RIL_BLOCK, leftB, topB, rightB, bottomB);
+                int left = leftB.get(0);
+                int top = topB.get(0);
+                int right = rightB.get(0);
+                int bottom = bottomB.get(0);
+
+                pageLayoutDTO.setRect_top(BigDecimal.valueOf(top));
+                pageLayoutDTO.setRect_bottom(BigDecimal.valueOf(bottom));
+                pageLayoutDTO.setRect_left(BigDecimal.valueOf(left));
+                pageLayoutDTO.setRect_right(BigDecimal.valueOf(right));
+                pageLayouts.add(pageLayoutDTO);
+            }
+
+            if (api.TessPageIteratorIsAtBeginningOf(pi, TessPageIteratorLevel.RIL_PARA) == 1) {
+                PageLayout pageLayoutDTO = new PageLayout();
+                currentParaUUID = UUID.randomUUID();
+
+                pageLayoutDTO.setMediaId(ocrTask.getMediaId());
+                pageLayoutDTO.setPageNumber(ocrTask.getPageNumber());
+                pageLayoutDTO.setIterator_level("RIL_PARA");
+                pageLayoutDTO.setItemGUID(currentParaUUID);
+                pageLayoutDTO.setParentGUID(currentBlockUUID);
+
+                api.TessPageIteratorBoundingBox(pi, TessPageIteratorLevel.RIL_PARA, leftB, topB, rightB, bottomB);
+                int left = leftB.get(0);
+                int top = topB.get(0);
+                int right = rightB.get(0);
+                int bottom = bottomB.get(0);
+
+                pageLayoutDTO.setRect_top(BigDecimal.valueOf(top));
+                pageLayoutDTO.setRect_bottom(BigDecimal.valueOf(bottom));
+                pageLayoutDTO.setRect_left(BigDecimal.valueOf(left));
+                pageLayoutDTO.setRect_right(BigDecimal.valueOf(right));
+
+                pageLayouts.add(pageLayoutDTO);
+            }
+
+            if (api.TessPageIteratorIsAtBeginningOf(pi, TessPageIteratorLevel.RIL_TEXTLINE) == 1) {
+                PageLayout pageLayoutDTO = new PageLayout();
+                TextBlock textBlock = new TextBlock();
+
+                currentTextLineUUID = UUID.randomUUID();
+                currentTextBlockUUID = UUID.randomUUID();
+
+                pageLayoutDTO.setMediaId(ocrTask.getMediaId());
+                pageLayoutDTO.setPageNumber(ocrTask.getPageNumber());
+                pageLayoutDTO.setIterator_level("RIL_TEXTLINE");
+                pageLayoutDTO.setItemGUID(currentTextLineUUID);
+                pageLayoutDTO.setParentGUID(currentParaUUID);
+
+                api.TessPageIteratorBoundingBox(pi, TessPageIteratorLevel.RIL_TEXTLINE, leftB, topB, rightB, bottomB);
+
+                int left = leftB.get(0);
+                int top = topB.get(0);
+                int right = rightB.get(0);
+                int bottom = bottomB.get(0);
+
+                pageLayoutDTO.setRect_top(BigDecimal.valueOf(top));
+                pageLayoutDTO.setRect_bottom(BigDecimal.valueOf(bottom));
+                pageLayoutDTO.setRect_left(BigDecimal.valueOf(left));
+                pageLayoutDTO.setRect_right(BigDecimal.valueOf(right));
+                pageLayouts.add(pageLayoutDTO);
+
+                textBlock.setMediaId(ocrTask.getMediaId());
+                textBlock.setPageNumber(ocrTask.getPageNumber());
+                textBlock.setBlockUUID(currentTextBlockUUID);
+                textBlock.setBlockIndex(textBlocks.size());
+                textBlocks.add(textBlock);
+            }
+
             api.TessPageIteratorBoundingBox(pi, level, leftB, topB, rightB, bottomB);
-            int left = leftB.get();
-            int top = topB.get();
-            int right = rightB.get();
-            int bottom = bottomB.get();
-            //System.out.print(String.format("%s %d %d %d %d %f", word, left, top, right, bottom, confidence));
+            int left = leftB.get(0);
+            int top = topB.get(0);
+            int right = rightB.get(0);
+            int bottom = bottomB.get(0);
+
             PageWord pageWord = new PageWord();
             pageWord.setMediaId(ocrTask.getMediaId());
             pageWord.setPageNumber(ocrTask.getPageNumber());
@@ -133,16 +234,22 @@ public class OCRService {
             pageWord.setn_heigth(Long.valueOf(bottom - top));
             pageWord.setn_width((Long.valueOf(right - left)));
             pageWord.setVersion(version);
+            pageWord.setTextLineUUID(currentTextLineUUID);
+            pageWord.setTextBlockUUID(currentTextBlockUUID);
             pageWords.add(pageWord);
         } while (api.TessPageIteratorNext(pi, level) == 1);
+
+        // Delete existing OCR
+        pageWordRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
+        pageLayoutRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
+        textBlockRepository.deleteByMediaIdAndPageNumber(ocrTask.getMediaId(), ocrTask.getPageNumber());
+        // Insert new OCR
         pageWordRepository.saveAll(pageWords);
-        //        api.TessPageIteratorDelete(pi);
+        pageLayoutRepository.saveAll(pageLayouts);
+        textBlockRepository.saveAll(textBlocks);
+
         api.TessResultIteratorDelete(ri);
 
-        //Pointer utf8Text = api.TessBaseAPIGetUTF8Text(handle);
-        //String result = utf8Text.getString(0);
-
-        //log.debug("OCR page: {} from media: {} {}", ocrTask.getPageNumber(), ocrTask.getMediaId(), pageWords);
         //release API
         if (handle != null) api.TessBaseAPIDelete(handle);
         //release Pix resource
@@ -169,16 +276,18 @@ public class OCRService {
             OcrTasksDTO ocrTask = ocrTasks.get(0);
             ocrTask.setJobStatus("PROCESSING");
             ocrTask.setStartTime(ZonedDateTime.now());
-            Optional<OcrTasksDTO> result = ocrTasksService.partialUpdate(ocrTask);
-            log.debug("Start task {}", result);
+            ocrTasksService.partialUpdate(ocrTask);
             try {
                 doOCR(ocrTask, ZonedDateTime.now());
                 ocrTask.setJobStatus("PROCESSED");
                 ocrTask.setStopTime(ZonedDateTime.now());
-                result = ocrTasksService.partialUpdate(ocrTask);
-                log.debug("Task {} done", result);
+                ocrTasksService.partialUpdate(ocrTask);
             } catch (Throwable e) {
                 log.debug("OCR filed with message {}", e.getMessage());
+
+                ocrTask.setJobStatus("FAILED");
+                ocrTask.setStopTime(ZonedDateTime.now());
+                ocrTasksService.partialUpdate(ocrTask);
             }
         }
     }

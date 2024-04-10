@@ -14,6 +14,9 @@ import javax.persistence.EntityManager;
 import org.jhipster.dich.IntegrationTest;
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
+import org.jhipster.dich.service.MediaService;
+import org.jhipster.dich.service.dto.MediaDTO;
+import org.jhipster.dich.service.mapper.MediaMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +62,12 @@ class MediaResourceIT {
     private MediaRepository mediaRepositoryMock;
 
     @Autowired
+    private MediaMapper mediaMapper;
+
+    @Mock
+    private MediaService mediaServiceMock;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -98,8 +107,9 @@ class MediaResourceIT {
     void createMedia() throws Exception {
         int databaseSizeBeforeCreate = mediaRepository.findAll().size();
         // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
         restMediaMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(media)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Media in the database
@@ -116,12 +126,13 @@ class MediaResourceIT {
     void createMediaWithExistingId() throws Exception {
         // Create the Media with an existing ID
         media.setId(1L);
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
 
         int databaseSizeBeforeCreate = mediaRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restMediaMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(media)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Media in the database
@@ -137,9 +148,10 @@ class MediaResourceIT {
         media.setFileName(null);
 
         // Create the Media, which fails.
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
 
         restMediaMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(media)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaDTO)))
             .andExpect(status().isBadRequest());
 
         List<Media> mediaList = mediaRepository.findAll();
@@ -154,9 +166,10 @@ class MediaResourceIT {
         media.setFileType(null);
 
         // Create the Media, which fails.
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
 
         restMediaMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(media)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaDTO)))
             .andExpect(status().isBadRequest());
 
         List<Media> mediaList = mediaRepository.findAll();
@@ -182,20 +195,20 @@ class MediaResourceIT {
 
     @SuppressWarnings({ "unchecked" })
     void getAllMediaWithEagerRelationshipsIsEnabled() throws Exception {
-        when(mediaRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(mediaServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restMediaMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
-        verify(mediaRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(mediaServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({ "unchecked" })
     void getAllMediaWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(mediaRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(mediaServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restMediaMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
-        verify(mediaRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(mediaServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -235,12 +248,13 @@ class MediaResourceIT {
         // Disconnect from session so that the updates on updatedMedia are not directly saved in db
         em.detach(updatedMedia);
         updatedMedia.fileName(UPDATED_FILE_NAME).fileType(UPDATED_FILE_TYPE).fileDesc(UPDATED_FILE_DESC);
+        MediaDTO mediaDTO = mediaMapper.toDto(updatedMedia);
 
         restMediaMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedMedia.getId())
+                put(ENTITY_API_URL_ID, mediaDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedMedia))
+                    .content(TestUtil.convertObjectToJsonBytes(mediaDTO))
             )
             .andExpect(status().isOk());
 
@@ -259,12 +273,15 @@ class MediaResourceIT {
         int databaseSizeBeforeUpdate = mediaRepository.findAll().size();
         media.setId(count.incrementAndGet());
 
+        // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restMediaMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, media.getId())
+                put(ENTITY_API_URL_ID, mediaDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(media))
+                    .content(TestUtil.convertObjectToJsonBytes(mediaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -279,12 +296,15 @@ class MediaResourceIT {
         int databaseSizeBeforeUpdate = mediaRepository.findAll().size();
         media.setId(count.incrementAndGet());
 
+        // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restMediaMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(media))
+                    .content(TestUtil.convertObjectToJsonBytes(mediaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -299,9 +319,12 @@ class MediaResourceIT {
         int databaseSizeBeforeUpdate = mediaRepository.findAll().size();
         media.setId(count.incrementAndGet());
 
+        // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restMediaMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(media)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(mediaDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Media in the database
@@ -377,12 +400,15 @@ class MediaResourceIT {
         int databaseSizeBeforeUpdate = mediaRepository.findAll().size();
         media.setId(count.incrementAndGet());
 
+        // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restMediaMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, media.getId())
+                patch(ENTITY_API_URL_ID, mediaDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(media))
+                    .content(TestUtil.convertObjectToJsonBytes(mediaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -397,12 +423,15 @@ class MediaResourceIT {
         int databaseSizeBeforeUpdate = mediaRepository.findAll().size();
         media.setId(count.incrementAndGet());
 
+        // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restMediaMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(media))
+                    .content(TestUtil.convertObjectToJsonBytes(mediaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -417,9 +446,12 @@ class MediaResourceIT {
         int databaseSizeBeforeUpdate = mediaRepository.findAll().size();
         media.setId(count.incrementAndGet());
 
+        // Create the Media
+        MediaDTO mediaDTO = mediaMapper.toDto(media);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restMediaMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(media)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(mediaDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Media in the database

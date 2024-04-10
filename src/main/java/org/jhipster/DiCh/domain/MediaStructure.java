@@ -32,7 +32,7 @@ public class MediaStructure implements Serializable {
     private String tag;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "collections" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "collections", "books" }, allowSetters = true)
     private Media media;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

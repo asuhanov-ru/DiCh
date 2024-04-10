@@ -68,6 +68,7 @@ module.exports = async options =>
           }),
       new BrowserSyncPlugin(
         {
+          open: false,
           https: options.tls,
           host: 'localhost',
           port: 9000,
@@ -94,10 +95,10 @@ module.exports = async options =>
         {
           reload: false,
         }
-      ),
+      ) /*
       new WebpackNotifierPlugin({
         title: 'Di Ch',
         contentImage: path.join(__dirname, 'logo-jhipster.png'),
-      }),
+      }), */,
     ].filter(Boolean),
   });

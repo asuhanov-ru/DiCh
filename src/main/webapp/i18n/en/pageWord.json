@@ -26,7 +26,10 @@
       "n_idx": "N Idx",
       "mediaId": "Media Id",
       "pageNumber": "Page Number",
-      "version": "Version"
+      "version": "Version",
+      "ocrLang": "Ocr Lang",
+      "textLineUUID": "Text Line UUID",
+      "textBlockUUID": "Text Block UUID"
     }
   }
 }

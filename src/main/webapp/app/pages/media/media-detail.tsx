@@ -1,39 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import { convertFromRaw, EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import '../../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { Row, Col } from 'reactstrap';
+import RBush from 'rbush';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './media.reducer';
 import { getEntity as getImageEntity } from './image/reducer';
-import { getEntities as getPageOcr } from './ocr/reducer';
-import { Ocr } from './ocr';
+import { getEntities as getPageOcr, doOcr } from './ocr/ocr_entity_reducer';
+import { getEntities as getPageLayout } from './ocr/ocr_layout_reducer';
+import { getEntities as getPageTextBlocks } from './ocr/text_block_reducer';
+import { MediaPane } from './ocr/media_pane';
+import { OutlinePane } from './ocr/outline_pane';
+import { TextPane } from './ocr/text_pane';
+import { mediaPaneDefaultState } from './config';
 
 export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
   const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedPageNumber, setSelectedPageNumber] = useState<number>(1);
+  // TO-DO Add spiner while data is fetching
   const isFetching = useAppSelector(state => state.media.loading || state.pageImageTransfer.loading);
   const mediaEntity = useAppSelector(state => state.media.entity);
   const ocrEntities = useAppSelector(state => state.ocrTransfer.entities);
   const imageTransfer = useAppSelector(state => state.pageImageTransfer.entity);
-  const [contentState, setContentState] = useState({
-    entityMap: {},
-    blocks: [
-      {
-        key: '1004,1005,1006',
-        text: 'Initialized from content state.',
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {},
-      },
-    ],
-  });
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [highlighted, setHighlighted] = useState([]);
+
+  const [selectedPolys, setSelectedPolys] = useState([]);
+
+  const [isContentChanged, setIsContentChanged] = useState(false);
+
+  const [mediaPaneState, setMediaPaneState] = useState<any>(mediaPaneDefaultState);
 
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
@@ -43,103 +40,88 @@ export const MediaDetail = (props: RouteComponentProps<{ id: string }>) => {
     if (mediaEntity && mediaEntity.id) {
       dispatch(getImageEntity({ id: mediaEntity.id, pageNumber: currentPage }));
       dispatch(getPageOcr({ id: mediaEntity.id, pageNumber: currentPage }));
+      dispatch(getPageLayout({ id: mediaEntity.id, pageNumber: currentPage }));
+      dispatch(getPageTextBlocks({ id: mediaEntity.id, pageNumber: currentPage }));
+      setMediaPaneState({ ...mediaPaneState, navigate: { page: currentPage, total: mediaEntity.lastPageNumber } });
     }
   }, [currentPage, mediaEntity]);
 
-  useEffect(() => {
-    const content = {
-      entityMap: {},
-      blocks: [],
-    };
-    let i = 0;
-    let keys = [];
-    let text = [];
+  const handleDoOcr = () => {
+    dispatch(doOcr({ id: mediaEntity.id, pageNumber: currentPage }));
+  };
 
-    if (ocrEntities && ocrEntities?.length) {
-      ocrEntities.forEach(ocr_entity => {
-        keys.push(ocr_entity.id);
-        text.push(ocr_entity.s_word);
-        i++;
-        if (i > 10) {
-          i = 0;
-          const block = {
-            key: keys.join(','),
-            text: text.join(' '),
-            depth: 0,
-            type: 'unstyled',
-            entityRanges: [],
-            data: {},
-          };
-          content.blocks.push(block);
-          keys = [];
-          text = [];
-        }
-      });
-
-      setContentState(content);
+  const handleSetPage = page => {
+    if (page > 0 && page < mediaEntity?.lastPageNumber) {
+      setCurrentPage(page);
     }
+  };
+
+  const polyTree = useMemo(() => {
+    if (ocrEntities && ocrEntities.length > 0) {
+      const tree = new RBush(ocrEntities.length);
+      ocrEntities.map((el, idx) =>
+        tree.insert({ minX: el.n_left, minY: el.n_top, maxX: el.n_left + el.n_width, maxY: el.n_top + el.n_heigth, foo: idx })
+      );
+      return tree;
+    }
+    return null;
   }, [ocrEntities]);
 
-  const handlePrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  const paneEnabled = (paneName: string): boolean => mediaPaneState.tab[paneName];
+
+  const handleMediaPaneClick = ({ x, y }) => {
+    if (polyTree) {
+      const selectedItems = polyTree.search({
+        minX: x,
+        minY: y,
+        maxX: x,
+        maxY: y,
+      });
+      setSelectedPolys(selectedItems);
+      return;
+    }
+    setSelectedPolys([]);
   };
 
-  const changePageNumber = evt => setSelectedPageNumber(evt.target.valueAsNumber);
-
-  const handleNext = () => {
-    if (currentPage < mediaEntity?.lastPageNumber) setCurrentPage(currentPage + 1);
-  };
-
-  const handleGo = () => setCurrentPage(selectedPageNumber);
-
-  const onContentStateChange = content => {
-    setContentState(content);
+  const handleDispatchCommand = ({ command, value }) => {
+    switch (command) {
+      case 'ocrSelected':
+        handleDoOcr();
+        break;
+      default:
+        break;
+    }
   };
 
   return (
     <>
       <Row>
-        <Col md="8">
-          <h2 data-cy="mediaDetailsHeading">Media</h2>
-          <span>{mediaEntity.fileName}</span>
-        </Col>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+          <h2 data-cy="mediaDetailsHeading">{mediaEntity.fileName}</h2>
+        </div>
       </Row>
-      &nbsp;
-      <Row>
-        <Col md="8">
-          <h4>
-            Page {currentPage} of {mediaEntity?.lastPageNumber}
-          </h4>
-          <Button onClick={handlePrev} color="info">
-            Previous
-          </Button>
-          &nbsp;
-          <Button color="info" onClick={handleNext}>
-            Next
-          </Button>
-          &nbsp;
-          <input type="number" value={selectedPageNumber} onChange={changePageNumber} disabled={isFetching} />
-          &nbsp;
-          <Button color="info" onClick={handleGo}>
-            Go
-          </Button>
-        </Col>
-      </Row>
-      &nbsp;
+
       <Row>
         <Col>
-          <Ocr image={`data:image/jpeg;base64,${imageTransfer?.image}`} />
+          <MediaPane
+            image={`data:image/jpeg;base64,${imageTransfer?.image}`}
+            highlights={highlighted}
+            currentPage={currentPage}
+            totalPages={mediaEntity?.lastPageNumber}
+            setPage={handleSetPage}
+            onClick={handleMediaPaneClick}
+            currentEditorState={mediaPaneState}
+            setEditorState={setMediaPaneState}
+            dispatchCommand={handleDispatchCommand}
+          />
         </Col>
         <Col>
-          <div>
-            <Editor
-              contentState={contentState}
-              wrapperClassName="wrapper-class"
-              editorClassName="editor-class"
-              toolbarClassName="toolbar-class"
-              onContentStateChange={onContentStateChange}
-            />
-          </div>
+          <>
+            {paneEnabled('editor') && <TextPane setHighlighted={setHighlighted} />}
+            {paneEnabled('outlines') && (
+              <OutlinePane setPage={handleSetPage} currentPage={currentPage} currentEditorState={mediaPaneState} />
+            )}
+          </>
         </Col>
       </Row>
     </>

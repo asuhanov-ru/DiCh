@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.jhipster.dich.domain.Media;
 import org.jhipster.dich.repository.MediaRepository;
 import org.jhipster.dich.service.MediaDetailsService;
+import org.jhipster.dich.service.PdfDocService;
 import org.jhipster.dich.service.dto.MediaDetailsDto;
 import org.jhipster.dich.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -40,9 +41,12 @@ public class MediaResourceV2 {
 
     private final MediaDetailsService mediaDetailsService;
 
-    public MediaResourceV2(MediaRepository mediaRepository, MediaDetailsService mediaDetailsService) {
+    private final PdfDocService pdfDocService;
+
+    public MediaResourceV2(MediaRepository mediaRepository, MediaDetailsService mediaDetailsService, PdfDocService pdfDocService) {
         this.mediaRepository = mediaRepository;
         this.mediaDetailsService = mediaDetailsService;
+        this.pdfDocService = pdfDocService;
     }
 
     /**
@@ -170,6 +174,16 @@ public class MediaResourceV2 {
     public ResponseEntity<MediaDetailsDto> getMedia(@PathVariable Long id) {
         log.debug("REST request to get Media : {}", id);
         Optional<MediaDetailsDto> mediaDetails = mediaDetailsService.findOne(id);
+
+        mediaDetails.map(media -> {
+            try {
+                media.setOutlines(pdfDocService.getOutline(media.getId()));
+            } catch (Exception e) {
+                log.debug("Error {}", e);
+            }
+            return 0;
+        });
+
         return ResponseUtil.wrapOrNotFound(mediaDetails);
     }
 

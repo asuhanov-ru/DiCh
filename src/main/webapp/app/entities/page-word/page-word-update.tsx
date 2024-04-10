@@ -138,6 +138,27 @@ export const PageWordUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 type="datetime-local"
                 placeholder="YYYY-MM-DD HH:mm"
               />
+              <ValidatedField
+                label={translate('diChApp.pageWord.ocrLang')}
+                id="page-word-ocrLang"
+                name="ocrLang"
+                data-cy="ocrLang"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageWord.textLineUUID')}
+                id="page-word-textLineUUID"
+                name="textLineUUID"
+                data-cy="textLineUUID"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('diChApp.pageWord.textBlockUUID')}
+                id="page-word-textBlockUUID"
+                name="textBlockUUID"
+                data-cy="textBlockUUID"
+                type="text"
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/page-word" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

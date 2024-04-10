@@ -21,7 +21,6 @@ public class ScheduleOcr {
 
     @Scheduled(fixedRate = 5000)
     public void reportCurrentTime() throws Exception {
-        log.debug("The time is now {}", dateFormat.format(new Date()));
         ocrService.processOCRTasks();
     }
 }

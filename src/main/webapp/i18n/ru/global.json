@@ -16,6 +16,11 @@
         "translation": "Translation",
         "ocrTasks": "Ocr Tasks",
         "pageLayout": "Page Layout",
+        "author": "Author",
+        "book": "Book",
+        "textBlock": "Text Block",
+        "inlineStyleRanges": "Inline Style Ranges",
+        "bookMark": "Book Mark",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

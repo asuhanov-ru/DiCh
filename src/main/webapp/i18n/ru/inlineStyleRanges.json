@@ -1,0 +1,26 @@
+{
+  "diChApp": {
+    "inlineStyleRanges": {
+      "home": {
+        "title": "Inline Style Ranges",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Inline Style Ranges",
+        "createOrEditLabel": "Создать или отредактировать Inline Style Ranges",
+        "notFound": "Inline Style Ranges не найдено"
+      },
+      "created": "Новый Inline Style Ranges создан с идентификатором {{ param }}",
+      "updated": "Inline Style Ranges обновлен с идентификатором {{ param }}",
+      "deleted": "Inline Style Ranges удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Inline Style Ranges {{ id }}?"
+      },
+      "detail": {
+        "title": "Inline Style Ranges"
+      },
+      "id": "ID",
+      "startPos": "Start Pos",
+      "stopPos": "Stop Pos",
+      "textBlock": "Text Block"
+    }
+  }
+}

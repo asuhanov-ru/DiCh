@@ -37,6 +37,18 @@
     {
       "fieldName": "version",
       "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "ocrLang",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "textLineUUID",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "textBlockUUID",
+      "fieldType": "UUID"
     }
   ],
   "jpaMetamodelFiltering": true,

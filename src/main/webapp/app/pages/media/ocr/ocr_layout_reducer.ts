@@ -1,21 +1,20 @@
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending } from '@reduxjs/toolkit';
-import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
-import { IPageWord, defaultValue } from 'app/shared/model/page-word.model';
+import { createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
+import { IPageLayout, defaultValue } from 'app/shared/model/page-layout.model';
 
-export type IPageWordsQueryParams = {
+export type IPageLayoutsQueryParams = {
   id: string | number;
   pageNumber: string | number;
 };
 
-export type IPageWordQueryParams = {
+export type IPageLayoutQueryParams = {
   id: string | number;
 };
 
-const initialState: EntityState<IPageWord> = {
+const initialState: EntityState<IPageLayout> = {
   loading: false,
   errorMessage: null,
   entities: [],
@@ -26,36 +25,36 @@ const initialState: EntityState<IPageWord> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'api/v2/page-ocr';
+const apiUrl = 'api/v2/page-layout';
 
 // Actions
 
-export const getEntities = createAsyncThunk('ocrTransfer/fetch_entity_list', async ({ id, pageNumber }: IPageWordsQueryParams) => {
+export const getEntities = createAsyncThunk('ocrLayoutTransfer/fetch_entity_list', async ({ id, pageNumber }: IPageLayoutsQueryParams) => {
   const requestUrl = `${apiUrl}?pageNumber.equals=${pageNumber}&mediaId.equals=${id}`;
-  return axios.get<IPageWord[]>(requestUrl);
+  return axios.get<IPageLayout[]>(requestUrl);
 });
 
 export const getEntity = createAsyncThunk(
-  'ocrTransfer/fetch_entity',
-  async ({ id }: IPageWordQueryParams) => {
+  'ocrLayoutTransfer/fetch_entity',
+  async ({ id }: IPageLayoutQueryParams) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return axios.get<IPageWord>(requestUrl);
+    return axios.get<IPageLayout>(requestUrl);
   },
   { serializeError: serializeAxiosError }
 );
 
 export const createEntity = createAsyncThunk(
-  'ocrTransfer/create_entity',
-  async (entity: IPageWord, thunkAPI) => {
-    return axios.post<IPageWord>(apiUrl, cleanEntity(entity));
+  'ocrLayoutTransfer/create_entity',
+  async (entity: IPageLayout, thunkAPI) => {
+    return axios.post<IPageLayout>(apiUrl, cleanEntity(entity));
   },
   { serializeError: serializeAxiosError }
 );
 
 // slice
 
-export const OcrTransferSlice = createEntitySlice({
-  name: 'ocrTransfer',
+export const OcrLayoutTransferSlice = createEntitySlice({
+  name: 'ocrLayoutTransfer',
   initialState,
   extraReducers(builder) {
     builder
@@ -81,7 +80,7 @@ export const OcrTransferSlice = createEntitySlice({
   },
 });
 
-export const { reset } = OcrTransferSlice.actions;
+export const { reset } = OcrLayoutTransferSlice.actions;
 
 // Reducer
-export default OcrTransferSlice.reducer;
+export default OcrLayoutTransferSlice.reducer;

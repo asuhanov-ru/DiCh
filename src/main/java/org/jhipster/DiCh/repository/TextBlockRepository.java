@@ -1,0 +1,14 @@
+package org.jhipster.dich.repository;
+
+import org.jhipster.dich.domain.TextBlock;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
+
+/**
+ * Spring Data SQL repository for the TextBlock entity.
+ */
+@SuppressWarnings("unused")
+@Repository
+public interface TextBlockRepository extends JpaRepository<TextBlock, Long>, JpaSpecificationExecutor<TextBlock> {
+    int deleteByMediaIdAndPageNumber(Long mediaId, int pageNumber);
+}

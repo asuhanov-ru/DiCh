@@ -17,9 +17,13 @@ logging:
   level:
     ROOT: DEBUG
     tech.jhipster: DEBUG
-    org.hibernate.SQL: DEBUG
     org.jhipster.dich: DEBUG
     net.sourceforge.lept4j: DEBUG
+    org.jhipster.dich.service.OcrTasksQueryService: OFF
+    org.jhipster.dich.service.PageWordQueryService: OFF
+    org.jhipster.dich.service.OCRService: OFF
+    org.hibernate.SQL: OFF
+    org.jhipster.dich.web.rest.PageOcrResource: OFF
 
 spring:
   devtools:
@@ -107,7 +111,7 @@ jhipster:
 
 # application:
 collections:
-  location: 'C:\Users\suhanov_av\Documents\My\Химия\'
+  location: ${DICH_MEDIA_DIR}
 
 tessdata:
-  location: 'C:\Users\suhanov_av\Documents\Projects\tessdata_best'
+  location: ${DICH_TESSDATA_DIR}

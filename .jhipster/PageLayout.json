@@ -9,6 +9,39 @@
     {
       "fieldName": "pageNumber",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "iterator_level",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rect_top",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "rect_left",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "rect_right",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "rect_bottom",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "parent_id",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "itemGUID",
+      "fieldType": "UUID",
+      "fieldValidateRules": []
+    },
+    {
+      "fieldName": "parentGUID",
+      "fieldType": "UUID"
     }
   ],
   "jpaMetamodelFiltering": true,

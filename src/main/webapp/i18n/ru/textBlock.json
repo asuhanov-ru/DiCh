@@ -1,0 +1,27 @@
+{
+  "diChApp": {
+    "textBlock": {
+      "home": {
+        "title": "Text Blocks",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Text Block",
+        "createOrEditLabel": "Создать или отредактировать Text Block",
+        "notFound": "Text Blocks не найдено"
+      },
+      "created": "Новый Text Block создан с идентификатором {{ param }}",
+      "updated": "Text Block обновлен с идентификатором {{ param }}",
+      "deleted": "Text Block удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Text Block {{ id }}?"
+      },
+      "detail": {
+        "title": "Text Block"
+      },
+      "id": "ID",
+      "mediaId": "Media Id",
+      "pageNumber": "Page Number",
+      "blockIndex": "Block Index",
+      "blockUUID": "Block UUID"
+    }
+  }
+}

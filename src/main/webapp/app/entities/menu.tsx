@@ -34,6 +34,21 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/page-layout">
         <Translate contentKey="global.menu.entities.pageLayout" />
       </MenuItem>
+      <MenuItem icon="asterisk" to="/author">
+        <Translate contentKey="global.menu.entities.author" />
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/book">
+        <Translate contentKey="global.menu.entities.book" />
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/text-block">
+        <Translate contentKey="global.menu.entities.textBlock" />
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/inline-style-ranges">
+        <Translate contentKey="global.menu.entities.inlineStyleRanges" />
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/book-mark">
+        <Translate contentKey="global.menu.entities.bookMark" />
+      </MenuItem>
       {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
     </>
   );

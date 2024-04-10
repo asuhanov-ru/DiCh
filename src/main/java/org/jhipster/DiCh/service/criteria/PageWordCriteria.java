@@ -11,6 +11,7 @@ import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.UUIDFilter;
 import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
@@ -47,6 +48,12 @@ public class PageWordCriteria implements Serializable, Criteria {
 
     private ZonedDateTimeFilter version;
 
+    private StringFilter ocrLang;
+
+    private UUIDFilter textLineUUID;
+
+    private UUIDFilter textBlockUUID;
+
     private Boolean distinct;
 
     public PageWordCriteria() {}
@@ -62,6 +69,9 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.mediaId = other.mediaId == null ? null : other.mediaId.copy();
         this.pageNumber = other.pageNumber == null ? null : other.pageNumber.copy();
         this.version = other.version == null ? null : other.version.copy();
+        this.ocrLang = other.ocrLang == null ? null : other.ocrLang.copy();
+        this.textLineUUID = other.textLineUUID == null ? null : other.textLineUUID.copy();
+        this.textBlockUUID = other.textBlockUUID == null ? null : other.textBlockUUID.copy();
         this.distinct = other.distinct;
     }
 
@@ -220,6 +230,51 @@ public class PageWordCriteria implements Serializable, Criteria {
         this.version = version;
     }
 
+    public StringFilter getOcrLang() {
+        return ocrLang;
+    }
+
+    public StringFilter ocrLang() {
+        if (ocrLang == null) {
+            ocrLang = new StringFilter();
+        }
+        return ocrLang;
+    }
+
+    public void setOcrLang(StringFilter ocrLang) {
+        this.ocrLang = ocrLang;
+    }
+
+    public UUIDFilter getTextLineUUID() {
+        return textLineUUID;
+    }
+
+    public UUIDFilter textLineUUID() {
+        if (textLineUUID == null) {
+            textLineUUID = new UUIDFilter();
+        }
+        return textLineUUID;
+    }
+
+    public void setTextLineUUID(UUIDFilter textLineUUID) {
+        this.textLineUUID = textLineUUID;
+    }
+
+    public UUIDFilter getTextBlockUUID() {
+        return textBlockUUID;
+    }
+
+    public UUIDFilter textBlockUUID() {
+        if (textBlockUUID == null) {
+            textBlockUUID = new UUIDFilter();
+        }
+        return textBlockUUID;
+    }
+
+    public void setTextBlockUUID(UUIDFilter textBlockUUID) {
+        this.textBlockUUID = textBlockUUID;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -248,13 +303,31 @@ public class PageWordCriteria implements Serializable, Criteria {
             Objects.equals(mediaId, that.mediaId) &&
             Objects.equals(pageNumber, that.pageNumber) &&
             Objects.equals(version, that.version) &&
+            Objects.equals(ocrLang, that.ocrLang) &&
+            Objects.equals(textLineUUID, that.textLineUUID) &&
+            Objects.equals(textBlockUUID, that.textBlockUUID) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, s_word, n_top, n_left, n_heigth, n_width, n_idx, mediaId, pageNumber, version, distinct);
+        return Objects.hash(
+            id,
+            s_word,
+            n_top,
+            n_left,
+            n_heigth,
+            n_width,
+            n_idx,
+            mediaId,
+            pageNumber,
+            version,
+            ocrLang,
+            textLineUUID,
+            textBlockUUID,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -271,6 +344,9 @@ public class PageWordCriteria implements Serializable, Criteria {
             (mediaId != null ? "mediaId=" + mediaId + ", " : "") +
             (pageNumber != null ? "pageNumber=" + pageNumber + ", " : "") +
             (version != null ? "version=" + version + ", " : "") +
+            (ocrLang != null ? "ocrLang=" + ocrLang + ", " : "") +
+            (textLineUUID != null ? "textLineUUID=" + textLineUUID + ", " : "") +
+            (textBlockUUID != null ? "textBlockUUID=" + textBlockUUID + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

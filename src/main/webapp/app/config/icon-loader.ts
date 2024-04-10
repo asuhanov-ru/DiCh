@@ -32,6 +32,19 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { faUsersCog } from '@fortawesome/free-solid-svg-icons/faUsersCog';
 import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
+import { faUpDownLeftRight } from '@fortawesome/free-solid-svg-icons/faUpDownLeftRight';
+import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
+import { faLocationArrow } from '@fortawesome/free-solid-svg-icons/faLocationArrow';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare';
+import { faDivide } from '@fortawesome/free-solid-svg-icons/faDivide';
+import { faMousePointer } from '@fortawesome/free-solid-svg-icons/faMousePointer';
+import { faTree } from '@fortawesome/free-solid-svg-icons/faTree';
+import { faCodeBranch } from '@fortawesome/free-solid-svg-icons/faCodeBranch';
+import { faTable } from '@fortawesome/free-solid-svg-icons/faTable';
+import { faBookBookmark } from '@fortawesome/free-solid-svg-icons/faBookBookmark';
+import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
+import { faWalking } from '@fortawesome/free-solid-svg-icons/faWalking';
+// import { faBookBookmark } from '@fortawesome/free-solid-svg-icons/faAdd';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -70,6 +83,18 @@ export const loadIcons = () => {
     faUserPlus,
     faUsers,
     faUsersCog,
-    faWrench
+    faWrench,
+    faUpDownLeftRight,
+    faMinus,
+    faLocationArrow,
+    faArrowUpRightFromSquare,
+    faDivide,
+    faMousePointer,
+    faTree,
+    faCodeBranch,
+    faTable,
+    faBookBookmark,
+    faEdit,
+    faWalking
   );
 };

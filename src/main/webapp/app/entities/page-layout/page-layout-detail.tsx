@@ -42,6 +42,54 @@ export const PageLayoutDetail = (props: RouteComponentProps<{ id: string }>) => 
             </span>
           </dt>
           <dd>{pageLayoutEntity.pageNumber}</dd>
+          <dt>
+            <span id="iterator_level">
+              <Translate contentKey="diChApp.pageLayout.iterator_level">Iterator Level</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.iterator_level}</dd>
+          <dt>
+            <span id="rect_top">
+              <Translate contentKey="diChApp.pageLayout.rect_top">Rect Top</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.rect_top}</dd>
+          <dt>
+            <span id="rect_left">
+              <Translate contentKey="diChApp.pageLayout.rect_left">Rect Left</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.rect_left}</dd>
+          <dt>
+            <span id="rect_right">
+              <Translate contentKey="diChApp.pageLayout.rect_right">Rect Right</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.rect_right}</dd>
+          <dt>
+            <span id="rect_bottom">
+              <Translate contentKey="diChApp.pageLayout.rect_bottom">Rect Bottom</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.rect_bottom}</dd>
+          <dt>
+            <span id="parent_id">
+              <Translate contentKey="diChApp.pageLayout.parent_id">Parent Id</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.parent_id}</dd>
+          <dt>
+            <span id="itemGUID">
+              <Translate contentKey="diChApp.pageLayout.itemGUID">Item GUID</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.itemGUID}</dd>
+          <dt>
+            <span id="parentGUID">
+              <Translate contentKey="diChApp.pageLayout.parentGUID">Parent GUID</Translate>
+            </span>
+          </dt>
+          <dd>{pageLayoutEntity.parentGUID}</dd>
         </dl>
         <Button tag={Link} to="/page-layout" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
